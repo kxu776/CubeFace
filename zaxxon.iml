@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-assimp-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-assimp.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-bgfx-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-bgfx.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-cuda.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-egl.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-glfw-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-glfw.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jawt.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jemalloc-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jemalloc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-libdivide-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-libdivide.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-llvm-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-llvm.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lmdb-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lmdb.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lz4-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lz4.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-meow-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-meow.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nanovg-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nanovg.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nfd-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nfd.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nuklear-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nuklear.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-odbc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openal-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openal.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opencl.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengl-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengl.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengles-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengles.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openvr-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openvr.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opus-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opus.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-ovr-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-ovr.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-par-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-par.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-remotery-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-remotery.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-rpmalloc-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-rpmalloc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sse-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sse.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-stb-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-stb.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyexr-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyexr.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyfd-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyfd.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tootle-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tootle.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vma-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vma.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vulkan.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-xxhash-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-xxhash.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-yoga-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-yoga.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-zstd-natives-windows.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-zstd.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-assimp-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-bgfx-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-cuda-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-egl-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-glfw-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jawt-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jemalloc-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-libdivide-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-llvm-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lmdb-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lz4-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-meow-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nanovg-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nfd-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nuklear-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-odbc-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openal-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opencl-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengl-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengles-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openvr-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opus-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-ovr-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-par-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-remotery-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-rpmalloc-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sse-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-stb-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyexr-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyfd-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tootle-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vma-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vulkan-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-xxhash-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-yoga-javadoc.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-zstd-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-assimp-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-bgfx-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-cuda-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-egl-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-glfw-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jawt-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-jemalloc-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-libdivide-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-llvm-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lmdb-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-lz4-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-meow-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nanovg-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nfd-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-nuklear-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-odbc-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openal-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opencl-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengl-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opengles-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-openvr-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-opus-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-ovr-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-par-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-remotery-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-rpmalloc-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sse-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-stb-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyexr-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tootle-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vma-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-vulkan-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-xxhash-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-yoga-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-zstd-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sources.jar!/" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-sources.jar!/org/lwjgl/system/jni" />
+          <root url="jar://C:/Program Files/lwjgl/lwjgl-3.2.1/lwjgl-tinyfd-sources.jar!/org/lwjgl/util/tinyfd" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
