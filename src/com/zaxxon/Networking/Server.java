@@ -2,6 +2,7 @@ package com.zaxxon.Networking;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Server {
 
@@ -11,6 +12,7 @@ public class Server {
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[]  data = new byte[MAX_PACKET_SIZE * 10];
+	private ArrayList<Integer> clientList;
 
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
@@ -34,7 +36,6 @@ public class Server {
 	}
 
 	public void send(byte[] data, InetAddress address, int port) {
-		//
 		DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 		try {
 			serverSocket.send(packet);
@@ -43,9 +44,9 @@ public class Server {
 		}
 	}
 
+	
 	private void listen() {
 		while (listening) {
-			//Used to receive and then handle the packets
 			DatagramPacket packet = new DatagramPacket(data,MAX_PACKET_SIZE);
 			try {
 				serverSocket.receive(packet);
@@ -60,13 +61,21 @@ public class Server {
 		byte[] data = packet.getData();
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
+		clientList = new ArrayList<>();
 		
 		System.out.println("--------");
 		System.out.println("PACKET " );
-		System.out.println(address.getHostAddress() + " : " + port);
+		System.out.println(address.getHostAddress() + " : " + port + " " + new String(packet.getData()));
 		System.out.println("--------");
-
-
+		
+		clientList.add(packet.getPort());
+		
+		send("Connected".getBytes(),address, port);
+	}
+	
+	
+	public void close() {
+		serverSocket.close();
 	}
 }
 
