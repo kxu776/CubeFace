@@ -62,7 +62,7 @@ public class GettingStarted extends Application {
 		AnimationTimer animator = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeys();
-				puppyRect.setX(xPos + currentNanoTime/10000000000l-1000);
+				puppyRect.setX(xPos);
 			}
 		};
 		animator.start();
