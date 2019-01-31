@@ -2,15 +2,15 @@ package com.zaxxon.world.mobile;
 
 import com.zaxxon.world.Sprite;
 
-public class MoveableSprite extends Sprite {
+public class MovableSprite extends Sprite {
     private double velocityX;
     private double velocityY;
     private double movementSpeed;
     private double health;
     private double damage;
-    protected boolean controllable;
+    public boolean controllable;
 
-    public MoveableSprite(){
+    public MovableSprite(){
         velocityX = 0.0;
         velocityY = 0.0;
         movementSpeed = 0.0;
@@ -48,6 +48,22 @@ public class MoveableSprite extends Sprite {
 
     private double getHealth(){
         return health;
+    }
+
+    public void moveLeft(){
+        addVelocity(-50,0);
+    }
+
+    public void moveUp(){
+        addVelocity(0,50);
+    }
+
+    public void moveRight(){
+        addVelocity(50,0);
+    }
+
+    public void moveDown(){
+        addVelocity(0,-50);
     }
 
     public String toString(){
