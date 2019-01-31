@@ -1,15 +1,39 @@
 package com.zaxxon.input;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallback;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Input extends GLFWKeyCallback {
-	
-	public static boolean[] keys = new boolean[100];
-	
-	public void invoke(long window, int key, int scancode, int action, int mods) {
-		
-		keys[key] = action != GLFW.GLFW_RELEASE;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+
+public class Input {
+
+	private Set<KeyCode> keysPressed = new HashSet<KeyCode>();
+
+	public Input(Stage attachedStage) {
+		attachedStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent key) {
+				keysPressed.add(key.getCode());
+			}
+		});
+		attachedStage.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent key) {
+				keysPressed.remove(key.getCode());
+			}
+		});
+	}
+
+	public Set<KeyCode> getKeysPressed() {
+		return keysPressed;
+	}
+
+	public boolean isKeyPressed(KeyCode key) {
+		if (keysPressed.contains(key)) {
+			return true;
+		}
+		return false;
 	}
 
 }
