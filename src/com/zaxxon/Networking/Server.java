@@ -1,6 +1,8 @@
 package com.zaxxon.Networking;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -13,6 +15,8 @@ public class Server {
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[]  data = new byte[MAX_PACKET_SIZE * 10];
 	private ArrayList<Integer> clientList;
+	private ObjectInputStream obi;
+	private ByteArrayOutputStream bao;
 
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
@@ -22,6 +26,7 @@ public class Server {
 		try {	
 			serverSocket = new DatagramSocket(serverPort);
 			listening = true;
+			
 			listenThread = new Thread(new Runnable() {
 				public void run() {
 					listen();
@@ -73,6 +78,9 @@ public class Server {
 		send("Connected".getBytes(),address, port);
 	}
 	
+	public InetAddress getServerIP() {
+		return serverSocket.getInetAddress();
+	}
 	
 	public void close() {
 		serverSocket.close();

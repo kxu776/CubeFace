@@ -1,6 +1,9 @@
 package com.zaxxon.Networking;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -16,17 +19,18 @@ public class Client extends Thread {
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[]  data = new byte[MAX_PACKET_SIZE];
 	private boolean running = false;
-	
+	private ObjectOutputStream out = null;
+	private ObjectInputStream in = null;
+	private ByteArrayOutputStream baos;
+	private ClientSender client;
 	
 	public Client(String host, int port) {
 		//port refers to port of the server
 		this.port = port;
-		ipAddress = host;
+		this.ipAddress = host;
 	}
 	public void run() {
-		
 		connect();
-		
 		while(true) {
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			try {
@@ -47,12 +51,11 @@ public class Client extends Thread {
 		}
 		try {
 			socket = new DatagramSocket();
-			
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 		sendConnectionPacket();
-		
+		//sendPlayerObj();
 	}
 	
 	private void sendConnectionPacket() {
@@ -60,6 +63,18 @@ public class Client extends Thread {
 		send(data);
 	}
 	
+	private void sendPlayerObj() {
+		client = new ClientSender(100, 100, 100);
+		  baos = new ByteArrayOutputStream();
+		  try {
+			  out = new ObjectOutputStream(baos);
+			 out.writeObject(client);
+			 out.flush();
+			 send(baos.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
