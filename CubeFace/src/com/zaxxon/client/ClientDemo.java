@@ -36,7 +36,7 @@ public class ClientDemo extends Application {
 
 		Scene renderedScene = new Scene(root, 800, 600);
 
-		Rectangle puppyRect = new Rectangle(128*2, 128);
+		Rectangle puppyRect = new Rectangle(128*4, 128*2);
 		Image puppyImg = new Image("/com/zaxxon/gameart/brute-zombie.png");
 		ImagePattern imgPat = new ImagePattern(puppyImg);
 		puppyRect.setFill(imgPat);
