@@ -57,6 +57,14 @@ public class Sprite {
 		positionX = x;
 		positionY = y;
 	}
+	
+	public int getPositionX() {
+		return positionX;
+	}
+	
+	public int getPositionY() {
+		return positionY;
+	}
 
 	public void render(GraphicsContext gc) {
 		gc.drawImage(image, positionX, positionY);
