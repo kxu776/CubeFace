@@ -2,6 +2,8 @@ package com.zaxxon.world.mobile;
 
 import com.zaxxon.world.Sprite;
 
+import java.util.LinkedHashMap;
+
 public class MovableSprite extends Sprite {
 	private double velocityX;
 	private double velocityY;
@@ -67,4 +69,13 @@ public class MovableSprite extends Sprite {
 		return super.toString() + ", Velocity: [" + velocityX + "," + velocityY + "]";
 	}
 
+	@Override
+	public LinkedHashMap<String, Object> getAttributes() {
+		LinkedHashMap<String,Object> attributes =  super.getAttributes();
+		attributes.put("velocityX", velocityX);
+		attributes.put("velocityY", velocityY);
+		attributes.put("Health", health);
+		attributes.put("Damage", damage);
+		return attributes;
+	}
 }

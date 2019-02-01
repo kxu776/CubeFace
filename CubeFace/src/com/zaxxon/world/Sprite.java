@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import java.util.LinkedHashMap;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
 
@@ -82,4 +84,15 @@ public class Sprite {
 		return "ID: " + id + ", Position: [" + positionX + ", " + positionY + "], Dimensions: [" + width + ", " + height
 				+ "]";
 	}
+
+
+	public LinkedHashMap<String,Object> getAttributes(){
+		LinkedHashMap<String,Object> attributes = new LinkedHashMap<>();
+		attributes.put("posX", positionX);
+		attributes.put("posY", positionY);
+		attributes.put("height", height);
+		attributes.put("width", width);
+		return attributes;
+	}
+
 }
