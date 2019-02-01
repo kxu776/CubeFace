@@ -1,5 +1,6 @@
 package com.zaxxon.Networking;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,6 +23,7 @@ public class Client extends Thread {
 	private ObjectOutputStream out = null;
 	private ObjectInputStream in = null;
 	private ByteArrayOutputStream baos;
+	private ByteArrayInputStream bais;
 	private ClientSender client;
 	
 	public Client(String host, int port) {
@@ -35,7 +37,14 @@ public class Client extends Thread {
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			try {
 				socket.receive(packet);
-			} catch (IOException e) {
+				
+					if (packet.getData() != null) {
+						bais = new ByteArrayInputStream(packet.getData());
+						in = new ObjectInputStream(bais);
+						String str = (String) in.readObject();
+						System.out.println(str);
+					}
+			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 			 String message = new String (packet.getData());
@@ -55,7 +64,7 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		sendConnectionPacket();
-		//sendPlayerObj();
+		sendPlayerObj();
 	}
 	
 	private void sendConnectionPacket() {
@@ -70,7 +79,8 @@ public class Client extends Thread {
 			  out = new ObjectOutputStream(baos);
 			 out.writeObject(client);
 			 out.flush();
-			 send(baos.toByteArray());
+			 byte[] playerinfo = baos.toByteArray();
+			 send(playerinfo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
