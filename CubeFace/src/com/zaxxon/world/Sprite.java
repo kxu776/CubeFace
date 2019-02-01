@@ -1,51 +1,95 @@
 package com.zaxxon.world;
 
-import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
+
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.util.LinkedHashMap;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
 
 public class Sprite {
-    private Image image;
-    private double positionX;
-    private double positionY;
-    private double width;
-    private double height;
 
-    public Sprite() {
-        positionX = 0;
-        positionY = 0;
-    }
+	protected static int idCounter = 0;
 
-    public void setImage(Image i) {
-        image = i;
-        width = i.getWidth();
-        height = i.getHeight();
-    }
+	protected javafx.scene.image.Image image;
+	protected javafx.scene.image.Image[] spriteSheet;
+	protected int positionX;
+	protected int positionY;
+	protected int width;
+	protected int height;
+	protected int id;
 
-    public void setImage(String filename) {
-        Image i = new Image(filename);
-        setImage(i);
-    }
+	public Sprite() {
+		id = idCounter;
+		idCounter++;
+		positionX = 0;
+		positionY = 0;
+	}
 
-    public void setPosition(double x, double y) {
-        positionX = x;
-        positionY = y;
-    }
+	public void setImageSpriteSheet(Image im, int rows, int columns) {
+		BufferedImage image = (BufferedImage) im;
+		javafx.scene.image.Image[] spriteSheet = new javafx.scene.image.Image[rows * columns];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				spriteSheet[(i * columns) + j] = SwingFXUtils
+						.toFXImage(image.getSubimage(j * width, i * height, width, height), null);
+			}
+		}
+	}
 
+	public void setImage(javafx.scene.image.Image i) {
+		image = i;
+		width = (int) i.getWidth();
+		height = (int) i.getHeight();
+	}
 
-    public void render(GraphicsContext gc) {
-        gc.drawImage(image, positionX, positionY);
-    }
+	public void setImage(String filename) {
+		javafx.scene.image.Image i = new javafx.scene.image.Image(filename);
+		setImage(i);
+	}
 
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, positionY, width, height);
-    }
+	public void setImageFromSpriteSheet(int index) {
+		setImage(spriteSheet[index]);
+	}
 
-    public boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
-    }
+	public void setPosition(int x, int y) {
+		positionX = x;
+		positionY = y;
+	}
+	
+	public int getPositionX() {
+		return positionX;
+	}
+	
+	public int getPositionY() {
+		return positionY;
+	}
 
-    public String toString() {
-        return " Position: [" + positionX + "," + positionY + "]";
-    }
+	public void render(GraphicsContext gc) {
+		gc.drawImage(image, positionX, positionY);
+	}
+
+	public Rectangle2D getBoundary() {
+		return new Rectangle2D(positionX, positionY, width, height);
+	}
+
+	public boolean intersects(Sprite s) {
+		return s.getBoundary().intersects(this.getBoundary());
+	}
+
+	public String toString() {
+		return "ID: " + id + ", Position: [" + positionX + ", " + positionY + "], Dimensions: [" + width + ", " + height
+				+ "]";
+	}
+
+	public LinkedHashMap<String,Object> getAttributes(){
+		LinkedHashMap<String,Object> attributes = new LinkedHashMap<>();
+		attributes.put("posX", positionX);
+		attributes.put("posY", positionY);
+		attributes.put("height", height);
+		attributes.put("width", width);
+		return attributes;
+	}
 }
