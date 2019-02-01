@@ -12,47 +12,46 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Client extends Thread {
-	
+
 	private String ipAddress;
 	private int port;
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
 	private int MAX_PACKET_SIZE = 1024;
-	private byte[]  data = new byte[MAX_PACKET_SIZE];
-	private boolean running = false;
+	private byte[] data = new byte[MAX_PACKET_SIZE];
 	private ObjectOutputStream out = null;
 	private ObjectInputStream in = null;
 	private ByteArrayOutputStream baos;
 	private ByteArrayInputStream bais;
 	private ClientSender client;
-	
+	private boolean running = false;
+
 	public Client(String host, int port) {
-		//port refers to port of the server
+		// port refers to port of the server
 		this.port = port;
 		this.ipAddress = host;
 	}
+
 	public void run() {
+		running = true;
 		connect();
-		while(true) {
-			DatagramPacket packet = new DatagramPacket(data,data.length);
+		while (running) {
+			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
+				// Expects a player object
 				socket.receive(packet);
-				
-					if (packet.getData() != null) {
-						bais = new ByteArrayInputStream(packet.getData());
-						in = new ObjectInputStream(bais);
-						String str = (String) in.readObject();
-						System.out.println(str);
-					}
-			} catch (IOException | ClassNotFoundException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			 String message = new String (packet.getData());
-			System.out.println("Server >: " + message);
+
+			System.out.println("Getting object");
+			getPlayerObj(packet);
 		}
+		// String message = new String (packet.getData());
+		// System.out.println("Server >: " + message);
 	}
-	
-	public void connect(){
+
+	public void connect() {
 		try {
 			serverAddress = InetAddress.getByName(ipAddress);
 		} catch (UnknownHostException e) {
@@ -63,29 +62,55 @@ public class Client extends Thread {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		sendConnectionPacket();
+		// sendConnectionPacket();
 		sendPlayerObj();
 	}
-	
+
 	private void sendConnectionPacket() {
 		byte[] data = "ConnectionPacket".getBytes();
 		send(data);
 	}
-	
+
+	private void getPlayerObj(DatagramPacket packet) {
+		System.out.println("Is it even received");
+		if (packet.getData() != null) {
+			try {
+				System.out.println("Yes");
+				bais = new ByteArrayInputStream(packet.getData());
+				in = new ObjectInputStream(bais);
+				ClientSender data = (ClientSender) in.readObject();
+				System.out.println(data.getHealth());
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("No, closing socket");
+			socket.close();
+			running = false;
+
+			try {
+				bais.close();
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void sendPlayerObj() {
 		client = new ClientSender(100, 100, 100);
-		  baos = new ByteArrayOutputStream();
-		  try {
-			  out = new ObjectOutputStream(baos);
-			 out.writeObject(client);
-			 out.flush();
-			 byte[] playerinfo = baos.toByteArray();
-			 send(playerinfo);
+		baos = new ByteArrayOutputStream();
+		try {
+			out = new ObjectOutputStream(baos);
+			out.writeObject(client);
+			out.flush();
+			byte[] playerinfo = baos.toByteArray();
+			send(playerinfo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
@@ -94,5 +119,5 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

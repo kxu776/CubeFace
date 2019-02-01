@@ -16,8 +16,8 @@ public class Server {
 	private boolean listening = false;
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
-	private byte[]  data = new byte[MAX_PACKET_SIZE * 10];
-	private HashMap<InetAddress,Integer> clients = new HashMap();
+	private byte[] data = new byte[MAX_PACKET_SIZE * 10];
+	private HashMap<InetAddress, Integer> clients = new HashMap();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 
@@ -26,7 +26,7 @@ public class Server {
 	}
 
 	public void start() {
-		try {	
+		try {
 			serverSocket = new DatagramSocket(serverPort);
 			listening = true;
 			listenThread = new Thread(new Runnable() {
@@ -35,12 +35,12 @@ public class Server {
 				}
 			});
 			listenThread.start();
-			//Used to wait till we receive something
-		try {
-			listenThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			// Used to wait till we receive something
+			try {
+				listenThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -55,80 +55,79 @@ public class Server {
 		}
 	}
 
-	
 	private void listen() {
 		while (listening) {
-			DatagramPacket packet = new DatagramPacket(data,MAX_PACKET_SIZE);
+			DatagramPacket packet = new DatagramPacket(data, MAX_PACKET_SIZE);
 			try {
 				serverSocket.receive(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		if (clients.isEmpty()) {
-			process(packet);	
-		}
-		else {
-			
-			System.out.println("Sending Received Obj to client");
+			if (clients.isEmpty()) {
+				process(packet);
+				System.out.println("Packet sent");
 
-			broadcastPlayers(packet);
-			
-			System.out.println("Packet Received");
-			serverSocket.close();
-			System.out.println("Closed socket?");
-			listening = false;
-			
+				//find where our packets from and process the client
+
+				System.out.println("Sending Received Obj to client");
+
+				broadcastPlayers(packet);
+
+				System.out.println("Packet Received");
+				serverSocket.close();
+				System.out.println("Closed socket?");
+				listening = false;
 			}
 		}
 	}
-	
+
 	private void broadcastPlayers(DatagramPacket packet) {
-		try {
-			baos = new ByteArrayOutputStream();
-			out = new ObjectOutputStream(baos);
-			baos.flush();
-			byte [] bytes = baos.toByteArray();
-			out.flush();
+		//try {
+			//baos = new ByteArrayOutputStream();
+			//out = new ObjectOutputStream(baos);
+			//out.writeObject(packet);
+			//byte[] bytes = baos.toByteArray();
 			
-			//DatagramPacket playerPacket = new DatagramPacket(bytes, bytes.length);
-			
+		//	out.flush();
+
+			// DatagramPacket playerPacket = new DatagramPacket(bytes, bytes.length);
+
 			int tempPort = packet.getPort();
 			InetAddress tempIP = packet.getAddress();
-			
-			System.out.println("sending player object");
-			send(bytes, tempIP, tempPort);
-			
-			out.close();
-			baos.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+			//System.out.println("sending player object");
+			send(packet.getData(), tempIP, tempPort);
+
+			//out.close();
+		//	baos.close();
+
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//}
 	}
 
 	private void process(DatagramPacket packet) {
 		byte[] data = packet.getData();
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
-		
+
 		System.out.println("--------");
-		System.out.println("PACKET " );
-		System.out.println(address.getHostAddress() + " : " + port + " " + new String(packet.getData()));
+		System.out.println("PACKET ");
+		System.out.println(address.getHostAddress() + " : " + port);
 		System.out.println("--------");
-		
+
 		clients.put(address, port);
-		
-		send("Connected".getBytes(),address, port);
-		
+
+		//send("Connected".getBytes(), address, port);
+
 	}
-	
+
 	public InetAddress getServerIP() {
 		return serverSocket.getInetAddress();
 	}
 	
+
 	public void close() {
 		serverSocket.close();
 	}
 }
-
-
