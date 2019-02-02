@@ -5,7 +5,7 @@
 * Megan Pearce
 * Kristian Ujejski
 * Alexanandru George
-* Omar Khan
+* Omar Farooq Khan
 * Dan Turner
 * Philip Eagles
 
