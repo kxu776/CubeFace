@@ -1,5 +1,6 @@
 package com.zaxxon.Networking;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,12 +21,15 @@ public class Server {
 	private HashMap<InetAddress, Integer> clients = new HashMap();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
+	private ObjectInputStream in;
+	private ByteArrayInputStream bais;
 
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
 	}
 
 	public void start() {
+		System.out.println("Starting the server........");
 		try {
 			serverSocket = new DatagramSocket(serverPort);
 			listening = true;
@@ -63,62 +67,73 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if (clients.isEmpty()) {
+	
 				process(packet);
-				System.out.println("Packet sent");
-
-				//find where our packets from and process the client
-
-				System.out.println("Sending Received Obj to client");
-
-				broadcastPlayers(packet);
-
-				System.out.println("Packet Received");
-				serverSocket.close();
-				System.out.println("Closed socket?");
-				listening = false;
-			}
+			
+				
 		}
 	}
 
-	private void broadcastPlayers(DatagramPacket packet) {
-		//try {
-			//baos = new ByteArrayOutputStream();
-			//out = new ObjectOutputStream(baos);
-			//out.writeObject(packet);
-			//byte[] bytes = baos.toByteArray();
+/*	private void editObj(DatagramPacket packet) {
+		int tempPort = packet.getPort();
+		InetAddress tempIP = packet.getAddress();
+		
+		try {
+			System.out.println("Object recieved ");
+			bais = new ByteArrayInputStream(packet.getData());
+			in = new ObjectInputStream(bais);
+			ClientSender data = (ClientSender) in.readObject();
+			System.out.println(data.getHealth());
+			data.setHealth(75);
 			
-		//	out.flush();
+			sendPlayerObj(data, tempIP, tempPort );
+	
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+	}*/
+	
+	/*private void sendPlayerObj(ClientSender client,InetAddress inet,int port) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			out = new ObjectOutputStream(baos);
+			out.writeObject(client);
+			out.flush();
+			byte[] playerinfo = baos.toByteArray();
+			send(playerinfo,inet,port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}*/
 
-			// DatagramPacket playerPacket = new DatagramPacket(bytes, bytes.length);
-
+	private void broadcastPlayers(DatagramPacket packet) {
+			//editObj(packet);
 			int tempPort = packet.getPort();
 			InetAddress tempIP = packet.getAddress();
-
-			//System.out.println("sending player object");
 			send(packet.getData(), tempIP, tempPort);
-
-			//out.close();
-		//	baos.close();
-
-		//} catch (IOException e) {
-		//	e.printStackTrace();
-		//}
 	}
 
 	private void process(DatagramPacket packet) {
 		byte[] data = packet.getData();
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
-
-		System.out.println("--------");
-		System.out.println("PACKET ");
-		System.out.println(address.getHostAddress() + " : " + port);
-		System.out.println("--------");
-
-		clients.put(address, port);
-
-		//send("Connected".getBytes(), address, port);
+		
+		if (clients.containsKey(address)){
+			System.out.println("Sending Received Obj to client");
+			broadcastPlayers(packet);
+			System.out.println("Packet Received");
+			serverSocket.close();
+			System.out.println("Closed socket?");
+			listening = false;
+		}
+		else {
+			System.out.println("------------");
+			System.out.println("New Player ");
+			System.out.println(address.getHostAddress() + " : " + port);
+			System.out.println("------------");
+			clients.put(address, port);
+		send("Connected".getBytes(), address, port);
+		}
 
 	}
 

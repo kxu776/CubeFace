@@ -43,12 +43,9 @@ public class Client extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-			System.out.println("Getting object");
 			getPlayerObj(packet);
+			sendPlayerObj();
 		}
-		// String message = new String (packet.getData());
-		// System.out.println("Server >: " + message);
 	}
 
 	public void connect() {
@@ -62,8 +59,7 @@ public class Client extends Thread {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		// sendConnectionPacket();
-		sendPlayerObj();
+		sendConnectionPacket();
 	}
 
 	private void sendConnectionPacket() {
@@ -72,22 +68,42 @@ public class Client extends Thread {
 	}
 
 	private void getPlayerObj(DatagramPacket packet) {
-		System.out.println("Is it even received");
+		System.out.println("Incoming from server......");
 		if (packet.getData() != null) {
-			try {
-				System.out.println("Yes");
-				bais = new ByteArrayInputStream(packet.getData());
-				in = new ObjectInputStream(bais);
-				ClientSender data = (ClientSender) in.readObject();
-				System.out.println(data.getHealth());
-			} catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+			String message = new String (packet.getData());
+			
+			if (message.trim().equalsIgnoreCase("Connected")) { 
+				System.out.println("Server >: " + message);
+				return;
 			}
-		} else {
+			
+			else {
+				try {
+					System.out.println("Object recieved ");
+					bais = new ByteArrayInputStream(packet.getData());
+					in = new ObjectInputStream(bais);
+					ClientSender data = (ClientSender) in.readObject();
+					System.out.println("Health is: " +  data.getHealth());
+					System.out.println("Object tested, closing socket");
+					socket.close();
+					running = false;
+					try {
+						bais.close();
+						in.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			
+				} catch (ClassNotFoundException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+				
+		else {
 			System.out.println("No, closing socket");
 			socket.close();
 			running = false;
-
 			try {
 				bais.close();
 				in.close();
