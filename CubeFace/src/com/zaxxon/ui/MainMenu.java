@@ -1,4 +1,4 @@
-package sample;
+package com.zaxxon.ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,12 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+
+
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        root.getStylesheets().add(getClass().getResource("ms.css").toString());
+
         primaryStage.setTitle("CubeFace");
         primaryStage.setScene(new Scene(root, 600, 575));
         primaryStage.show();

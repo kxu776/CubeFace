@@ -1,4 +1,4 @@
-package sample;
+package com.zaxxon.ui;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
