@@ -13,6 +13,7 @@ public class Player extends MovableSprite{
 	ImagePattern imgPat;
 	
 	Vector2 velocity = new Vector2();
+	double speed = 5.0;
 	
     public Player(ImagePattern imgPat) {
         
@@ -31,25 +32,64 @@ public class Player extends MovableSprite{
     
     public void update(double time) {
     	
+    	movement();
+		
+		Vector2 toMove = new Vector2 (velocity.x * time, velocity.y * time);
+		this.translate(toMove);
+		
+		collision();
+    }
+    
+    private void movement() {
+    	
+    	Vector2 inputDir = new Vector2();
+    	
+    	//X
+    	
     	if (Input.isKeyPressed(KeyCode.LEFT) && Input.isKeyPressed(KeyCode.RIGHT)) {
 			
-    		velocity.x = 0;
+    		inputDir.x = 0;
 		}
     	
     	else if (Input.isKeyPressed(KeyCode.LEFT)) {
 			
-    		velocity.x = -5;
+    		inputDir.x = -1;
 		}
     	
     	else if (Input.isKeyPressed(KeyCode.RIGHT)) {
 			
-    		velocity.x = 5;
+    		inputDir.x = 1;
 		}
     	
-    	else velocity.x = 0;
-		
-		Vector2 toMove = new Vector2 (velocity.x * time, velocity.y * time);
-		this.translate(toMove);
+    	else inputDir.x = 0;
+    	
+    	//Y
+    	
+    	if (Input.isKeyPressed(KeyCode.DOWN) && Input.isKeyPressed(KeyCode.UP)) {
+			
+    		inputDir.y = 0;
+		}
+    	
+    	else if (Input.isKeyPressed(KeyCode.DOWN)) {
+			
+    		inputDir.y = 1;
+		}
+    	
+    	else if (Input.isKeyPressed(KeyCode.UP)) {
+			
+    		inputDir.y = -1;
+		}
+    	
+    	else inputDir.y = 0;
+    	
+    	
+    	inputDir = Vector2.normalise(inputDir);
+    	velocity = new Vector2 (inputDir.x * speed, inputDir.y * speed);
+    }
+    
+    private void collision() {
+    	
+    	
     }
     
     
