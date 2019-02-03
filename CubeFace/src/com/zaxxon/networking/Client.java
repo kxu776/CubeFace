@@ -1,6 +1,7 @@
 package com.zaxxon.networking;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
+import com.zaxxon.world.Sprite;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -74,8 +76,17 @@ public class Client extends Thread {
 		}
 	}
 
+	//Takes ArrayList of Sprites, returns ArrayList of attribute strings of sprites
+	public static ArrayList<String> spritesToString(ArrayList<Sprite> sprites){
+		ArrayList<String> attributeStrings = new ArrayList<>();
+		for(Sprite sprite: sprites){
+			attributeStrings.add(mapToString(sprite.getAttributes()));
+		}
+		return attributeStrings;
+	}
+
 	//Parses hashmap of sprite attributes to string. Can then be converted to packet via byte array.
-	public static String toString(LinkedHashMap<String, Object> attributes){
+	public static String mapToString(LinkedHashMap<String, Object> attributes){
 		String outputString = "";
 		for(Map.Entry<String, Object> value: attributes.entrySet()){
 			outputString += String.valueOf(value.getValue());
@@ -89,7 +100,7 @@ public class Client extends Thread {
 		map.put("test", new Integer(17));
 		map.put("test1", new String("test1"));
 		map.put("test2", new Character('c'));
-		System.out.println(toString(map));
+		System.out.println(mapToString(map));
 	}
 	
 }
