@@ -1,4 +1,4 @@
-package com.zaxxon.Networking;
+package com.zaxxon.networking;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Client extends Thread {
 	
@@ -68,6 +70,14 @@ public class Client extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String toString(LinkedHashMap<String, Object> attributes){
+		String outputString = "";
+		for(Map.Entry<String, Object> value: attributes.entrySet()){
+			outputString += value.toString();
+		}
+		return outputString;
 	}
 	
 }
