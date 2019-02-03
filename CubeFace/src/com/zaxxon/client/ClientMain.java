@@ -1,6 +1,5 @@
 package com.zaxxon.client;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
@@ -21,6 +20,8 @@ public class ClientMain extends Application implements Runnable {
 	private boolean running = false;
 	private Group root;
 	private Group world;
+	private Group background;
+	private Group foreground;
 	private Group overlay;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
 	
@@ -47,9 +48,9 @@ public class ClientMain extends Application implements Runnable {
 		root.setId("root");
 		world = new Group();
 		world.setId("world");
-		Group background = new Group();
+		background = new Group();
 		background.setId("background");
-		Group foreground = new Group();
+		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
 		overlay.setId("overlay");
@@ -67,6 +68,16 @@ public class ClientMain extends Application implements Runnable {
 		
 		Input.addHandlers(primaryStage);
 		
+		Sprite[] bg = SampleLevel.generateBackground();
+		for(int i = 0; i < bg.length; i++) {
+			Sprite s = bg[i];
+			if (s != null) {
+				s.setX(SampleLevel.SIZE * (i % SampleLevel.STATE_SHEET.length));
+				s.setY(SampleLevel.SIZE * (i / SampleLevel.STATE_SHEET.length));
+				addSpriteToBackground(s);
+			}
+		}
+		
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 
@@ -76,12 +87,12 @@ public class ClientMain extends Application implements Runnable {
 	}
 	
 	public void addSpriteToBackground(Sprite s) {
-		((Group) world.lookup("background")).getChildren().add(s);
+		background.getChildren().add(s);
 		spriteList.add(s);
 	}
 	
 	public void addSpriteToForeground(Sprite s) {
-		((Group) world.lookup("foreground")).getChildren().add(s);
+		foreground.getChildren().add(s);
 		spriteList.add(s);
 	}
 	

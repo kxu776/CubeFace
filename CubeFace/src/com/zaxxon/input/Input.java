@@ -11,9 +11,9 @@ import javafx.stage.Stage;
 public class Input {
 
 	private static Set<KeyCode> keysPressed = new HashSet<KeyCode>();
-	
+
 	public static void addHandlers(Stage attachedStage) {
-		
+
 		attachedStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
 				keysPressed.add(key.getCode());
@@ -25,8 +25,6 @@ public class Input {
 			}
 		});
 	}
-	
-	
 
 	public static Set<KeyCode> getKeysPressed() {
 		return keysPressed;

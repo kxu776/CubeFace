@@ -48,7 +48,7 @@ public class ClientDemo extends Application {
 		Scene renderedScene = new Scene(root, 800, 600);
 		BufferedImage bruteZombieSpriteSheet = null;
 		try {
-			File bruteZombieFile = new File("src/com/zaxxon/gameart/brute-zombie.png");
+			File bruteZombieFile = new File("CubeFace/src/com/zaxxon/gameart/brute-zombie.png");
 			bruteZombieSpriteSheet = ImageIO.read(bruteZombieFile);
 		} catch (IOException e) {
 			e.printStackTrace();

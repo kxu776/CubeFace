@@ -5,8 +5,11 @@ import javafx.scene.shape.Rectangle;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
+
+import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
 
@@ -39,17 +42,22 @@ public class Sprite extends Rectangle {
 		this.setHeight(height);
 	}
 
-	public void setImageSpriteSheet(Image im, int rows, int columns) {
-		BufferedImage image = (BufferedImage) im;
+	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
+		BufferedImage image = (BufferedImage) imageFile;
 		int width = image.getWidth() / columns;
 		int height = image.getHeight() / rows;
-		javafx.scene.image.Image[] spriteSheet = new javafx.scene.image.Image[rows * columns];
+		spriteSheet = new javafx.scene.image.Image[rows * columns];
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
 				spriteSheet[(i * columns) + j] = SwingFXUtils
 						.toFXImage(image.getSubimage(j * width, i * height, width, height), null);
 			}
 		}
+	}
+
+	public void setImageSpriteSheet(String imageURL, int rows, int columns) throws IOException {
+		File imageFile = new File(imageURL);
+		setImageSpriteSheet(ImageIO.read(imageFile), rows, columns);
 	}
 
 	public void setImage(javafx.scene.image.Image i) {
@@ -69,6 +77,10 @@ public class Sprite extends Rectangle {
 
 	public String toString() {
 		return "ID: " + this.getId() + ", " + super.toString();
+	}
+	
+	public javafx.scene.image.Image[] getSpriteSheet() {
+		return spriteSheet;
 	}
 
 	public LinkedHashMap<String, Object> getAttributes() {
