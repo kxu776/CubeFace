@@ -6,6 +6,10 @@ import java.util.*;
 
 import javax.imageio.*;
 
+import com.zaxxon.input.Input;
+import com.zaxxon.world.Sprite;
+import com.zaxxon.world.mobile.Player;
+
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.embed.swing.SwingFXUtils;
@@ -20,11 +24,12 @@ import javafx.stage.*;
 public class ClientDemo extends Application {
 
 	private int xPos = 0;
-	private Rectangle bruteZombieRect;
+	private Player player;
+	private static Input input;
 	private BufferedImage[] sprites;
 	private int zombieImage = 0;
 
-	private Set<KeyCode> keysPressed = new HashSet<KeyCode>();
+	public Set<KeyCode> keysPressed = new HashSet<KeyCode>();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -61,52 +66,37 @@ public class ClientDemo extends Application {
 			}
 		}
 
-		bruteZombieRect = new Rectangle(128, 128);
 		Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[0], null);
 		ImagePattern imgPat = new ImagePattern(bruteZombieImg);
-		bruteZombieRect.setFill(imgPat);
-
-		foreground.getChildren().add(bruteZombieRect);
+		
+		player = new Player(imgPat);
+		foreground.getChildren().add(player);
+		
 
 		root.setFocusTraversable(true);
 		root.requestFocus();
 
 		primaryStage.setScene(renderedScene);
 		primaryStage.show();
-
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent key) {
-				keysPressed.add(key.getCode());
-			}
-		});
-
-		primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent key) {
-				keysPressed.remove(key.getCode());
-			}
-		});
+		
+		Input.addHandlers(primaryStage);
 
 		AnimationTimer animator = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeys();
-				bruteZombieRect.setX(xPos);
+				player.update(1);
 			}
 		};
 		animator.start();
 	}
 
 	private void dealWithKeys() {
-		if (keysPressed.contains(KeyCode.LEFT)) {
-			xPos -= 1;
-		}
-		if (keysPressed.contains(KeyCode.RIGHT)) {
-			xPos += 1;
-		}
-		if (keysPressed.contains(KeyCode.SPACE)) {
+		
+		if (Input.isKeyPressed(KeyCode.SPACE)) {
 			zombieImage++;
 			Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[zombieImage % sprites.length], null);
 			ImagePattern imgPat = new ImagePattern(bruteZombieImg);
-			bruteZombieRect.setFill(imgPat);
+			player.setFill(imgPat);
 			keysPressed.remove(KeyCode.SPACE);
 		}
 	}
