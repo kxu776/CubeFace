@@ -6,6 +6,9 @@ import java.util.*;
 
 import javax.imageio.*;
 
+import com.zaxxon.world.Sprite;
+import com.zaxxon.world.mobile.Player;
+
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.embed.swing.SwingFXUtils;
@@ -20,7 +23,7 @@ import javafx.stage.*;
 public class ClientDemo extends Application {
 
 	private int xPos = 0;
-	private Rectangle bruteZombieRect;
+	private Player player;
 	private BufferedImage[] sprites;
 	private int zombieImage = 0;
 
@@ -43,7 +46,7 @@ public class ClientDemo extends Application {
 		Scene renderedScene = new Scene(root, 800, 600);
 		BufferedImage bruteZombieSpriteSheet = null;
 		try {
-			File bruteZombieFile = new File("CubeFace/src/com/zaxxon/gameart/brute-zombie.png");
+			File bruteZombieFile = new File("src/com/zaxxon/gameart/brute-zombie.png");
 			bruteZombieSpriteSheet = ImageIO.read(bruteZombieFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,12 +64,13 @@ public class ClientDemo extends Application {
 			}
 		}
 
-		bruteZombieRect = new Rectangle(128, 128);
 		Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[0], null);
 		ImagePattern imgPat = new ImagePattern(bruteZombieImg);
-		bruteZombieRect.setFill(imgPat);
-
-		foreground.getChildren().add(bruteZombieRect);
+		
+		player = new Player(imgPat);
+		foreground.getChildren().add(player);
+		xPos = 300;
+		
 
 		root.setFocusTraversable(true);
 		root.requestFocus();
@@ -89,7 +93,7 @@ public class ClientDemo extends Application {
 		AnimationTimer animator = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeys();
-				bruteZombieRect.setX(xPos);
+				player.setX(xPos);
 			}
 		};
 		animator.start();
@@ -106,7 +110,7 @@ public class ClientDemo extends Application {
 			zombieImage++;
 			Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[zombieImage % sprites.length], null);
 			ImagePattern imgPat = new ImagePattern(bruteZombieImg);
-			bruteZombieRect.setFill(imgPat);
+			player.setFill(imgPat);
 			keysPressed.remove(KeyCode.SPACE);
 		}
 	}
