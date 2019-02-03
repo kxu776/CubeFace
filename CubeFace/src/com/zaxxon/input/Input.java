@@ -10,9 +10,10 @@ import javafx.stage.Stage;
 
 public class Input {
 
-	private Set<KeyCode> keysPressed = new HashSet<KeyCode>();
-
-	public Input(Stage attachedStage) {
+	private static Set<KeyCode> keysPressed = new HashSet<KeyCode>();
+	
+	public static void addHandlers(Stage attachedStage) {
+		
 		attachedStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
 				keysPressed.add(key.getCode());
@@ -24,12 +25,14 @@ public class Input {
 			}
 		});
 	}
+	
+	
 
-	public Set<KeyCode> getKeysPressed() {
+	public static Set<KeyCode> getKeysPressed() {
 		return keysPressed;
 	}
 
-	public boolean isKeyPressed(KeyCode key) {
+	public static boolean isKeyPressed(KeyCode key) {
 		if (keysPressed.contains(key)) {
 			return true;
 		}

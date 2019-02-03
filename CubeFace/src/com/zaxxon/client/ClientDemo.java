@@ -6,6 +6,7 @@ import java.util.*;
 
 import javax.imageio.*;
 
+import com.zaxxon.input.Input;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
@@ -24,10 +25,11 @@ public class ClientDemo extends Application {
 
 	private int xPos = 0;
 	private Player player;
+	private static Input input;
 	private BufferedImage[] sprites;
 	private int zombieImage = 0;
 
-	private Set<KeyCode> keysPressed = new HashSet<KeyCode>();
+	public Set<KeyCode> keysPressed = new HashSet<KeyCode>();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -69,7 +71,6 @@ public class ClientDemo extends Application {
 		
 		player = new Player(imgPat);
 		foreground.getChildren().add(player);
-		xPos = 300;
 		
 
 		root.setFocusTraversable(true);
@@ -77,35 +78,28 @@ public class ClientDemo extends Application {
 
 		primaryStage.setScene(renderedScene);
 		primaryStage.show();
-
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent key) {
-				keysPressed.add(key.getCode());
-			}
-		});
-
-		primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent key) {
-				keysPressed.remove(key.getCode());
-			}
-		});
+		
+		Input.addHandlers(primaryStage);
 
 		AnimationTimer animator = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeys();
-				player.setX(xPos);
+				player.update();
 			}
 		};
 		animator.start();
 	}
 
 	private void dealWithKeys() {
-		if (keysPressed.contains(KeyCode.LEFT)) {
+		
+		if (Input.isKeyPressed(KeyCode.LEFT)) {
+			System.out.println("move left");
 			xPos -= 1;
 		}
 		if (keysPressed.contains(KeyCode.RIGHT)) {
 			xPos += 1;
 		}
+		
 		if (keysPressed.contains(KeyCode.SPACE)) {
 			zombieImage++;
 			Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[zombieImage % sprites.length], null);
