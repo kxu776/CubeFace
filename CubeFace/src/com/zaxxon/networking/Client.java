@@ -1,5 +1,7 @@
 package com.zaxxon.networking;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -72,12 +74,22 @@ public class Client extends Thread {
 		}
 	}
 
-	public String toString(LinkedHashMap<String, Object> attributes){
+	//Parses hashmap of sprite attributes to string. Can then be converted to packet via byte array.
+	public static String toString(LinkedHashMap<String, Object> attributes){
 		String outputString = "";
 		for(Map.Entry<String, Object> value: attributes.entrySet()){
-			outputString += value.toString();
+			outputString += String.valueOf(value.getValue());
 		}
 		return outputString;
+	}
+
+	//Test method
+	public static void main(String[] args){
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put("test", new Integer(17));
+		map.put("test1", new String("test1"));
+		map.put("test2", new Character('c'));
+		System.out.println(toString(map));
 	}
 	
 }
