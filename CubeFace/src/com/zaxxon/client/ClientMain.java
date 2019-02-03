@@ -1,87 +1,94 @@
 package com.zaxxon.client;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
+import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+
 import com.zaxxon.input.Input;
+import com.zaxxon.world.Sprite;
 
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class ClientMain implements Runnable {
+public class ClientMain extends Application implements Runnable {
 
 	private int width = 1280;
 	private int height = 720;
 	
 	private Thread thread;
 	private boolean running = false;
-	
-	private long window;
-	
+	private Input inputDetector;
+	private Group root;
+	private Group world;
+	private Group overlay;
+	private LinkedList<Sprite> spriteList = new LinkedList<>();
 	
 	public static void main(String[] args) {
-		
 		new ClientMain().start();
 	}
 
 	public void start() {
-		
 		running = true;
 		thread = new Thread(this, "Client");
 		thread.start();
 	}
 
-	private void initialise() {
-		
-		if (!glfwInit()) {
-			
-			//error
-		}
-		
-		glfwWindowHint (GLFW_RESIZABLE, GL_TRUE);
-		window = glfwCreateWindow(width, height, "CubeFace", NULL, NULL);
-		
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
-		
-		glfwSetKeyCallback(window, new Input());
-		
-		glfwMakeContextCurrent(window);
-		glfwShowWindow(window);
-		GL.createCapabilities();
-	}
-	
-	
+	@Override
 	public void run() {
+		launch();
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setTitle("Cubeface");
+
+		root = new Group();
+		root.setId("root");
+		world = new Group();
+		world.setId("world");
+		Group background = new Group();
+		background.setId("background");
+		Group foreground = new Group();
+		foreground.setId("foreground");
+		overlay = new Group();
+		overlay.setId("overlay");
+		root.getChildren().add(world);
+		root.getChildren().add(overlay);
+		world.getChildren().add(background);
+		world.getChildren().add(foreground);
+
+		Scene renderedScene = new Scene(root, width, height);
+		primaryStage.setScene(renderedScene);
+		primaryStage.show();
 		
-		initialise();
+		root.setFocusTraversable(true);
+		root.requestFocus();
 		
+		inputDetector = new Input(primaryStage);
 		
-		while (running) {
-			
-			//put some deltaTime stuff here to stabilise update rate
-			
-				update();
-				render();
-			
-			if (glfwWindowShouldClose(window)) {
-				
-				running = false;
+		AnimationTimer mainGameLoop = new AnimationTimer() {
+			public void handle(long currentNanoTime) {
+
 			}
-		}
-		
-		
-		glfwDestroyWindow(window);
-		glfwTerminate();
+		};
+		mainGameLoop.start();
 	}
 	
-	private void update() {
-		
-		glfwPollEvents();
+	public void addSpriteToBackground(Sprite s) {
+		((Group) world.lookup("background")).getChildren().add(s);
+		spriteList.add(s);
 	}
 	
-	private void render() {
-		
+	public void addSpriteToForeground(Sprite s) {
+		((Group) world.lookup("foreground")).getChildren().add(s);
+		spriteList.add(s);
+	}
+	
+	public void addSpriteToOverlay(Sprite s) {
+		overlay.getChildren().add(s);
+		spriteList.add(s);
 	}
 }
 

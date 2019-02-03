@@ -18,8 +18,6 @@ public class MovableSprite extends Sprite {
 		movementSpeed = 0.0;
 		health = 0.0;
 		damage = 0.0;
-		positionX = 0;
-		positionY = 0;
 	}
 
 	public void setVelocity(double x, double y) {
@@ -33,8 +31,8 @@ public class MovableSprite extends Sprite {
 	}
 
 	public void update(double time) {
-		this.positionX += velocityX * time;
-		this.positionY += velocityY * time;
+		this.setX(this.getX() + velocityX * time);
+		this.setY(this.getY() + velocityY * time);
 	}
 
 	public void takeDamage(int damage) {
@@ -45,7 +43,7 @@ public class MovableSprite extends Sprite {
 		health += healing;
 	}
 
-	private double getHealth() {
+	public double getHealth() {
 		return health;
 	}
 
