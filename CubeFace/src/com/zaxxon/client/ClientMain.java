@@ -19,7 +19,6 @@ public class ClientMain extends Application implements Runnable {
 	
 	private Thread thread;
 	private boolean running = false;
-	private Input inputDetector;
 	private Group root;
 	private Group world;
 	private Group overlay;
@@ -66,7 +65,7 @@ public class ClientMain extends Application implements Runnable {
 		root.setFocusTraversable(true);
 		root.requestFocus();
 		
-		inputDetector = new Input(primaryStage);
+		Input.addHandlers(primaryStage);
 		
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
