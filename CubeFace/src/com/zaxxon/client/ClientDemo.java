@@ -84,7 +84,7 @@ public class ClientDemo extends Application {
 		AnimationTimer animator = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeys();
-				player.update();
+				player.update(1);
 			}
 		};
 		animator.start();
@@ -92,15 +92,7 @@ public class ClientDemo extends Application {
 
 	private void dealWithKeys() {
 		
-		if (Input.isKeyPressed(KeyCode.LEFT)) {
-			System.out.println("move left");
-			xPos -= 1;
-		}
-		if (keysPressed.contains(KeyCode.RIGHT)) {
-			xPos += 1;
-		}
-		
-		if (keysPressed.contains(KeyCode.SPACE)) {
+		if (Input.isKeyPressed(KeyCode.SPACE)) {
 			zombieImage++;
 			Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[zombieImage % sprites.length], null);
 			ImagePattern imgPat = new ImagePattern(bruteZombieImg);
