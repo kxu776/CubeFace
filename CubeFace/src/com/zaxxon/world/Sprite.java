@@ -26,13 +26,12 @@ public class Sprite extends Rectangle {
 
 	public Sprite(int width, int height) {
 		init(width, height, 0, 0);
-		Rectangle r = new Rectangle();
 	}
 
 	public Sprite(int width, int height, int x, int y) {
 		init(width, height, x, y);
 	}
-	
+
 	private void init(int width, int height, int x, int y) {
 		this.setId(Integer.toString(idCounter));
 		idCounter++;
@@ -42,8 +41,7 @@ public class Sprite extends Rectangle {
 		this.setHeight(height);
 	}
 
-	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
-		BufferedImage image = (BufferedImage) imageFile;
+	public void setImageSpriteSheet(BufferedImage image, int rows, int columns) {
 		int width = image.getWidth() / columns;
 		int height = image.getHeight() / rows;
 		spriteSheet = new javafx.scene.image.Image[rows * columns];
@@ -53,6 +51,11 @@ public class Sprite extends Rectangle {
 						.toFXImage(image.getSubimage(j * width, i * height, width, height), null);
 			}
 		}
+	}
+
+	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
+		BufferedImage image = (BufferedImage) imageFile;
+		setImageSpriteSheet(image, rows, columns);
 	}
 
 	public void setImageSpriteSheet(String imageURL, int rows, int columns) throws IOException {
@@ -78,7 +81,7 @@ public class Sprite extends Rectangle {
 	public String toString() {
 		return "ID: " + this.getId() + ", " + super.toString();
 	}
-	
+
 	public javafx.scene.image.Image[] getSpriteSheet() {
 		return spriteSheet;
 	}

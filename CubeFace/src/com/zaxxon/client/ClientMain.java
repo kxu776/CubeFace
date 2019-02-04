@@ -1,6 +1,5 @@
 package com.zaxxon.client;
 
-
 import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
@@ -16,7 +15,7 @@ public class ClientMain extends Application implements Runnable {
 
 	private int width = 1280;
 	private int height = 720;
-	
+
 	private Thread thread;
 	private boolean running = false;
 	private Group root;
@@ -25,7 +24,7 @@ public class ClientMain extends Application implements Runnable {
 	private Group foreground;
 	private Group overlay;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
-	
+
 	public static void main(String[] args) {
 		new ClientMain().start();
 	}
@@ -63,14 +62,14 @@ public class ClientMain extends Application implements Runnable {
 		Scene renderedScene = new Scene(root, width, height);
 		primaryStage.setScene(renderedScene);
 		primaryStage.show();
-		
+
 		root.setFocusTraversable(true);
 		root.requestFocus();
-		
+
 		Input.addHandlers(primaryStage);
-		
+
 		Sprite[] bg = SampleLevel.generateBackground();
-		for(int i = 0; i < bg.length; i++) {
+		for (int i = 0; i < bg.length; i++) {
 			Sprite s = bg[i];
 			if (s != null) {
 				s.setX(SampleLevel.SIZE * (i % SampleLevel.STATE_SHEET.length));
@@ -78,7 +77,7 @@ public class ClientMain extends Application implements Runnable {
 				addSpriteToBackground(s);
 			}
 		}
-		
+
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 
@@ -86,20 +85,19 @@ public class ClientMain extends Application implements Runnable {
 		};
 		mainGameLoop.start();
 	}
-	
+
 	public void addSpriteToBackground(Sprite s) {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
 	}
 }
-
