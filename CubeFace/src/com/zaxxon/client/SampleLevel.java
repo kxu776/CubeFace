@@ -1,38 +1,32 @@
 package com.zaxxon.client;
 
-import java.io.File;
-
-import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.world.Sprite;
+import com.zaxxon.world.Wall;
 
 public class SampleLevel {
-	private static final String WALL_SPRITE_SHEET_URL = "CubeFace/src/com/zaxxon/gameart/wall-sprite-sheet.png";
 	public static final int SIZE = 64;
 	public static final int[][] STATE_SHEET = { { 2, 1, 3, 1, 1, 1, 3, 2 }, { 4, 0, 0, 0, 0, 0, 0, 4 },
 			{ 2, 3, 3, 2, 3, 3, 0, 4 }, { 4, 0, 0, 4, 0, 0, 0, 4 }, { 4, 0, 1, 1, 3, 2, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 0, 0, 0, 0, 4 }, { 2, 1, 1, 1, 1, 1, 1, 2 } };
 
 	public static Sprite[] generateBackground() {
-		Sprite[] allSprites = new Sprite[STATE_SHEET.length * STATE_SHEET[0].length];
-		File f = new File(WALL_SPRITE_SHEET_URL);
+		Wall[] allWalls = new Wall[STATE_SHEET.length * STATE_SHEET[0].length];
 		for (int i = 0; i < STATE_SHEET.length; i++) {
 			for (int j = 0; j < STATE_SHEET.length; j++) {
-				Sprite s = null;
+				Wall w = null;
 				if (STATE_SHEET[i][j] != 0) {
-					s = newSprite();
-					s.setImageFromSpriteSheet(STATE_SHEET[i][j] - 1);
+					w = newWall(STATE_SHEET[i][j] - 1);
 				}
-				allSprites[i * STATE_SHEET.length + j] = s;
+				allWalls[i * STATE_SHEET.length + j] = w;
 			}
 		}
-		return allSprites;
+		return allWalls;
 	}
-
-	public static Sprite newSprite() {
-		Sprite s = new Sprite();
-		s.setImageSpriteSheet(SpriteImages.WALL_SPRITESHEET_IMAGE, 1, 5);
-		s.setWidth(SIZE);
-		s.setHeight(SIZE);
-		return s;
+	
+	private static Wall newWall(int wallSprite) {
+		Wall w = new Wall(wallSprite);
+		w.setWidth(SIZE);
+		w.setHeight(SIZE);
+		return w;
 	}
 }
