@@ -91,40 +91,47 @@ public class ClientMain extends Application {
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-//				world.setTranslateX(camera.getPositionX() + world.getScene().getWidth()/2);
-				world.setTranslateX(camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
-						+ WIDTH / 2);
-				world.setTranslateY(camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
-						+ HEIGHT / 2);
-				world.setScaleX(camera.getScaleX());
-				world.setScaleY(camera.getScaleY());
-				if (Input.isKeyPressed(KeyCode.UP)) {
-					camera.setPositionY(camera.getPositionY() + 1);
-				}
-				if (Input.isKeyPressed(KeyCode.DOWN)) {
-					camera.setPositionY(camera.getPositionY() - 1);
-				}
-				if (Input.isKeyPressed(KeyCode.LEFT)) {
-					camera.setPositionX(camera.getPositionX() + 1);
-				}
-				if (Input.isKeyPressed(KeyCode.RIGHT)) {
-					camera.setPositionX(camera.getPositionX() - 1);
-				}
-				if (Input.isKeyPressed(KeyCode.Q)) {
-					camera.setScaleX(camera.getScaleX() * 1.02);
-					camera.setScaleY(camera.getScaleX());
-				}
-				if (Input.isKeyPressed(KeyCode.E)) {
-					camera.setScaleX(camera.getScaleX() / 1.02);
-					camera.setScaleY(camera.getScaleX());
-				}
-				if (Input.isKeyPressed(KeyCode.SPACE)) {
-					System.out.println("(" + world.getTranslateX() + ", " + world.getTranslateY() + "), ["
-							+ world.getScaleX() + ", " + world.getScaleY() + "]");
-				}
+				transformWorld();
+				dealWithKeyInput();
 			}
 		};
 		mainGameLoop.start();
+	}
+	
+	private void transformWorld() {
+		world.setTranslateX(camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
+				+ WIDTH / 2);
+		world.setTranslateY(camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
+				+ HEIGHT / 2);
+		world.setScaleX(camera.getScaleX());
+		world.setScaleY(camera.getScaleY());
+	}
+
+	private void dealWithKeyInput() {
+		if (Input.isKeyPressed(KeyCode.UP)) {
+			camera.setPositionY(camera.getPositionY() + 1);
+		}
+		if (Input.isKeyPressed(KeyCode.DOWN)) {
+			camera.setPositionY(camera.getPositionY() - 1);
+		}
+		if (Input.isKeyPressed(KeyCode.LEFT)) {
+			camera.setPositionX(camera.getPositionX() + 1);
+		}
+		if (Input.isKeyPressed(KeyCode.RIGHT)) {
+			camera.setPositionX(camera.getPositionX() - 1);
+		}
+		if (Input.isKeyPressed(KeyCode.Q)) {
+			camera.setScaleX(camera.getScaleX() * 1.02);
+			camera.setScaleY(camera.getScaleX());
+		}
+		if (Input.isKeyPressed(KeyCode.E)) {
+			camera.setScaleX(camera.getScaleX() / 1.02);
+			camera.setScaleY(camera.getScaleX());
+		}
+		if (Input.isKeyPressed(KeyCode.SPACE)) {
+			System.out.println("(" + world.getTranslateX() + ", " + world.getTranslateY() + "), [" + world.getScaleX()
+					+ ", " + world.getScaleY() + "]");
+		}
 	}
 
 	public void addSpriteToBackground(Sprite s) {
