@@ -3,45 +3,56 @@ package com.zaxxon.client;
 import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
+import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
-public class ClientMain extends Application implements Runnable {
+//public class ClientMain extends Application implements Runnable {
+public class ClientMain extends Application {
 
-	private int width = 1280;
-	private int height = 720;
+	private static final int WIDTH = 1280;
+	private static final int HEIGHT = 720;
 
-	private Thread thread;
-	private boolean running = false;
+//	private Thread thread;
+//	private boolean running = false;
 	private Group root;
 	private Group world;
 	private Group background;
 	private Group foreground;
 	private Group overlay;
+	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
 
 	public static void main(String[] args) {
-		new ClientMain().start();
-	}
-
-	public void start() {
-		running = true;
-		thread = new Thread(this, "Client");
-		thread.start();
-	}
-
-	@Override
-	public void run() {
+//		new ClientMain().start();
 		launch();
 	}
 
+	private void initialise() {
+		camera = new Camera();
+	}
+
+//	public void start() {
+//		running = true;
+//		thread = new Thread(this, "Client");
+//		thread.start();
+//	}
+//
+//	@Override
+//	public void run() {
+//		launch();
+//	}
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		initialise();
+
 		primaryStage.setTitle("Cubeface");
 
 		root = new Group();
@@ -59,7 +70,7 @@ public class ClientMain extends Application implements Runnable {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
-		Scene renderedScene = new Scene(root, width, height);
+		Scene renderedScene = new Scene(root, WIDTH, HEIGHT);
 		primaryStage.setScene(renderedScene);
 		primaryStage.show();
 
@@ -80,7 +91,37 @@ public class ClientMain extends Application implements Runnable {
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-
+//				world.setTranslateX(camera.getPositionX() + world.getScene().getWidth()/2);
+				world.setTranslateX(camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
+						+ WIDTH / 2);
+				world.setTranslateY(camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
+						+ HEIGHT / 2);
+				world.setScaleX(camera.getScaleX());
+				world.setScaleY(camera.getScaleY());
+				if (Input.isKeyPressed(KeyCode.UP)) {
+					camera.setPositionY(camera.getPositionY() + 1);
+				}
+				if (Input.isKeyPressed(KeyCode.DOWN)) {
+					camera.setPositionY(camera.getPositionY() - 1);
+				}
+				if (Input.isKeyPressed(KeyCode.LEFT)) {
+					camera.setPositionX(camera.getPositionX() + 1);
+				}
+				if (Input.isKeyPressed(KeyCode.RIGHT)) {
+					camera.setPositionX(camera.getPositionX() - 1);
+				}
+				if (Input.isKeyPressed(KeyCode.Q)) {
+					camera.setScaleX(camera.getScaleX() * 1.02);
+					camera.setScaleY(camera.getScaleX());
+				}
+				if (Input.isKeyPressed(KeyCode.E)) {
+					camera.setScaleX(camera.getScaleX() / 1.02);
+					camera.setScaleY(camera.getScaleX());
+				}
+				if (Input.isKeyPressed(KeyCode.SPACE)) {
+					System.out.println("(" + world.getTranslateX() + ", " + world.getTranslateY() + "), ["
+							+ world.getScaleX() + ", " + world.getScaleY() + "]");
+				}
 			}
 		};
 		mainGameLoop.start();

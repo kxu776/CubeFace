@@ -4,7 +4,7 @@ import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
 
 public class SampleLevel {
-	public static final int SIZE = 64;
+	public static final int SIZE = 128;
 	public static final int[][] STATE_SHEET = { { 2, 1, 3, 1, 1, 1, 3, 2 }, { 4, 0, 0, 0, 0, 0, 0, 4 },
 			{ 2, 3, 3, 2, 3, 3, 0, 4 }, { 4, 0, 0, 4, 0, 0, 0, 4 }, { 4, 0, 1, 1, 3, 2, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 0, 0, 0, 0, 4 }, { 2, 1, 1, 1, 1, 1, 1, 2 } };
