@@ -26,7 +26,6 @@ public class ClientDemo extends Application {
 	private int xPos = 0;
 	private Player player;
 	private static Input input;
-	private BufferedImage[] sprites;
 	private int zombieImage = 0;
 
 	public Set<KeyCode> keysPressed = new HashSet<KeyCode>();
@@ -46,30 +45,9 @@ public class ClientDemo extends Application {
 		root.getChildren().add(foreground);
 
 		Scene renderedScene = new Scene(root, 800, 600);
-		BufferedImage bruteZombieSpriteSheet = null;
-		try {
-			File bruteZombieFile = new File("CubeFace/src/com/zaxxon/gameart/brute-zombie.png");
-			bruteZombieSpriteSheet = ImageIO.read(bruteZombieFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		final int width = 128;
-		final int height = 128;
-		final int rows = 2;
-		final int cols = 4;
-		sprites = new BufferedImage[rows * cols];
-
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				sprites[(i * cols) + j] = bruteZombieSpriteSheet.getSubimage(j * width, i * height, width, height);
-			}
-		}
-
-		Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[0], null);
-		ImagePattern imgPat = new ImagePattern(bruteZombieImg);
 		
-		player = new Player(imgPat);
+		
+		player = new Player();
 		foreground.getChildren().add(player);
 		
 
@@ -82,23 +60,13 @@ public class ClientDemo extends Application {
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer animator = new AnimationTimer() {
+			
 			public void handle(long currentNanoTime) {
-				dealWithKeys();
+				
 				player.update(1);
 			}
 		};
 		animator.start();
-	}
-
-	private void dealWithKeys() {
-		
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			zombieImage++;
-			Image bruteZombieImg = SwingFXUtils.toFXImage(sprites[zombieImage % sprites.length], null);
-			ImagePattern imgPat = new ImagePattern(bruteZombieImg);
-			player.setFill(imgPat);
-			keysPressed.remove(KeyCode.SPACE);
-		}
 	}
 
 }
