@@ -1,4 +1,6 @@
 package com.zaxxon.world.mobile.enemies;
 
-public class Bullet {
+import com.zaxxon.world.mobile.MovableSprite;
+
+public class Bullet extends MovableSprite {
 }
