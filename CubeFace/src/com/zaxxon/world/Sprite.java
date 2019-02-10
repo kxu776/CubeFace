@@ -31,6 +31,11 @@ public class Sprite extends Rectangle {
 	public Sprite(int width, int height, int x, int y) {
 		init(width, height, x, y);
 	}
+	
+	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image){
+		init(width, height, x, y);
+		this.image = _image;
+	}
 
 	private void init(int width, int height, int x, int y) {
 		this.setId(Integer.toString(idCounter));
