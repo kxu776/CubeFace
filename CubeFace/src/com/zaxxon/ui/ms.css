@@ -1,7 +1,7 @@
 .root {
     -fx-background-image: url(gui-prototypes.png)}
 
-#start {
+#button {
     -fx-background-color: #e1f4b3;
     -fx-background-image: url(start.png);
     -fx-background-size: 60%;
