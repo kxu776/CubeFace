@@ -30,9 +30,15 @@ public class Player extends MovableSprite{
 	private BufferedImage[] sprites;
 	private ImagePattern[] imgPats;
 	
+	double deltaTime;
+	
 	Vector2 inputDir = new Vector2();
+	Vector2 moveDir = new Vector2();
 	Vector2 velocity = new Vector2();
-	double speed = 5.0;
+	final double maxSpeed = 5.0;
+	final double acceleration = 1.2;
+	final double deceleration = -0.6;
+	double currentSpeed = 0;
 	
     public Player() {
         
@@ -53,9 +59,11 @@ public class Player extends MovableSprite{
     
     public void update(double time) {
     	
+    	deltaTime = time;
+    	
     	movement();
 		
-		Vector2 toMove = new Vector2 (velocity.x * time, velocity.y * time);
+		Vector2 toMove = new Vector2 (velocity.x * deltaTime, velocity.y * deltaTime);
 		this.translate(toMove);
 		
 		collision();
@@ -65,6 +73,9 @@ public class Player extends MovableSprite{
     private void movement() {
     	
     	inputDir = new Vector2();
+    	
+    	
+    	//ordering swaps to handle diagonal facing directions in the correct order
     	
     	if (facingDir == FacingDir.up || facingDir == FacingDir.down) {
     		
@@ -79,7 +90,20 @@ public class Player extends MovableSprite{
     	}
     	
     	inputDir = Vector2.normalise(inputDir);
-    	velocity = new Vector2 (inputDir.x * speed, inputDir.y * speed);
+    	
+    	
+    	if (Vector2.getMagnitude(inputDir) > 0) {
+    		
+    		currentSpeed = Math.min(maxSpeed, currentSpeed + acceleration * deltaTime);
+    		moveDir = inputDir;
+    	}
+    	
+    	else {
+    		
+    		currentSpeed = Math.max(0, currentSpeed + deceleration * deltaTime);
+    	}
+    	
+    	velocity = new Vector2 (moveDir.x * currentSpeed, moveDir.y * currentSpeed);
     }
     
     private void moveX() {
