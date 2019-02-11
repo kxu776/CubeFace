@@ -85,14 +85,14 @@ public class Client extends Thread {
 					ClientSender data = (ClientSender) in.readObject();
 					System.out.println("Health is: " +  data.getHealth());
 					System.out.println("Object tested, closing socket");
-					socket.close();
-					running = false;
-					try {
-						bais.close();
-						in.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					//socket.close();
+				//	running = false;
+//					try {
+//						bais.close();
+//						in.close();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
 			
 				} catch (ClassNotFoundException | IOException e) {
 					e.printStackTrace();

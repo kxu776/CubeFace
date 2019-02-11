@@ -67,17 +67,16 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	
-				process(packet);
-			
-				
+
+			process(packet);
+
 		}
 	}
 
-/*	private void editObj(DatagramPacket packet) {
+	private void editObj(DatagramPacket packet) {
 		int tempPort = packet.getPort();
 		InetAddress tempIP = packet.getAddress();
-		
+
 		try {
 			System.out.println("Object recieved ");
 			bais = new ByteArrayInputStream(packet.getData());
@@ -85,54 +84,61 @@ public class Server {
 			ClientSender data = (ClientSender) in.readObject();
 			System.out.println(data.getHealth());
 			data.setHealth(75);
-			
-			sendPlayerObj(data, tempIP, tempPort );
-	
+
+			sendPlayerObj(data, tempIP, tempPort);
+
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-	}*/
-	
-	/*private void sendPlayerObj(ClientSender client,InetAddress inet,int port) {
+	}
+
+	private void sendPlayerObj(ClientSender client, InetAddress inet, int port) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			out = new ObjectOutputStream(baos);
 			out.writeObject(client);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-			send(playerinfo,inet,port);
+			send(playerinfo, inet, port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 
 	private void broadcastPlayers(DatagramPacket packet) {
-			//editObj(packet);
-			int tempPort = packet.getPort();
-			InetAddress tempIP = packet.getAddress();
-			send(packet.getData(), tempIP, tempPort);
+		// editObj(packet);
+		int tempPort = packet.getPort();
+		InetAddress tempIP = packet.getAddress();
+		
+		//clients.remove(tempIP);
+		clients.remove(tempIP, packet);
+		
+		for (Map.Entry<InetAddress, Integer> entry : clients.entrySet()){
+			send(packet.getData(), entry.getKey(), entry.getValue());
+		}
+		clients.put(tempIP, tempPort);
 	}
 
 	private void process(DatagramPacket packet) {
 		byte[] data = packet.getData();
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
-		
-		if (clients.containsKey(address)){
-			System.out.println("Sending Received Obj to client");
+
+		if (clients.containsKey(address)) {
+			System.out.println("Sending Received Obj to clients");
 			broadcastPlayers(packet);
-			System.out.println("Packet Received");
-			serverSocket.close();
-			System.out.println("Closed socket?");
-			listening = false;
-		}
-		else {
+		//	System.out.println("Packet Received");
+		//	serverSocket.close();
+			//System.out.println("Closed socket?");
+			//listening = false;
+		} else if (new String(data).trim().equalsIgnoreCase("ConnectionPacket")) {
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 			clients.put(address, port);
-		send("Connected".getBytes(), address, port);
+			System.out.println("Sending connection to clients");
+			send("Connected".getBytes(), address, port);
 		}
 
 	}
@@ -140,7 +146,6 @@ public class Server {
 	public InetAddress getServerIP() {
 		return serverSocket.getInetAddress();
 	}
-	
 
 	public void close() {
 		serverSocket.close();

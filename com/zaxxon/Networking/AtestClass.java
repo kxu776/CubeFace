@@ -1,4 +1,4 @@
-package com.zaxxon.networking;
+package com.zaxxon.Networking;
 
 public class AtestClass {
 	public static void main(String[] args) {
