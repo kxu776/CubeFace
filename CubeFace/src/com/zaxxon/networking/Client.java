@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Client extends Thread {
@@ -77,7 +78,7 @@ public class Client extends Thread {
 	}
 
 	//Takes ArrayList of Sprites, returns ArrayList of attribute strings of sprites
-	public static ArrayList<String> spritesToString(ArrayList<Sprite> sprites){
+	public static ArrayList<String> spritesToString(LinkedList<Sprite> sprites){
 		ArrayList<String> attributeStrings = new ArrayList<>();
 		for(Sprite sprite: sprites){
 			attributeStrings.add(mapToString(sprite.getAttributes()));
@@ -86,7 +87,7 @@ public class Client extends Thread {
 	}
 
 	//Parses hashmap of sprite attributes to string. Can then be converted to packet via byte array.
-	public static String mapToString(LinkedHashMap<String, Object> attributes){
+	private static String mapToString(LinkedHashMap<String, Object> attributes){
 		String outputString = "";
 		for(Map.Entry<String, Object> value: attributes.entrySet()){
 			outputString += String.valueOf(value.getValue());

@@ -100,5 +100,4 @@ public class Sprite extends Rectangle {
 		attributes.put("id", this.getId());
 		return attributes;
 	}
-
 }

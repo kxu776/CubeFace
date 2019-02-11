@@ -3,6 +3,7 @@ package com.zaxxon.client;
 import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
+import com.zaxxon.networking.Client;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 
@@ -28,6 +29,7 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	private Client networkingClient;
 
 	public static void main(String[] args) {
 //		new ClientMain().start();
@@ -70,6 +72,12 @@ public class ClientMain extends Application {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+
+		/* ---NETWORK INTEGRATION
+		networkingClient = new Client();
+
+		*/
+
 		Scene renderedScene = new Scene(root, WIDTH, HEIGHT);
 		primaryStage.setScene(renderedScene);
 		primaryStage.show();
@@ -93,6 +101,8 @@ public class ClientMain extends Application {
 			public void handle(long currentNanoTime) {
 				transformWorld();
 				dealWithKeyInput();
+				sendNetworkUpdate();
+
 			}
 		};
 		mainGameLoop.start();
@@ -148,4 +158,10 @@ public class ClientMain extends Application {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
 	}
+
+	public void sendNetworkUpdate(){
+		networkingClient.spritesToString(spriteList);	//Compiles ArrayList<string> of concatenated sprite attributes.
+		//actually send the packets here
+	}
+
 }
