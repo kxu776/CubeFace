@@ -1,4 +1,4 @@
-package com.zaxxon.Networking;
+package com.zaxxon.networking;
 
 import java.io.IOException;
 import java.io.Serializable;

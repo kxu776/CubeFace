@@ -1,4 +1,4 @@
-package com.zaxxon.Networking;
+package com.zaxxon.networking;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
