@@ -11,7 +11,7 @@ public class Enemy extends MovableSprite{
 
     private void trackPlayer(int pX, int pY){
         if(this.getX()>pX){
-            this.
+            this.setX()
         }
 
     }
