@@ -6,6 +6,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
+import com.zaxxon.world.mobile.Player;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -30,6 +31,7 @@ public class ClientMain extends Application {
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
 	private Client networkingClient;
+	private Player player;
 
 	public static void main(String[] args) {
 //		new ClientMain().start();
@@ -71,6 +73,9 @@ public class ClientMain extends Application {
 		root.getChildren().add(overlay);
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
+		
+		player = new Player();
+		foreground.getChildren().add(player);
 
 
 		/* ---NETWORK INTEGRATION
@@ -100,6 +105,7 @@ public class ClientMain extends Application {
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				transformWorld();
+				player.update(1);
 				dealWithKeyInput();
 				sendNetworkUpdate();
 
@@ -118,16 +124,16 @@ public class ClientMain extends Application {
 	}
 
 	private void dealWithKeyInput() {
-		if (Input.isKeyPressed(KeyCode.UP)) {
+		if (Input.isKeyPressed(KeyCode.W)) {
 			camera.setPositionY(camera.getPositionY() + 1);
 		}
-		if (Input.isKeyPressed(KeyCode.DOWN)) {
+		if (Input.isKeyPressed(KeyCode.S)) {
 			camera.setPositionY(camera.getPositionY() - 1);
 		}
-		if (Input.isKeyPressed(KeyCode.LEFT)) {
+		if (Input.isKeyPressed(KeyCode.A)) {
 			camera.setPositionX(camera.getPositionX() + 1);
 		}
-		if (Input.isKeyPressed(KeyCode.RIGHT)) {
+		if (Input.isKeyPressed(KeyCode.D)) {
 			camera.setPositionX(camera.getPositionX() - 1);
 		}
 		if (Input.isKeyPressed(KeyCode.Q)) {
