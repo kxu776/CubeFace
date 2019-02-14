@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
+import com.zaxxon.ui.MainMenu2;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 
@@ -22,7 +23,7 @@ public class ClientMain extends Application {
 
 //	private Thread thread;
 //	private boolean running = false;
-	private Group root;
+	private Group grpGame;
 	private Group world;
 	private Group background;
 	private Group foreground;
@@ -55,10 +56,12 @@ public class ClientMain extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		initialise();
 
-		primaryStage.setTitle("Cubeface");
+		primaryStage.setTitle("CubeFace");
 
-		root = new Group();
-		root.setId("root");
+
+
+		grpGame = new Group();
+		grpGame.setId("grpGame");
 		world = new Group();
 		world.setId("world");
 		background = new Group();
@@ -67,8 +70,8 @@ public class ClientMain extends Application {
 		foreground.setId("foreground");
 		overlay = new Group();
 		overlay.setId("overlay");
-		root.getChildren().add(world);
-		root.getChildren().add(overlay);
+		grpGame.getChildren().add(world);
+		grpGame.getChildren().add(overlay);
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
@@ -78,12 +81,23 @@ public class ClientMain extends Application {
 
 		*/
 
-		Scene renderedScene = new Scene(root, WIDTH, HEIGHT);
-		primaryStage.setScene(renderedScene);
+		//make a rendered scene to hold the game
+		Scene renderedScene = new Scene(grpGame, WIDTH, HEIGHT);
+
+
+		//make a main menu
+		MainMenu2 mainMenu2 = new MainMenu2();
+		Scene mainmenu = mainMenu2.makeMainMenu(renderedScene, primaryStage);
+
+		//make an audio screen
+		//make a help screen
+
+		primaryStage.setMaximized(true);
+		primaryStage.setScene(mainmenu);
 		primaryStage.show();
 
-		root.setFocusTraversable(true);
-		root.requestFocus();
+		grpGame.setFocusTraversable(true);
+		grpGame.requestFocus();
 
 		Input.addHandlers(primaryStage);
 
