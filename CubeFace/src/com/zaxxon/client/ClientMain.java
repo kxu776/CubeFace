@@ -8,6 +8,7 @@ import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
+import com.zaxxon.world.mobile.Player;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -30,6 +31,7 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	private Player player;
 	private Client networkingClient;
 	private Player player;
 
@@ -73,7 +75,7 @@ public class ClientMain extends Application {
 		root.getChildren().add(overlay);
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
-		
+
 		player = new Player();
 		foreground.getChildren().add(player);
 
@@ -108,6 +110,11 @@ public class ClientMain extends Application {
 				player.update(1);
 				dealWithKeyInput();
 				sendNetworkUpdate();
+				updateEnemies(player.getX(), player.getY());
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+				}
 
 			}
 		};
@@ -168,6 +175,13 @@ public class ClientMain extends Application {
 	public void sendNetworkUpdate(){
 		networkingClient.spritesToString(spriteList);	//Compiles ArrayList<string> of concatenated sprite attributes.
 		//actually send the packets here
+	}
+
+
+	public void updateEnemies(double pX, double pY){
+		//Iterates through enemies, updates pos relative to player
+		// TODO: How to collect enemies (ie as a seperate collection from sprites
+				//How does movement work (absolute movement vs velocity based).
 	}
 
 }
