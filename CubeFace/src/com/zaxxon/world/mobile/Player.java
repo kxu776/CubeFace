@@ -16,12 +16,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.ImagePattern;
 
 public class Player extends MovableSprite{
-
-	enum FacingDir {
-		
-		up, down, left, right
-	}
-	
 	FacingDir facingDir; 
 	
 	int width = 64;

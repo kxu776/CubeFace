@@ -13,6 +13,10 @@ public class MovableSprite extends Sprite {
 	private double damage;
 	public boolean controllable;
 
+	protected enum FacingDir {
+		up, down, left, right
+	}
+
 	public MovableSprite() {
 		velocityX = 0.0;
 		velocityY = 0.0;

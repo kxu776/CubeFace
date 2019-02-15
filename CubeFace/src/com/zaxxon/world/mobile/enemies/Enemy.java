@@ -16,12 +16,7 @@ import static java.lang.Math.abs;
 
 public class Enemy extends MovableSprite {
 
-    enum FacingDir {
-
-        up, down, left, right
-    }
-
-    Enemy.FacingDir facingDir;
+    FacingDir facingDir;
 
     int width = 64;
     int height = 64;
