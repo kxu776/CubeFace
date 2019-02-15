@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static java.lang.Math.abs;
+
 public class Enemy extends MovableSprite {
 
     enum FacingDir {
@@ -34,13 +36,15 @@ public class Enemy extends MovableSprite {
     Vector2 inputDir = new Vector2();
     Vector2 moveDir = new Vector2();
     Vector2 velocity = new Vector2();
-    final double maxSpeed = 5.0;
+    final double maxSpeed = 1.5;
     final double acceleration = 1.2;
     final double deceleration = -0.6;
     double currentSpeed = 0;
 
-    public Enemy() {
+    public Enemy(double spawnX, double spawnY) {
         controllable = false;
+        this.setX(spawnX);
+        this.setY(spawnY);
         init();
     }
 
@@ -69,12 +73,12 @@ public class Enemy extends MovableSprite {
 
         inputDir = new Vector2();
         //ordering swaps to handle diagonal facing directions in the correct order
-        if (facingDir == Enemy.FacingDir.up || facingDir == Enemy.FacingDir.down) {
-            moveX();
+        if (abs(pX-this.getX())>abs(pY-this.getY())) {
             moveY();
+            moveX();
         } else {
-            moveY();
             moveX();
+            moveY();
         }
         inputDir = Vector2.normalise(inputDir);
 

@@ -32,7 +32,6 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
-	private Player player;
 	private Client networkingClient;
 	private Player player;
 
