@@ -10,6 +10,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
+import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.embed.swing.SwingFXUtils;
@@ -49,7 +50,8 @@ public class ClientDemo extends Application {
 		
 		player = new Player();
 		foreground.getChildren().add(player);
-		
+		Enemy enemy = new Enemy(1,1);
+		foreground.getChildren().add(enemy);
 
 		root.setFocusTraversable(true);
 		root.requestFocus();
@@ -64,6 +66,7 @@ public class ClientDemo extends Application {
 			public void handle(long currentNanoTime) {
 				
 				player.update(1);
+				enemy.update(1, player.getX(), player.getY());
 			}
 		};
 		animator.start();
