@@ -9,6 +9,7 @@ import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
 import com.zaxxon.world.mobile.Player;
+import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -180,8 +181,11 @@ public class ClientMain extends Application {
 
 	public void updateEnemies(double pX, double pY){
 		//Iterates through enemies, updates pos relative to player
-		// TODO: How to collect enemies (ie as a seperate collection from sprites
-				//How does movement work (absolute movement vs velocity based).
+		for(Sprite sprite: spriteList){
+			if(sprite.getClass()== Enemy.class){  //Typechecks for enemies
+				sprite.update();
+			}
+		}
 	}
 
 }
