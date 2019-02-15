@@ -1,12 +1,10 @@
 package com.zaxxon.world.mobile.enemies;
 
 import com.zaxxon.gameart.SpriteImages;
-import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.mobile.MovableSprite;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.ImagePattern;
 
 import javax.imageio.ImageIO;
@@ -15,19 +13,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class Enemy extends MovableSprite {
-
-    /*
-    public Enemy(){
-
-
-    }
-
-    private void trackPlayer(int pX, int pY){
-        if(this.getX()>pX){
-
-        }
-
-    }*/
 
     enum FacingDir {
 
@@ -44,7 +29,7 @@ public class Enemy extends MovableSprite {
 
     double deltaTime;
 
-    double pX, pY; //Can be declared static to save overhead.
+    double pX, pY; //Player's coords (Can be declared static to save overhead).
 
     Vector2 inputDir = new Vector2();
     Vector2 moveDir = new Vector2();
@@ -103,29 +88,23 @@ public class Enemy extends MovableSprite {
     }
 
     private void moveX() {
-
-        if (Input.isKeyPressed(KeyCode.LEFT) && Input.isKeyPressed(KeyCode.RIGHT)) {
-
-            inputDir.x = 0;
-        } else if (Input.isKeyPressed(KeyCode.LEFT)) {
-            inputDir.x = -1;
-            facingDir = Enemy.FacingDir.left;
-        } else if (Input.isKeyPressed(KeyCode.RIGHT)) {
+        if (this.getX()<pX) {  //enemy is to the left of the player
             inputDir.x = 1;
             facingDir = Enemy.FacingDir.right;
-        } else inputDir.x = 0;
+        } else if (this.getX()>pX) {    //enemy is to the right of the player
+            inputDir.x = -1;
+            facingDir = Enemy.FacingDir.left;
+        } else inputDir.x = 0;      //enemy is horizontally inline with the player.
     }
 
     private void moveY() {
-        if (Input.isKeyPressed(KeyCode.DOWN) && Input.isKeyPressed(KeyCode.UP)) {
-            inputDir.y = 0;
-        } else if (Input.isKeyPressed(KeyCode.DOWN)) {
+        if (this.getY()<pY) {  //enemy is above the player
             inputDir.y = 1;
             facingDir = Enemy.FacingDir.down;
-        } else if (Input.isKeyPressed(KeyCode.UP)) {
+        } else if (this.getY()>pY) {    //enemy is below the player
             inputDir.y = -1;
             facingDir = Enemy.FacingDir.up;
-        } else inputDir.y = 0;
+        } else inputDir.y = 0;      //enemy is vertically inline with the player.
     }
 
     private void collision() {
