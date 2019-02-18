@@ -107,6 +107,7 @@ public class Enemy extends MovableSprite {
         } else inputDir.y = 0;      //enemy is vertically inline with the player.
     }
 
+
     private void collision() {
 
 
