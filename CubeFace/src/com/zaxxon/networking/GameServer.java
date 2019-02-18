@@ -1,4 +1,4 @@
-package com.zaxxon.Networking;
+package com.zaxxon.networking;
 
 public class GameServer {
 

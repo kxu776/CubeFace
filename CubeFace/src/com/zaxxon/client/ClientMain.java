@@ -6,7 +6,10 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
+import com.zaxxon.world.mobile.Player;
 
+import com.zaxxon.world.mobile.Player;
+import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -29,6 +32,7 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	private Player player;
 	private Client networkingClient;
 
 	public static void main(String[] args) {
@@ -72,6 +76,9 @@ public class ClientMain extends Application {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+		player = new Player();
+		foreground.getChildren().add(player);
+
 
 		/* ---NETWORK INTEGRATION
 		networkingClient = new Client();
@@ -100,8 +107,14 @@ public class ClientMain extends Application {
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				transformWorld();
+				player.update(1);
 				dealWithKeyInput();
 				sendNetworkUpdate();
+				updateEnemies(player.getX(), player.getY());
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+				}
 
 			}
 		};
@@ -118,16 +131,16 @@ public class ClientMain extends Application {
 	}
 
 	private void dealWithKeyInput() {
-		if (Input.isKeyPressed(KeyCode.UP)) {
+		if (Input.isKeyPressed(KeyCode.W)) {
 			camera.setPositionY(camera.getPositionY() + 1);
 		}
-		if (Input.isKeyPressed(KeyCode.DOWN)) {
+		if (Input.isKeyPressed(KeyCode.S)) {
 			camera.setPositionY(camera.getPositionY() - 1);
 		}
-		if (Input.isKeyPressed(KeyCode.LEFT)) {
+		if (Input.isKeyPressed(KeyCode.A)) {
 			camera.setPositionX(camera.getPositionX() + 1);
 		}
-		if (Input.isKeyPressed(KeyCode.RIGHT)) {
+		if (Input.isKeyPressed(KeyCode.D)) {
 			camera.setPositionX(camera.getPositionX() - 1);
 		}
 		if (Input.isKeyPressed(KeyCode.Q)) {
@@ -162,6 +175,16 @@ public class ClientMain extends Application {
 	public void sendNetworkUpdate(){
 		networkingClient.spritesToString(spriteList);	//Compiles ArrayList<string> of concatenated sprite attributes.
 		//actually send the packets here
+	}
+
+
+	public void updateEnemies(double pX, double pY){
+		//Iterates through enemies, updates pos relative to player
+		for(Sprite sprite: spriteList){
+			if(sprite.getClass()== Enemy.class){  //Typechecks for enemies
+				sprite.update();
+			}
+		}
 	}
 
 }
