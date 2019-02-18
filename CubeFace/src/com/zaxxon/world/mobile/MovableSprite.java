@@ -66,6 +66,11 @@ public class MovableSprite extends Sprite {
 	}
 
 
+	public Boolean isAlive(){
+		return isAlive;
+	}
+
+
 	public String toString() {
 		return super.toString() + ", Velocity: [" + velocityX + "," + velocityY + "]";
 	}
