@@ -66,7 +66,7 @@ public class ClientDemo extends Application {
 			public void handle(long currentNanoTime) {
 				
 				player.update(1);
-				enemy.update(1, player.getX(), player.getY());
+				enemy.update(1, player);
 			}
 		};
 		animator.start();
