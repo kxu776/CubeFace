@@ -10,6 +10,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Client extends Thread {
 
@@ -23,18 +27,21 @@ public class Client extends Thread {
 	private ObjectInputStream in = null;
 	private ByteArrayOutputStream baos;
 	private ByteArrayInputStream bais;
-	private ClientSender client;
 	private boolean running = false;
+	private String player;
 
-	public Client(String host, int port) {
+	public Client(String host, int port, String player) {
 		// port refers to port of the server
 		this.port = port;
 		this.ipAddress = host;
+		this.player = player;
 	}
 
 	public void run() {
 		running = true;
 		connect();
+		ClientSender cli = new ClientSender(100, 100, 100);
+		
 		while (running) {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
@@ -44,7 +51,7 @@ public class Client extends Thread {
 				e.printStackTrace();
 			}
 			getPlayerObj(packet);
-			sendPlayerObj();
+			
 		}
 	}
 
@@ -63,65 +70,80 @@ public class Client extends Thread {
 	}
 
 	private void sendConnectionPacket() {
-		byte[] data = "ConnectionPacket".getBytes();
+		byte[] data = ("/C/" + player).getBytes();
 		send(data);
 	}
 
 	private void getPlayerObj(DatagramPacket packet) {
 		System.out.println("Incoming from server......");
-		if (packet.getData() != null) {
-			String message = new String (packet.getData());
-			
-			if (message.trim().equalsIgnoreCase("Connected")) { 
-				System.out.println("Server >: " + message);
-				return;
-			}
-			
-			else {
-				try {
-					System.out.println("Object recieved ");
-					bais = new ByteArrayInputStream(packet.getData());
-					in = new ObjectInputStream(bais);
-					ClientSender data = (ClientSender) in.readObject();
-					System.out.println("Health is: " +  data.getHealth());
-					System.out.println("Object tested, closing socket");
-					//socket.close();
-				//	running = false;
-//					try {
-//						bais.close();
-//						in.close();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-			
-				} catch (ClassNotFoundException | IOException e) {
-					e.printStackTrace();
-				}
-			}
+
+		String message = new String(packet.getData());
+
+		if (message.trim().startsWith("/c/")) {
+			System.out.println("Server >: " + message.substring(3));
+			return;
 		}
-				
-		else {
-			System.out.println("No, closing socket");
-			socket.close();
-			running = false;
+
+		else if (message.startsWith("/s/")) {
+			message = message.substring(3, message.length());
+			System.out.println(message);
+			return;
+		}
+
+		else 
 			try {
-				bais.close();
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+				// Here is where we should update the client.
+				bais = new ByteArrayInputStream(packet.getData());
+				in = new ObjectInputStream(bais);
+
+				ClientSender data = (ClientSender) in.readObject();
+				System.out.println("Health is: " + data.getHealth());
+				System.out.println("Position is:" +data.getX() +" " + data.getY());
+//				socket.close();
+//				running = false;
+//				try {
+//					bais.close();
+//					in.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//			}
+
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
 		}
+		
 	}
 
-	private void sendPlayerObj() {
-		client = new ClientSender(100, 100, 100);
+	
+
+	public void sendPlayerObj(ClientSender c) {
 		baos = new ByteArrayOutputStream();
 		try {
 			out = new ObjectOutputStream(baos);
-			out.writeObject(client);
+			out.writeObject(c);
 			out.flush();
-			byte[] playerinfo = baos.toByteArray();
+			byte[] playerinfo =  baos.toByteArray();
+			
 			send(playerinfo);
+			Thread.sleep(20);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void disconnect() {
+		send("/d/.".getBytes());
+
+		System.out.println("No, closing socket");
+		socket.close();
+		running = false;
+		try {
+			bais.close();
+			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
