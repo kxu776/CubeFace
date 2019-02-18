@@ -34,7 +34,6 @@ public class ClientMain extends Application {
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
 	private Player player;
 	private Client networkingClient;
-	private Player player;
 
 	public static void main(String[] args) {
 //		new ClientMain().start();
