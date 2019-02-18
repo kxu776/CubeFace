@@ -55,26 +55,12 @@ public class Enemy extends MovableSprite {
     }
 
     public void update(double time, Player player) {
-        pX = player.getX();
-        pY = player.getY();
-        pWidth = player.getWidth();
-        pHeight = player.getHeight();
         damage(player);
         deltaTime = time;
         movement(pX, pY);
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         this.translate(toMove);
 
-        collision();
-        draw();
-    }
-
-    public void update(double time) {
-        deltaTime = time;
-        //damage();
-        movement(pX, pY);
-        Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
-        this.translate(toMove);
         collision();
         draw();
     }
@@ -124,8 +110,9 @@ public class Enemy extends MovableSprite {
     private void collision() {
     }
 
+    //Inflicts damage to player if collision occurs
     private void damage(Player player){
-        if(this.getBoundsInLocal().intersects(pX,pY,pWidth,pHeight)){   //collision check
+        if(this.getBoundsInLocal().intersects(player.getX(),player.getY(),player.getWidth(),player.getHeight())){   //collision check
             player.takeDamage(this.damage);
             System.out.println("Health: " + String.valueOf(player.getHealth()));
         }
@@ -160,7 +147,6 @@ public class Enemy extends MovableSprite {
     }
 
     private void getSpriteImages() {
-
         BufferedImage enemySS = null;
 
         try {

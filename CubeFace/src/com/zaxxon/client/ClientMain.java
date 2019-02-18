@@ -183,13 +183,6 @@ public class ClientMain extends Application {
 		boolean updatedPlayerPos = false;
 		for(Sprite sprite: spriteList){
 			if(sprite.getClass()==Enemy.class){  //Typechecks for enemies
-				/*
-				if(!updatedPlayerPos){				//Updates static player attributes in Enemy class once to reduce overhead.
-					sprite.update(player);
-					updatedPlayerPos=true;
-				}
-				else{ sprite.update();}
-				*/
 				sprite.update(player);
 			}
 		}
