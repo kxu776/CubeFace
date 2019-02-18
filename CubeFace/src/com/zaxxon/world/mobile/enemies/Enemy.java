@@ -26,9 +26,9 @@ public class Enemy extends MovableSprite {
     private BufferedImage[] sprites;
     private ImagePattern[] imgPats;
 
-    double deltaTime;
+    protected static double pX, pY;
 
-    static double pX, pY, pWidth, pHeight; //Player's coords (Can be declared static to save overhead).
+    double deltaTime;
 
     Vector2 inputDir = new Vector2();
     Vector2 moveDir = new Vector2();
@@ -55,6 +55,8 @@ public class Enemy extends MovableSprite {
     }
 
     public void update(double time, Player player) {
+        pX = player.getX();
+        pY = player.getY();
         damage(player);
         deltaTime = time;
         movement(pX, pY);
