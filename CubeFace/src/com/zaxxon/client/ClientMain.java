@@ -180,9 +180,17 @@ public class ClientMain extends Application {
 
 	public void updateEnemies(double pX, double pY){
 		//Iterates through enemies, updates pos relative to player
+		boolean updatedPlayerPos = false;
 		for(Sprite sprite: spriteList){
-			if(sprite.getClass()== Enemy.class){  //Typechecks for enemies
-				sprite.update();
+			if(sprite.getClass()==Enemy.class){  //Typechecks for enemies
+				/*
+				if(!updatedPlayerPos){				//Updates static player attributes in Enemy class once to reduce overhead.
+					sprite.update(player);
+					updatedPlayerPos=true;
+				}
+				else{ sprite.update();}
+				*/
+				sprite.update(player);
 			}
 		}
 	}

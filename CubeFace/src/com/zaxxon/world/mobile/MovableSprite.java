@@ -10,8 +10,8 @@ public class MovableSprite extends Sprite {
 	private double velocityY;
 	private double movementSpeed;
 	private double health;
-	private double damage;
 	public boolean controllable;
+	protected boolean isAlive;
 
 	protected enum FacingDir {
 		up, down, left, right
@@ -22,7 +22,6 @@ public class MovableSprite extends Sprite {
 		velocityY = 0.0;
 		movementSpeed = 0.0;
 		health = 0.0;
-		damage = 0.0;
 	}
 	
 	//methods for player
@@ -43,29 +42,22 @@ public class MovableSprite extends Sprite {
 		this.setX(this.getX() + v.x);
 		this.setY(this.getY() + v.y);
 	}
-	
-	//methods not used by player
-
-	public void setVelocity(double x, double y) {
-		velocityX = x;
-		velocityY = y;
-	}
-
-	public void addVelocity(double x, double y) {
-		velocityX += x;
-		velocityY += y;
-	}
 
 	public void update(double time) {
 		this.setX(this.getX() + velocityX * time);
 		this.setY(this.getY() + velocityY * time);
 	}
 
-	public void takeDamage(int damage) {
-		health -= damage;
+	public void takeDamage(double damage) {
+		if(health-damage>0.0){
+			health -= damage;
+		}else{
+			health = 0.0;
+			isAlive = false;
+		}
 	}
 
-	public void heal(int healing) {
+	public void heal(double healing) {
 		health += healing;
 	}
 
@@ -73,21 +65,6 @@ public class MovableSprite extends Sprite {
 		return health;
 	}
 
-	public void moveLeft() {
-		addVelocity(-50, 0);
-	}
-
-	public void moveUp() {
-		addVelocity(0, 50);
-	}
-
-	public void moveRight() {
-		addVelocity(50, 0);
-	}
-
-	public void moveDown() {
-		addVelocity(0, -50);
-	}
 
 	public String toString() {
 		return super.toString() + ", Velocity: [" + velocityX + "," + velocityY + "]";
@@ -99,7 +76,6 @@ public class MovableSprite extends Sprite {
 		attributes.put("velocityX", velocityX);
 		attributes.put("velocityY", velocityY);
 		attributes.put("Health", health);
-		attributes.put("Damage", damage);
 		return attributes;
 	}
 }

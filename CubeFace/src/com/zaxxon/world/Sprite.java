@@ -102,4 +102,6 @@ public class Sprite extends Rectangle {
 	}
 
 	public void update(){}			//abstract method
+
+	public void update(Sprite player){};
 }

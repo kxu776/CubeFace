@@ -45,8 +45,10 @@ public class Player extends MovableSprite{
     	
     	getSpriteImages();
     	
-    	this.setWidth(width);
-        this.setHeight(height);
+    	setWidth(width);
+        setHeight(height);
+        heal(100.0);
+        isAlive = true;
         
         facingDir = FacingDir.up;
     }
@@ -174,9 +176,9 @@ public class Player extends MovableSprite{
     		
     	default:
     		//error
-    	
     	}
     }
+
     
     private void getSpriteImages() {
     	

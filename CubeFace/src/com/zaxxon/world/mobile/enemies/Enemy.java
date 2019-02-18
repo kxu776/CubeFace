@@ -3,6 +3,7 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.mobile.MovableSprite;
+import com.zaxxon.world.mobile.Player;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -11,6 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 
 import static java.lang.Math.abs;
 
@@ -26,7 +28,7 @@ public class Enemy extends MovableSprite {
 
     double deltaTime;
 
-    double pX, pY; //Player's coords (Can be declared static to save overhead).
+    static double pX, pY, pWidth, pHeight; //Player's coords (Can be declared static to save overhead).
 
     Vector2 inputDir = new Vector2();
     Vector2 moveDir = new Vector2();
@@ -35,6 +37,7 @@ public class Enemy extends MovableSprite {
     final double acceleration = 1.2;
     final double deceleration = -0.6;
     double currentSpeed = 0;
+    private double damage = 0.1;
 
     public Enemy(double spawnX, double spawnY) {
         controllable = false;
@@ -45,21 +48,33 @@ public class Enemy extends MovableSprite {
 
     private void init() {
         getSpriteImages();
-
         this.setWidth(width);
         this.setHeight(height);
-
         facingDir = Enemy.FacingDir.up;
+        isAlive = true;
     }
 
-    public void update(double time, double pX, double pY) {
-        this.pX = pX;
-        this.pY = pY;
+    public void update(double time, Player player) {
+        pX = player.getX();
+        pY = player.getY();
+        pWidth = player.getWidth();
+        pHeight = player.getHeight();
+        damage(player);
         deltaTime = time;
         movement(pX, pY);
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         this.translate(toMove);
 
+        collision();
+        draw();
+    }
+
+    public void update(double time) {
+        deltaTime = time;
+        //damage();
+        movement(pX, pY);
+        Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
+        this.translate(toMove);
         collision();
         draw();
     }
@@ -107,8 +122,13 @@ public class Enemy extends MovableSprite {
     }
 
     private void collision() {
+    }
 
-
+    private void damage(Player player){
+        if(this.getBoundsInLocal().intersects(pX,pY,pWidth,pHeight)){   //collision check
+            player.takeDamage(this.damage);
+            System.out.println("Health: " + String.valueOf(player.getHealth()));
+        }
     }
 
     public void draw() {
@@ -172,5 +192,12 @@ public class Enemy extends MovableSprite {
             Image img = SwingFXUtils.toFXImage(sprites[i], null);
             imgPats[i] = new ImagePattern(img);
         }
+    }
+
+    @Override
+    public LinkedHashMap<String, Object> getAttributes() {
+        LinkedHashMap<String,Object> attributes =  super.getAttributes();
+        attributes.put("Damage", damage);
+        return attributes;
     }
 }
