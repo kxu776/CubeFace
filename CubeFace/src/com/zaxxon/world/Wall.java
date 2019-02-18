@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.zaxxon.gameart.SpriteImages;
 
 import javafx.geometry.Bounds;
+import javafx.util.Pair;
 
 public class Wall extends Sprite {
 	
@@ -16,6 +17,8 @@ public class Wall extends Sprite {
 	public static final int WALL_VERTICAL = 3;
 	public static final int WALL_VERTICAL_END = 4;
 	
+	private int wallType;
+	
 	public Wall() {
 		initialise(0);
 	}
@@ -25,9 +28,14 @@ public class Wall extends Sprite {
 	}
 	
 	private void initialise(int wallType) {
+		this.wallType = wallType;
 		addNewWall(this);
 		this.setImageSpriteSheet(SpriteImages.WALL_SPRITESHEET_IMAGE, 1, 5);
 		this.setImageFromSpriteSheet(wallType);
+	}
+	
+	public int getWallType() {
+		return wallType;
 	}
 	
 	private static void addNewWall(Wall w) {
@@ -45,6 +53,16 @@ public class Wall extends Sprite {
 			allBounds.add(w.getBoundsInParent());
 		}
 		return allBounds;
+	}
+	
+	public static ArrayList<Pair<Integer, Bounds>> getAllWallBoundsWithType(){
+		ArrayList<Pair<Integer, Bounds>> allBoundPairs = new ArrayList<Pair<Integer, Bounds>>();
+		ArrayList<Bounds> allBounds = getAllWallBounds();
+		ArrayList<Wall> allWalls = getAllWalls();
+		for (int i = 0; i < allWalls.size(); i++) {
+			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allBounds.get(i)));
+		}
+		return allBoundPairs;
 	}
 
 }
