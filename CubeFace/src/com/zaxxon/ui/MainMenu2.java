@@ -163,7 +163,6 @@ public class MainMenu2 {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
 
-
         mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
 
 

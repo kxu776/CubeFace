@@ -28,19 +28,40 @@ public class JoinGamePopup {
         GridPane.setConstraints(label, 0, 0);
 
         //***********ENTER DETAILS
+
+        //player name
+
         Label name = new Label("Player Name:");
         GridPane.setConstraints(name,0,1);
         TextField nameField = new TextField();
         GridPane.setConstraints(nameField, 1, 1);
+
+        //server port
 
         Label port = new Label("Server Port:");
         GridPane.setConstraints(port, 0, 2);
         TextField portField = new TextField();
         GridPane.setConstraints(portField,1, 2);
 
+        //start game button
+        Button startGame = new Button("Go");
+        GridPane.setConstraints(startGame, 0, 3);
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //get info from text field and pass to networking
+
+                popupwindow.close();
+                primaryStage.setScene(renderedScene);
+            }
+        });
+
+
+
         //LAYOUT
         GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(label, name, nameField, port, portField);
+        gridPane.getChildren().addAll(label, name, nameField, port, portField, startGame);
         gridPane.setAlignment(Pos.CENTER);
 
 
