@@ -66,26 +66,6 @@ public class MainMenu extends Application {
         start.setGraphic(startView); //add the image to the button
 
 
-        //AUDIO BUTTON
-
-        audio = new Button();
-        audio.setOnAction(e -> System.out.println("Opening audio popup..."));
-        GridPane.setConstraints(audio, 0, 4);
-        //load the audio button text
-        Image audioText = new Image(getClass().getResource("audio.png").toString());
-        ImageView audioView = new ImageView(audioText); //make image view for audio button's text
-        audio.setGraphic(audioView); //add image to button
-
-
-        //HELP BUTTON
-
-        help = new Button();
-        help.setOnAction(e-> System.out.println("Opening help screen..."));
-        GridPane.setConstraints(help, 0, 5);
-        //load the help button's text
-        Image helpText = new Image(getClass().getResource("help.png").toString());
-        ImageView helpView = new ImageView(helpText); //make image view for help button's text
-        help.setGraphic(helpView); //add image to button
 
 
 
@@ -158,7 +138,28 @@ public class MainMenu extends Application {
 
         //load the window
         window.show();
-
         System.out.println(getClass().getResource("cubefacelogo.png").toString());
     }
+
+    public GridPane makeModeSelection() {
+
+        //make a gridpane
+        GridPane modeSelectionPane = new GridPane();
+
+        //add a label to it (bg of popup)
+
+        //add singleplayer button
+
+        //add multiplayer button
+        //when clicked-> show join & create, grey out singleplayer
+
+        //add join button
+        //when clicked -> open joinGame gridpane
+
+        //add create button
+        //when clicked -> open createGame gridpane
+
+        return modeSelectionPane;
+    }
+
 }
