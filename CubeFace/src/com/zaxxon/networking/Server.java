@@ -5,11 +5,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.sun.xml.internal.ws.developer.Serialization;
 
 public class Server {
 
@@ -19,7 +22,7 @@ public class Server {
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
-	public  HashMap<Integer,ServerClient> clie = new HashMap<>();
+	public static HashMap<Integer,ServerClient> clie = new HashMap<>();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -75,47 +78,40 @@ public class Server {
 		}
 	}
 
-	private void editObj(DatagramPacket packet) {
+	private byte[] editObj(DatagramPacket packet,int ID,InetAddress inet, int port) {
 		int tempPort = packet.getPort();
 		InetAddress tempIP = packet.getAddress();
 
 		try {
-			System.out.println("Object recieved ");
 			bais = new ByteArrayInputStream(packet.getData());
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
-			System.out.println(data.getHealth());
-			data.setHealth(75);
-
-			sendPlayerObj(data, tempIP, tempPort);
-
+			data.setID(ID);
+			
+			
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try {
+				out = new ObjectOutputStream(baos);
+				out.writeObject(data);
+				out.flush();
+				 byte[] playerinfo = baos.toByteArray();
+			return playerinfo;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
+		return packet.getData();
 	}
 
-	private void sendPlayerObj(ClientSender client, InetAddress inet, int port) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			out = new ObjectOutputStream(baos);
-			out.writeObject(client);
-			out.flush();
-			byte[] playerinfo = baos.toByteArray();
-			send(playerinfo, inet, port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
-	private synchronized void broadcastPlayers(DatagramPacket packet) {
-		// editObj(packet);
-//		
-//		for (ServerClient c : clients) {
-//			send(packet.getData(),c.getAddress(),c.getPort());
-//		}	
+	private synchronized void broadcastPlayers(DatagramPacket packet) {	
 		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
-			if (packet.getPort() != c.getKey()) {	
-				send(packet.getData(),(c.getValue()).getAddress(),c.getKey());
+			if (packet.getPort() != c.getKey()) {
+				byte [] b = editObj(packet, c.getValue().getID(), c.getValue().getAddress(), c.getKey());
+				send(b,(c.getValue()).getAddress(),c.getKey());
 			}
 		}	
 	}

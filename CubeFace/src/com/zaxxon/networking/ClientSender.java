@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.net.InetAddress;
 
 public class ClientSender implements Serializable{
+	static final long serialVersionUID = 42L;
 	public double x;
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
-
-	public int port;
+	private int ID;
 	
 	public ClientSender(double d, double e, double health) {
 		this.x = d;
@@ -37,6 +37,7 @@ public class ClientSender implements Serializable{
 		return health;
 	}
 
+	
 	public void setHealth(double health) {
 		this.health = health;
 	}
@@ -45,8 +46,12 @@ public class ClientSender implements Serializable{
 		return ipAddress;
 	}
 
-	public int getPort() {
-		return port;
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 	
 }

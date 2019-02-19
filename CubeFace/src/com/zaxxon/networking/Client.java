@@ -90,8 +90,10 @@ public class Client extends Thread {
 		}
 
 		else 
-			try {
-
+			try {	
+				
+				
+				
 				// Here is where we should update the client.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
@@ -99,6 +101,7 @@ public class Client extends Thread {
 				ClientSender data = (ClientSender) in.readObject();
 				System.out.println("Health is: " + data.getHealth());
 				System.out.println("Position is:" + data.getX() + " " + data.getY());
+				System.out.println("ID is: " + data.getID());
 				
 				Thread.sleep(20);
 			
