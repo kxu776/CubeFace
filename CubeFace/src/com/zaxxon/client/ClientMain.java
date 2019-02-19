@@ -85,7 +85,7 @@ public class ClientMain extends Application {
 	
 
 		//---NETWORK INTEGRATION
-		networkingClient = new Client("localhost", 4444,"player1");
+		networkingClient = new Client("172.22.132.170", 4444,"player2");
 		networkingClient.start();
 		c  = new ClientSender(player.getX(), player.getY(), player.getHealth());
 		
