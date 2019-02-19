@@ -75,6 +75,10 @@ public class ClientMain extends Application {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+		//make a new gridpane
+
+
+
 
 		/* ---NETWORK INTEGRATION
 		networkingClient = new Client();
