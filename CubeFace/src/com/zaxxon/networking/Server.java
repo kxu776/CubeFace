@@ -20,6 +20,7 @@ public class Server {
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE * 10];
 	private ArrayList<ServerClient> clients = new ArrayList<>();
+	public HashMap<Integer,ServerClient> clie = new HashMap<>();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -61,6 +62,7 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+	
 
 	private void listen() {
 		while (listening) {
@@ -70,9 +72,7 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 			process(packet);
-
 		}
 	}
 
@@ -108,13 +108,17 @@ public class Server {
 		}
 	}
 
-	private void broadcastPlayers(DatagramPacket packet) {
+	private synchronized void broadcastPlayers(DatagramPacket packet) {
 		// editObj(packet);
-		
-		for (ServerClient c : clients) {
-			send(packet.getData(),c.getAddress(),c.getPort());
-		}
-	
+//		
+//		for (ServerClient c : clients) {
+//			send(packet.getData(),c.getAddress(),c.getPort());
+//		}	
+		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
+			if (packet.getPort() != c.getKey()) {
+				send(packet.getData(),(c.getValue()).getAddress(),c.getKey());
+			}
+		}	
 	}
 
 	private void process(DatagramPacket packet) {
@@ -122,22 +126,21 @@ public class Server {
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
 		
-		// less than 2 clients then just wait on connection packets only 
-		
+		// less than 2 clients then just wait on connection packets only 	
 
 		if (new String(data).trim().startsWith("/C/")) {
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
-			clients.add((new ServerClient(packet.getAddress(), packet.getPort(), ID)));
 			
+			clie.put(packet.getPort(),(new ServerClient(packet.getAddress(), packet.getPort(), ID)));			
 			System.out.println("Sending connection to clients");
 			send("/c/Connected".getBytes(), address, port);
 			ID++;
 			}
 		
-		if (clients.size() < 2) {
+		if (clie.size() < 2) {
 			if (waiting) {
 				return;
 			}
@@ -153,10 +156,7 @@ public class Server {
 			// System.out.println("Closed socket?");
 			// listening = false;
 		} 
-
 	}
-	
-	
 
 	public InetAddress getServerIP() {
 		return serverSocket.getInetAddress();

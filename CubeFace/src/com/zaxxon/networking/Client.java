@@ -92,12 +92,12 @@ public class Client extends Thread {
 
 		else 
 			try {
-
 				// Here is where we should update the client.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 
 				ClientSender data = (ClientSender) in.readObject();
+			
 				System.out.println("Health is: " + data.getHealth());
 				System.out.println("Position is:" +data.getX() +" " + data.getY());
 //				socket.close();
@@ -112,10 +112,7 @@ public class Client extends Thread {
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
-
-	
 
 	public void sendPlayerObj(ClientSender c) {
 		baos = new ByteArrayOutputStream();
@@ -126,11 +123,10 @@ public class Client extends Thread {
 			byte[] playerinfo =  baos.toByteArray();
 			
 			send(playerinfo);
-			Thread.sleep(20);
+			Thread.sleep(30);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
