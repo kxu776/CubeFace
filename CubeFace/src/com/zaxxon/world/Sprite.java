@@ -31,8 +31,8 @@ public class Sprite extends Rectangle {
 	public Sprite(int width, int height, int x, int y) {
 		init(width, height, x, y);
 	}
-	
-	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image){
+
+	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image) {
 		init(width, height, x, y);
 		this.image = _image;
 	}
@@ -101,9 +101,21 @@ public class Sprite extends Rectangle {
 		return attributes;
 	}
 
-	public void update(){}			//abstract method
+	public double getDistanceToSprite(Sprite s) {
+		double differenceX = s.getX() - this.getX();
+		double differenceY = s.getY() - this.getY();
+		differenceX *= differenceX;
+		differenceY *= differenceY;
+		return Math.sqrt(differenceX + differenceY);
+	}
 
-	public void update(Sprite player){};
+	public void update() {
+	} // abstract method
 
-	public Boolean isAlive(){return null;};	//abstract method
+	public void update(Sprite player) {
+	};
+
+	public Boolean isAlive() {
+		return null;
+	}; // abstract method
 }

@@ -1,6 +1,7 @@
 package com.zaxxon.ui;
 
-import javafx.application.Application;
+import com.zaxxon.client.MainGame;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,7 +21,7 @@ public class MainMenu2 {
 
 
     //a method that makes the main menu scene
-    public Scene makeMainMenu(Scene renderedScene, Stage window) {
+    public Scene makeMainMenu(MainGame mainGame, Stage window) {
 
         //******************************GRIDPANE 1***********************************
 
@@ -42,7 +43,10 @@ public class MainMenu2 {
         //START BUTTON
 
         start = new Button();
-        start.setOnAction(e -> window.setScene(renderedScene));
+        start.setOnAction(e -> {
+        	mainGame.start(window);
+        	window.setScene(mainGame.getRenderedScene());
+        });
         grid1.setConstraints(start, 0, 3);
         //load the start button text
         Image startText = new Image(getClass().getResource("start.png").toString());

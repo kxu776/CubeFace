@@ -29,4 +29,17 @@ public class SampleLevel {
 		w.setHeight(SIZE);
 		return w;
 	}
+	
+	public static void generateLevel(MainGame gameWindow) {
+		Sprite[] bg = SampleLevel.generateBackground();
+		for (int i = 0; i < bg.length; i++) {
+			Sprite s = bg[i];
+			if (s != null) {
+				s.setX(SampleLevel.SIZE * (i % SampleLevel.STATE_SHEET.length));
+				s.setY(SampleLevel.SIZE * (i / SampleLevel.STATE_SHEET.length));
+				gameWindow.addSpriteToBackground(s);
+			}
+		}
+
+	}
 }
