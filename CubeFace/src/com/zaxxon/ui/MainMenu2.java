@@ -5,8 +5,10 @@ import com.zaxxon.client.MainGame;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -159,14 +161,12 @@ public class MainMenu2 {
 
 
 
-
         //********************************ROOTPANE**************************************
         //make a rootpane
         GridPane rootPane = new GridPane();
         Scene mainmenu = new Scene(rootPane, 600, 575);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
-
 
         mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
 
