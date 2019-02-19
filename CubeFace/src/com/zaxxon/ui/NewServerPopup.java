@@ -12,7 +12,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-public class JoinGamePopup {
+public class NewServerPopup {
 
 
     public static void display(Stage primaryStage, Scene renderedScene)
@@ -20,60 +20,48 @@ public class JoinGamePopup {
         Stage popupwindow=new Stage();
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
-        popupwindow.setTitle("Join A Game");
+        popupwindow.setTitle("Make a new server");
 
         //****************************CONTENTS
 
-        Label label= new Label("Please enter the following details to join a game:");
+        Label label= new Label("Please enter the following details\nto make a new server:");
         GridPane.setConstraints(label, 0, 0);
 
         //***********ENTER DETAILS
 
-        //player name
 
-        Label name = new Label("Player Name:");
-        GridPane.setConstraints(name,0,1);
-        TextField nameField = new TextField();
-        GridPane.setConstraints(nameField, 1, 1);
 
         //server port
 
         Label port = new Label("Server Port:");
-        GridPane.setConstraints(port, 0, 2);
+        GridPane.setConstraints(port, 0, 1);
         TextField portField = new TextField();
-        GridPane.setConstraints(portField,1, 2);
+        GridPane.setConstraints(portField,1, 1);
 
-        //start game button
-        Button startGame = new Button("Go");
-        GridPane.setConstraints(startGame, 0, 3);
-        startGame.setOnAction(new EventHandler<ActionEvent>() {
+        //make server button
+
+        Button makeServer = new Button("Make server");
+        GridPane.setConstraints(makeServer, 0, 2);
+        makeServer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
                 //get info from text field and pass to networking
 
                 popupwindow.close();
-                primaryStage.setScene(renderedScene);
+                //open server confirmation popup
+
+                ServerConfirmationPopup.display(primaryStage, renderedScene);
             }
         });
 
-        //new server button
-        Button newServer = new Button("Or click here to make a new server");
-        GridPane.setConstraints(newServer,0,4);
-        newServer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                popupwindow.close();
-                NewServerPopup.display(primaryStage,renderedScene);
 
-            }
-        });
 
 
 
         //LAYOUT
         GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(label, name, nameField, port, portField, startGame, newServer);
+        gridPane.getChildren().addAll(label, port, portField, makeServer);
         gridPane.setAlignment(Pos.CENTER);
 
 
