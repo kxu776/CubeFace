@@ -10,10 +10,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
 public class Client extends Thread {
 
@@ -136,9 +132,8 @@ public class Client extends Thread {
 		}
 	}
 
-	private void disconnect() {
+	public void disconnect() {
 		send("/d/.".getBytes());
-
 		System.out.println("No, closing socket");
 		socket.close();
 		running = false;
