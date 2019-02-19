@@ -4,8 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -152,7 +154,6 @@ public class MainMenu2 {
 
         grid2.setConstraints(zombieView, 1, 1);
         grid2.getChildren().add(zombieView);
-
 
 
 

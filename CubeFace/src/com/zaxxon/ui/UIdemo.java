@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -91,15 +92,26 @@ public class UIdemo extends Application {
         logoView.setPreserveRatio(true);
 
 
+        //*******************************************MAKE A TEST STATS GROUP
+
+        //make a backgroud label
+        Label bg = new Label(" ");
+        GridPane.setConstraints(bg, 0, 0);
+        bg.setPadding(new Insets(60, 100, 60, 100));
+        bg.setStyle("-fx-background-color: grey;");
+
+        //make a new group
+        GridPane stats = new GridPane();
+        stats.getChildren().add(bg);
+
+
         //****************************GRIDPANES AND SCENE************************************
 
         //add all buttons to gridpane
         grid1.getChildren().add(start);
         grid1.getChildren().add(logoView);
 
-        //***********************************************ADDING TEST POPUP
-        Rectangle rectangle = new Rectangle(20, 20, 100, 100);
-        //GridPane.setConstraints(rectangle, 0, 3);
+
 
         //make a scene (haha)
         GridPane rootPane = new GridPane();
