@@ -4,21 +4,19 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
 
 import java.awt.*;
-import java.io.FileInputStream;
 
-import static javafx.application.Application.launch;
-
-public class MainMenu extends Application {
+public class UIdemo extends Application {
 
     Stage window;
     Button start;
@@ -32,6 +30,14 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        Label label1= new Label("game will b here");
+        GridPane tempgrid = new GridPane();
+        tempgrid.getChildren().addAll(label1);
+        tempgrid.setAlignment(Pos.CENTER);
+        Scene scene1= new Scene(tempgrid, 600, 575);
+
+
 
         //set primary stage = window to make code more readable
         window = primaryStage;
@@ -58,15 +64,12 @@ public class MainMenu extends Application {
         //START BUTTON
 
         start = new Button();
-        //start.setOnAction(e -> window.setScene(renderedScene)));
+        start.setOnAction(e -> ArityPopup.display(primaryStage, scene1));
         GridPane.setConstraints(start, 0, 3);
         //load the start button text
         Image startText = new Image(getClass().getResource("start.png").toString());
         ImageView startView = new ImageView(startText); //make an imageview for the start button's text
         start.setGraphic(startView); //add the image to the button
-
-
-
 
 
         //**************************LOGO****************************
@@ -86,44 +89,17 @@ public class MainMenu extends Application {
 
         //preseve ratio of image
         logoView.setPreserveRatio(true);
-/*
-        //************************************GRIDPANE 2*************************************
-        //make a gridpane for the bg, buttons and logo
-        GridPane grid2 = new GridPane();
-        grid1.setPadding(new Insets(20, 20, 20, 20));
-        grid1.setVgap(12); //set the gap between cells vertically and horizontally
-        grid1.setHgap(20);
-
-        //IMAGES
-
-        //load the zombie image
-        //load the logo image
-        Image zombie = new Image(getClass().getResource("zombie.png").toString());
-
-        //set the imageview
-        ImageView zombieView = new ImageView(logo);
-
-        //set the position of the image
-        zombieView.setX(20);
-        zombieView.setY(20);
-
-        //set height/width of image
-        //logoView.setFitHeight(455);
-        //logoView.setFitWidth(450);
-
-        //preseve ratio of image
-        zombieView.setPreserveRatio(true);
-
-
-        //load the cubeface image*/
-
 
 
         //****************************GRIDPANES AND SCENE************************************
 
         //add all buttons to gridpane
-        grid1.getChildren().addAll(start, audio, help);
+        grid1.getChildren().add(start);
         grid1.getChildren().add(logoView);
+
+        //***********************************************ADDING TEST POPUP
+        Rectangle rectangle = new Rectangle(20, 20, 100, 100);
+        //GridPane.setConstraints(rectangle, 0, 3);
 
         //make a scene (haha)
         GridPane rootPane = new GridPane();
@@ -139,27 +115,6 @@ public class MainMenu extends Application {
         //load the window
         window.show();
         System.out.println(getClass().getResource("cubefacelogo.png").toString());
-    }
-
-    public GridPane makeModeSelection() {
-
-        //make a gridpane
-        GridPane modeSelectionPane = new GridPane();
-
-        //add a label to it (bg of popup)
-
-        //add singleplayer button
-
-        //add multiplayer button
-        //when clicked-> show join & create, grey out singleplayer
-
-        //add join button
-        //when clicked -> open joinGame gridpane
-
-        //add create button
-        //when clicked -> open createGame gridpane
-
-        return modeSelectionPane;
     }
 
 }
