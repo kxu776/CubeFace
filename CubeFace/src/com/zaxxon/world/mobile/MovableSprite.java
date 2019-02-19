@@ -5,7 +5,7 @@ import com.zaxxon.world.Sprite;
 
 import java.util.LinkedHashMap;
 
-public class MovableSprite extends Sprite {
+public abstract class MovableSprite extends Sprite {
 	private double velocityX;
 	private double velocityY;
 	private double movementSpeed;

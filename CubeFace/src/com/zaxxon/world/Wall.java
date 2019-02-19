@@ -68,4 +68,9 @@ public class Wall extends Sprite {
 		return allBoundPairs;
 	}
 
+	@Override
+	public Boolean isAlive() {
+		return true;
+	}
+
 }

@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
 
-public class Sprite extends Rectangle {
+public abstract class Sprite extends Rectangle {
 
 	protected static int idCounter = 0;
 
@@ -111,14 +111,6 @@ public class Sprite extends Rectangle {
 		return Math.sqrt(differenceX + differenceY);
 	}
 
-	public void update() {
-	} // abstract method
-
-	public void update(Sprite player) {
-	};
-
-	public Boolean isAlive() {
-		return null;
-	}; // abstract method
+	public abstract Boolean isAlive();
 
 }
