@@ -22,7 +22,7 @@ public class SampleLevel {
 		}
 		return allWalls;
 	}
-	
+
 	private static Wall newWall(int wallSprite) {
 		Wall w = new Wall(wallSprite);
 		w.setWidth(SIZE);
@@ -30,7 +30,6 @@ public class SampleLevel {
 		return w;
 	}
 
-	
 	public static void generateLevel(MainGame gameWindow) {
 		Sprite[] bg = SampleLevel.generateBackground();
 		for (int i = 0; i < bg.length; i++) {

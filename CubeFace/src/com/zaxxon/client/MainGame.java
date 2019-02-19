@@ -166,7 +166,7 @@ public class MainGame {
 							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 						}
 					}
-					sprite.update(closestPlayer.getValue());
+					((Enemy) sprite).update(1, closestPlayer.getValue());
 				}
 			}
 		}
