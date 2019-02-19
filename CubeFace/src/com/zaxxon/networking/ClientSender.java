@@ -1,44 +1,44 @@
 package com.zaxxon.networking;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 
 public class ClientSender implements Serializable{
-	public int x;
-	public int y;
-	public int health;
+	static final long serialVersionUID = 42L;
+	public double x;
+	public double y;
+	public double health;
 	public InetAddress ipAddress;
-
-	public int port;
+	private int ID;
 	
-	public ClientSender(int x, int y, int health) {
-		this.x = x;
-		this.y = y;
+	public ClientSender(double d, double e, double health) {
+		this.x = d;
+		this.y = e;
 		this.health = health;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setX(double d) {
+		this.x = d;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
-	public int getHealth() {
+	public double getHealth() {
 		return health;
 	}
 
-	public void setHealth(int health) {
+	
+	public void setHealth(double health) {
 		this.health = health;
 	}
 
@@ -46,8 +46,12 @@ public class ClientSender implements Serializable{
 		return ipAddress;
 	}
 
-	public int getPort() {
-		return port;
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 	
 }

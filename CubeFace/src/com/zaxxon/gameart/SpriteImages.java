@@ -15,6 +15,7 @@ public class SpriteImages {
 	public static final String WALL_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/wall-sprite-sheet.png";
 	public static final String ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/zombie-sprite-sheet.png";
 
+
 	public static final BufferedImage BRUTE_ZOMBIE_SPRITESHEET_IMAGE = getBufferedImageFromURL(
 			BRUTE_ZOMBIE_SPRITESHEET_URL);
 	public static final BufferedImage CUBEFACE_SPRITESHEET_IMAGE = getBufferedImageFromURL(CUBEFACE_SPRITESHEET_URL);

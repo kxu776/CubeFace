@@ -1,9 +1,17 @@
 .root {
+<<<<<<< HEAD
     -fx-background-image: url(gui-prototypes.png), url(wallbg.png);
     -fx-background-repeat: round;}
 
 .button {
     -fx-background-color: #e1f4b3;
+=======
+    -fx-background-image: url(gui-prototypes.png)}
+
+#start {
+    -fx-background-color: #e1f4b3;
+    -fx-background-image: url(start.png);
+>>>>>>> Networking
     -fx-background-size: 60%;
     -fx-padding:5 50 5 50;
     -fx-background-repeat: no-repeat;
@@ -14,3 +22,35 @@
     -fx-font-size: 20px
 }
 
+<<<<<<< HEAD
+=======
+#audio {
+    -fx-background-color: #e1f4b3;
+    -fx-background-image: url(audio.png);
+    -fx-background-size: 60%;
+    -fx-padding:5 50 5 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 20px
+}
+
+#help {
+    -fx-background-color: #e1f4b3;
+    -fx-background-image: url(help.png);
+    -fx-background-size: 60%;
+    -fx-padding:5 50 5 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 16px
+}
+
+#logo {
+
+}
+>>>>>>> Networking

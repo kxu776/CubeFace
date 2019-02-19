@@ -10,6 +10,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
+
 import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.*;
 import javafx.application.*;
@@ -50,6 +51,7 @@ public class ClientDemo extends Application {
 		
 		player = new Player();
 		foreground.getChildren().add(player);
+
 		Enemy enemy = new Enemy(1,1);
 		foreground.getChildren().add(enemy);
 
@@ -67,6 +69,7 @@ public class ClientDemo extends Application {
 				
 				player.update(1);
 				enemy.update(1, player);
+
 			}
 		};
 		animator.start();

@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.ImagePattern;
 
 public class Player extends MovableSprite{
+
 	FacingDir facingDir; 
 	
 	int width = 64;
@@ -49,6 +50,7 @@ public class Player extends MovableSprite{
         setHeight(height);
         heal(100.0);
         isAlive = true;
+
         
         facingDir = FacingDir.up;
     }
@@ -176,8 +178,10 @@ public class Player extends MovableSprite{
     		
     	default:
     		//error
+
     	}
     }
+
 
     
     private void getSpriteImages() {

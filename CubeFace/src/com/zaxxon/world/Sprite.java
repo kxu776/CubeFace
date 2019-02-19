@@ -32,7 +32,9 @@ public class Sprite extends Rectangle {
 		init(width, height, x, y);
 	}
 
+
 	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image) {
+
 		init(width, height, x, y);
 		this.image = _image;
 	}
@@ -118,4 +120,5 @@ public class Sprite extends Rectangle {
 	public Boolean isAlive() {
 		return null;
 	}; // abstract method
+
 }

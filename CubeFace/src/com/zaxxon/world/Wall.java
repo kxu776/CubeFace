@@ -11,6 +11,7 @@ public class Wall extends Sprite {
 	
 	private static ArrayList<Wall> allWalls = new ArrayList<Wall>();
 	
+
 	public static final int WALL_CORNER = 0;
 	public static final int WALL_CORNER_WITH_VERTICAL = 1;
 	public static final int WALL_HORIZONTAL = 2;
@@ -19,6 +20,7 @@ public class Wall extends Sprite {
 	
 	private int wallType;
 	
+
 	public Wall() {
 		initialise(0);
 	}
@@ -28,6 +30,7 @@ public class Wall extends Sprite {
 	}
 	
 	private void initialise(int wallType) {
+
 		this.wallType = wallType;
 		addNewWall(this);
 		this.setImageSpriteSheet(SpriteImages.WALL_SPRITESHEET_IMAGE, 1, 5);

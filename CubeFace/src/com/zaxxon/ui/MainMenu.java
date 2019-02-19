@@ -1,6 +1,7 @@
 package com.zaxxon.ui;
 
 import javafx.application.Application;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -161,4 +162,5 @@ public class MainMenu extends Application {
 
         System.out.println(getClass().getResource("cubefacelogo.png").toString());
     }
+
 }

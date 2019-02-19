@@ -10,6 +10,7 @@ public class MovableSprite extends Sprite {
 	private double velocityY;
 	private double movementSpeed;
 	private double health;
+
 	public boolean controllable;
 	protected boolean isAlive;
 
@@ -22,6 +23,7 @@ public class MovableSprite extends Sprite {
 		velocityY = 0.0;
 		movementSpeed = 0.0;
 		health = 0.0;
+
 	}
 	
 	//methods for player
@@ -43,6 +45,8 @@ public class MovableSprite extends Sprite {
 		this.setY(this.getY() + v.y);
 	}
 
+
+
 	public void update(double time) {
 		this.setX(this.getX() + velocityX * time);
 		this.setY(this.getY() + velocityY * time);
@@ -58,6 +62,7 @@ public class MovableSprite extends Sprite {
 	}
 
 	public void heal(double healing) {
+
 		health += healing;
 	}
 
@@ -66,9 +71,11 @@ public class MovableSprite extends Sprite {
 	}
 
 
+
 	public Boolean isAlive(){
 		return isAlive;
 	}
+
 
 
 	public String toString() {
@@ -81,6 +88,7 @@ public class MovableSprite extends Sprite {
 		attributes.put("velocityX", velocityX);
 		attributes.put("velocityY", velocityY);
 		attributes.put("Health", health);
+
 		return attributes;
 	}
 }

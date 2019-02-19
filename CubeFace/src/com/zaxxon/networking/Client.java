@@ -1,18 +1,17 @@
 package com.zaxxon.networking;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import com.zaxxon.world.Sprite;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
+
 
 public class Client extends Thread {
 	
@@ -21,28 +20,35 @@ public class Client extends Thread {
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
 	private int MAX_PACKET_SIZE = 1024;
-	private byte[]  data = new byte[MAX_PACKET_SIZE];
+
+	private byte[] data = new byte[MAX_PACKET_SIZE];
+	private ObjectOutputStream out = null;
+	private ObjectInputStream in = null;
+	private ByteArrayOutputStream baos;
+	private ByteArrayInputStream bais;
 	private boolean running = false;
-	
-	
-	public Client(String host, int port) {
-		//port refers to port of the server
+	private String player;
+
+	public Client(String host, int port, String player) {
+		// port refers to port of the server
 		this.port = port;
-		ipAddress = host;
+		this.ipAddress = host;
+		this.player = player;
+
 	}
 	public void run() {
 		
 		connect();
 		
-		while(true) {
-			DatagramPacket packet = new DatagramPacket(data,data.length);
+		while (running) {
+			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			 String message = new String (packet.getData());
-			System.out.println("Server >: " + message);
+
+			getPlayerObj(packet);
 		}
 	}
 	
@@ -63,10 +69,86 @@ public class Client extends Thread {
 	}
 	
 	private void sendConnectionPacket() {
-		byte[] data = "ConnectionPacket".getBytes();
+		byte[] data = ("/C/" + player).getBytes();
 		send(data);
 	}
-	
+
+
+	private void getPlayerObj(DatagramPacket packet) {
+		System.out.println("Incoming from server......");
+
+		String message = new String(packet.getData());
+
+		if (message.trim().startsWith("/c/")) {
+			System.out.println("Server >: " + message.substring(3));
+			return;
+		}
+
+		else if (message.startsWith("/s/")) {
+			message = message.substring(3, message.length());
+			System.out.println(message);
+			return;
+		}
+
+		else 
+			try {	
+				
+				
+				
+				// Here is where we should update the client.
+				bais = new ByteArrayInputStream(packet.getData());
+				in = new ObjectInputStream(bais);
+
+				ClientSender data = (ClientSender) in.readObject();
+				System.out.println("Health is: " + data.getHealth());
+				System.out.println("Position is:" + data.getX() + " " + data.getY());
+				System.out.println("ID is: " + data.getID());
+				
+				Thread.sleep(20);
+			
+//				socket.close();
+//				running = false;
+//				try {
+//					bais.close();
+//					in.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//			}
+
+		} catch (ClassNotFoundException | IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendPlayerObj(ClientSender c) {
+		baos = new ByteArrayOutputStream();
+		try {
+			out = new ObjectOutputStream(baos);
+			out.writeObject(c);
+			out.flush();
+			byte[] playerinfo =  baos.toByteArray();
+			
+			send(playerinfo);
+			Thread.sleep(30);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void disconnect() {
+		send("/d/.".getBytes());
+		System.out.println("No, closing socket");
+		socket.close();
+		running = false;
+		try {
+			bais.close();
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
@@ -77,31 +159,6 @@ public class Client extends Thread {
 		}
 	}
 
-	//Takes ArrayList of Sprites, returns ArrayList of attribute strings of sprites
-	public static ArrayList<String> spritesToString(LinkedList<Sprite> sprites){
-		ArrayList<String> attributeStrings = new ArrayList<>();
-		for(Sprite sprite: sprites){
-			attributeStrings.add(mapToString(sprite.getAttributes()));
-		}
-		return attributeStrings;
-	}
-
-	//Parses hashmap of sprite attributes to string. Can then be converted to packet via byte array.
-	private static String mapToString(LinkedHashMap<String, Object> attributes){
-		String outputString = "";
-		for(Map.Entry<String, Object> value: attributes.entrySet()){
-			outputString += String.valueOf(value.getValue());
-		}
-		return outputString;
-	}
-
-	//Test method
-	public static void main(String[] args){
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put("test", new Integer(17));
-		map.put("test1", new String("test1"));
-		map.put("test2", new Character('c'));
-		System.out.println(mapToString(map));
-	}
+	
 	
 }

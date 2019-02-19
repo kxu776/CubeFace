@@ -1,8 +1,13 @@
-package com.zaxxon.Networking;
+package com.zaxxon.networking;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Server {
 
@@ -11,8 +16,15 @@ public class Server {
 	private boolean listening = false;
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
-	private byte[]  data = new byte[MAX_PACKET_SIZE * 10];
-	private ArrayList<Integer> clientList;
+	private byte[] data = new byte[MAX_PACKET_SIZE];
+	public static HashMap<Integer,ServerClient> clie = new HashMap<>();
+	private ByteArrayOutputStream baos;
+	private ObjectOutputStream out;
+	private ObjectInputStream in;
+	private ByteArrayInputStream bais;
+	private int ID = 1;
+	private boolean waiting = false;
+
 
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
@@ -43,6 +55,7 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+	
 
 	
 	private void listen() {
@@ -57,20 +70,86 @@ public class Server {
 		}
 	}
 
+	private byte[] editObj(DatagramPacket packet,int ID,InetAddress inet, int port) {
+		int tempPort = packet.getPort();
+		InetAddress tempIP = packet.getAddress();
+
+		try {
+			bais = new ByteArrayInputStream(packet.getData());
+			in = new ObjectInputStream(bais);
+			ClientSender data = (ClientSender) in.readObject();
+			data.setID(ID);
+			
+			
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try {
+				out = new ObjectOutputStream(baos);
+				out.writeObject(data);
+				out.flush();
+				 byte[] playerinfo = baos.toByteArray();
+			return playerinfo;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		return packet.getData();
+	}
+
+
+	private synchronized void broadcastPlayers(DatagramPacket packet) {	
+		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
+			if (packet.getPort() != c.getKey()) {
+				byte [] b = editObj(packet, c.getValue().getID(), c.getValue().getAddress(), c.getKey());
+				send(b,(c.getValue()).getAddress(),c.getKey());
+			}
+		}	
+	}
+
+
 	private void process(DatagramPacket packet) {
 		byte[] data = packet.getData();
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
-		clientList = new ArrayList<>();
+
 		
-		System.out.println("--------");
-		System.out.println("PACKET " );
-		System.out.println(address.getHostAddress() + " : " + port + " " + new String(packet.getData()));
-		System.out.println("--------");
+		// less than 2 clients then just wait on connection packets only 	
+
+		if (new String(data).trim().startsWith("/C/")) {
+			System.out.println("------------");
+			System.out.println("New Player ");
+			System.out.println(address.getHostAddress() + " : " + port);
+			System.out.println("------------");
+			
+			clie.put(packet.getPort(),(new ServerClient(packet.getAddress(), packet.getPort(), ID)));			
+			System.out.println("Sending connection to clients");
+			send("/c/Connected".getBytes(), address, port);
+			ID++;
+			}
 		
-		clientList.add(packet.getPort());
-		
-		send("Connected".getBytes(),address, port);
+		if (clie.size() < 2) {
+			if (waiting) {
+				return;
+			}
+			System.out.println("Waiting on players...");
+			send("/s/Waiting for one more player...".getBytes(),address,port);
+			waiting = true; 
+			return;
+		}
+		else {
+			waiting = false;
+			broadcastPlayers(packet);
+		//	serverSocket.close();
+			// System.out.println("Closed socket?");
+			// listening = false;
+		} 
+	}
+
+	public InetAddress getServerIP() {
+		return serverSocket.getInetAddress();
+
 	}
 	
 	

@@ -43,6 +43,7 @@ public class Enemy extends MovableSprite {
         controllable = false;
         this.setX(spawnX);
         this.setY(spawnY);
+
         init();
     }
 
@@ -77,6 +78,7 @@ public class Enemy extends MovableSprite {
         } else {
             moveX();
             moveY();
+        
         }
         inputDir = Vector2.normalise(inputDir);
 

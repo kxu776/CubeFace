@@ -22,6 +22,7 @@ public class ClientMain extends Application{
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
 		primaryStage.show();
+
 	}
 
 }

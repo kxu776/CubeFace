@@ -29,6 +29,7 @@ public class SampleLevel {
 		w.setHeight(SIZE);
 		return w;
 	}
+
 	
 	public static void generateLevel(MainGame gameWindow) {
 		Sprite[] bg = SampleLevel.generateBackground();
@@ -42,4 +43,5 @@ public class SampleLevel {
 		}
 
 	}
+
 }
