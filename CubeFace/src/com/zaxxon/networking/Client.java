@@ -40,7 +40,6 @@ public class Client extends Thread {
 	public void run() {
 		running = true;
 		connect();
-		ClientSender cli = new ClientSender(100, 100, 100);
 		
 		while (running) {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -92,14 +91,17 @@ public class Client extends Thread {
 
 		else 
 			try {
+
 				// Here is where we should update the client.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 
 				ClientSender data = (ClientSender) in.readObject();
-			
 				System.out.println("Health is: " + data.getHealth());
-				System.out.println("Position is:" +data.getX() +" " + data.getY());
+				System.out.println("Position is:" + data.getX() + " " + data.getY());
+				
+				Thread.sleep(20);
+			
 //				socket.close();
 //				running = false;
 //				try {
@@ -109,7 +111,7 @@ public class Client extends Thread {
 //					e.printStackTrace();
 //			}
 
-		} catch (ClassNotFoundException | IOException e) {
+		} catch (ClassNotFoundException | IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

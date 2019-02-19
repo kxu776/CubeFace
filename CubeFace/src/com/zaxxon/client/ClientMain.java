@@ -34,8 +34,10 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	ClientSender c;
 	private Client networkingClient;
 	private Player player;
+	
 
 	public static void main(String[] args) {
 //		new ClientMain().start();
@@ -85,7 +87,7 @@ public class ClientMain extends Application {
 		//---NETWORK INTEGRATION
 		networkingClient = new Client("localhost", 4444,"player1");
 		networkingClient.start();
-
+		c  = new ClientSender(player.getX(), player.getY(), player.getHealth());
 		
 
 		Scene renderedScene = new Scene(root, WIDTH, HEIGHT);
@@ -175,8 +177,9 @@ public class ClientMain extends Application {
 		spriteList.add(s);
 	}
 
+
 	public void sendNetworkUpdate(){
-		ClientSender c  = new ClientSender(player.getX(), player.getY(), player.getHealth());
+		c.setX(player.getX());c.setY(player.getY());c.setHealth(player.getHealth());
 		networkingClient.sendPlayerObj(c);
 		//networkingClient.spritesToString(spriteList);	//Compiles ArrayList<string> of concatenated sprite attributes.
 		//actually send the packets here

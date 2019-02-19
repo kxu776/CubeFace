@@ -25,8 +25,9 @@ public class ServerClient {
 		return port;
 	}
 
-	public int getID() {
-		return ID;
+	public String getID() {
+		String id = ""+ID;
+		return id;
 	}
 
 }

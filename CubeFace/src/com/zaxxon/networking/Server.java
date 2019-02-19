@@ -18,9 +18,8 @@ public class Server {
 	private boolean listening = false;
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
-	private byte[] data = new byte[MAX_PACKET_SIZE * 10];
-	private ArrayList<ServerClient> clients = new ArrayList<>();
-	public HashMap<Integer,ServerClient> clie = new HashMap<>();
+	private byte[] data = new byte[MAX_PACKET_SIZE];
+	public  HashMap<Integer,ServerClient> clie = new HashMap<>();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -115,7 +114,7 @@ public class Server {
 //			send(packet.getData(),c.getAddress(),c.getPort());
 //		}	
 		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
-			if (packet.getPort() != c.getKey()) {
+			if (packet.getPort() != c.getKey()) {	
 				send(packet.getData(),(c.getValue()).getAddress(),c.getKey());
 			}
 		}	
