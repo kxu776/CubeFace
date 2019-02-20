@@ -26,15 +26,15 @@ import javafx.util.Pair;
 
 public class MainGame {
 
-	private Group grpGame;
-	private Group world;
-	private Group background;
-	private Group foreground;
-	private Group overlay;
+	private static Group grpGame;
+	private static Group world;
+	private static Group background;
+	private static Group foreground;
+	private static Group overlay;
 	private Camera camera;
-	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	private static LinkedList<Sprite> spriteList = new LinkedList<>();
+	private static ArrayList<Player> playerList;
 	private Client networkingClient;
-	private ArrayList<Player> playerList;
 	private Scene renderedScene;
 	
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
@@ -150,7 +150,7 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	public void addSpriteToForeground(Sprite s) {
+	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
 		spriteList.add(s);
 		if (s.getClass() == Player.class) {
