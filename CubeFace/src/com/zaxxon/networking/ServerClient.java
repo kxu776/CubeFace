@@ -9,8 +9,8 @@ public class ServerClient {
 	public int port;
 	private final int ID;
 
-	public ServerClient(InetAddress address, int port, final int ID) {
-		
+	public ServerClient(String user,InetAddress address, int port, final int ID) {
+		this.name = user;
 		this.address = address;
 		this.port = port;
 		this.ID = ID;
