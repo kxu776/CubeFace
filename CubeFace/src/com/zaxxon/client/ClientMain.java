@@ -9,7 +9,6 @@ import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.networking.ClientSender;
 
-import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -85,7 +84,9 @@ public class ClientMain extends Application {
 	
 
 		//---NETWORK INTEGRATION
-		networkingClient = new Client("172.22.132.170", 4444,"player2");
+		
+		// Name would need to be unique 
+		networkingClient = new Client("localhost", 4444,"Name");
 		networkingClient.start();
 		c  = new ClientSender(player.getX(), player.getY(), player.getHealth());
 		
