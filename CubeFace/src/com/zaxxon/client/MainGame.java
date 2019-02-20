@@ -65,6 +65,9 @@ public class MainGame {
 		player1.setY(500);
 		this.addSpriteToForeground(player1);
 
+		Enemy enemy = new Enemy(600,600);
+		this.addSpriteToForeground(enemy);
+
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
