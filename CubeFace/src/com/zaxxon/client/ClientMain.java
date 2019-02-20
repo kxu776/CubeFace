@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
+import com.zaxxon.sound.MusicPlayer;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
@@ -33,9 +34,11 @@ public class ClientMain extends Application {
 	private Group overlay;
 	private Camera camera;
 	private LinkedList<Sprite> spriteList = new LinkedList<>();
-	ClientSender c;
+	private ClientSender c;
 	private Client networkingClient;
 	private Player player;
+	private MusicPlayer gameMusic;
+	
 	
 
 	public static void main(String[] args) {
@@ -45,6 +48,7 @@ public class ClientMain extends Application {
 
 	private void initialise() {
 		camera = new Camera();
+		gameMusic = new MusicPlayer("/mainmenu/flossin.mp3");
 	}
 
 //	public void start() {
@@ -107,6 +111,7 @@ public class ClientMain extends Application {
 				s.setX(SampleLevel.SIZE * (i % SampleLevel.STATE_SHEET.length));
 				s.setY(SampleLevel.SIZE * (i / SampleLevel.STATE_SHEET.length));
 				addSpriteToBackground(s);
+				gameMusic.play();
 			}
 		}
 
