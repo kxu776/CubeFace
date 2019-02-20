@@ -1,13 +1,15 @@
 package com.zaxxon.networking;
 
+import com.zaxxon.world.Sprite;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class ClientMain extends Client {
+/*public class ClientMain extends Client {
 
-	public ClientMain(String host, int port, String player,Game game) {
+	public ClientMain(String host, int port, String player) {
 		super(host, port, player);
 	}
 	
@@ -43,4 +45,4 @@ public class ClientMain extends Client {
 			System.out.println(mapToString(map));
 		}
 
-}
+}*/

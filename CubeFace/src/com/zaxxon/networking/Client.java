@@ -1,6 +1,8 @@
 package com.zaxxon.networking;
 
 
+import com.zaxxon.world.Sprite;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 
 public class Client extends Thread {
@@ -159,6 +162,7 @@ public class Client extends Thread {
 		}
 	}
 
-	
-	
+
+    public void spritesToString(LinkedList<Sprite> spriteList) {
+    }
 }

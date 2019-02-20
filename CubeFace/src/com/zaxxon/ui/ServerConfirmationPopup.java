@@ -21,6 +21,8 @@ public class ServerConfirmationPopup {
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Success!");
+        popupwindow.setResizable(false);
+
 
         //****************************CONTENTS
 
@@ -52,7 +54,7 @@ public class ServerConfirmationPopup {
         gridPane.setAlignment(Pos.CENTER);
 
 
-        Scene scene1= new Scene(gridPane, 350, 150);
+        Scene scene1= new Scene(gridPane, 400, 150);
 
         popupwindow.setScene(scene1);
 

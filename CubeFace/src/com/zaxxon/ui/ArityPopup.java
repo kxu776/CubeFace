@@ -2,6 +2,7 @@ package com.zaxxon.ui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -18,15 +19,17 @@ public class ArityPopup {
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Player mode");
+        popupwindow.setResizable(false);
+
 
         //****************************CONTENTS
 
         Label label = new Label("Choose the mode you would like to play in:");
-        GridPane.setConstraints(label, 1, 0);
+        GridPane.setConstraints(label, 0, 0);
 
         //***********SINGLE PLAYER BUTTON
         Button single = new Button("single player");
-        GridPane.setConstraints(single,0, 1);
+        GridPane.setConstraints(single,0, 0);
         single.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -38,7 +41,7 @@ public class ArityPopup {
 
         //************ MULTIPLAYER BUTTON
         Button multiplayer= new Button("multiplayer");
-        GridPane.setConstraints(multiplayer, 2, 1);
+        GridPane.setConstraints(multiplayer, 1, 0);
         multiplayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -48,16 +51,28 @@ public class ArityPopup {
         });
 
 
-        //LAYOUT
-        GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(label, multiplayer, single);
-        gridPane.setAlignment(Pos.CENTER);
+        //********************LAYOUT**************************
 
+        //VBox for the top
+        VBox top = new VBox();
+        top.getChildren().add(label);
+        top.setAlignment(Pos.CENTER);
+        top.setPadding(new Insets(40, 20, 0, 20));
 
-        Scene scene1= new Scene(gridPane, 350, 150);
+        //GridPane for the middle
+        GridPane center = new GridPane();
+        center.getChildren().addAll(single, multiplayer);
+        center.setAlignment(Pos.CENTER);
+        center.setHgap(20);
 
+        //borderPane for both
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(top);
+        borderPane.setCenter(center);
+
+        //Scene
+        Scene scene1= new Scene(borderPane, 400, 150);
         popupwindow.setScene(scene1);
-
         popupwindow.showAndWait();
 
     }
