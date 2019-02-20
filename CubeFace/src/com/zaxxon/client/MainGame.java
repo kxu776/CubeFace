@@ -59,6 +59,11 @@ public class MainGame {
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
 		camera = new Camera();
+		
+		Player player1 = new Player();
+		player1.setX(500);
+		player1.setY(500);
+		this.addSpriteToForeground(player1);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

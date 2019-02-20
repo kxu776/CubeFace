@@ -66,7 +66,7 @@ public class UIdemo extends Application {
         //START BUTTON
 
         start = new Button();
-        start.setOnAction(e -> ArityPopup.display(primaryStage, scene1));
+        start.setOnAction(e -> ArityPopup.display(primaryStage, scene1, null));
         GridPane.setConstraints(start, 0, 3);
         //load the start button text
         Image startText = new Image(getClass().getResource("start.png").toString());

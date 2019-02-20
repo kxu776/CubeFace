@@ -48,7 +48,7 @@ public class MainMenu {
         start.setOnAction(e -> {
         	//mainGame.start(window);
         	//window.setScene(mainGame.getRenderedScene());
-            ArityPopup.display(window, mainGame.getRenderedScene());
+            ArityPopup.display(window, mainGame.getRenderedScene(), mainGame);
         });
         grid1.setConstraints(start, 0, 3);
         //load the start button text
