@@ -15,7 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class MainMenu2 {
+public class MainMenu {
 
     Button start;
     Button audio;
@@ -46,12 +46,13 @@ public class MainMenu2 {
 
         start = new Button();
         start.setOnAction(e -> {
-        	mainGame.start(window);
-        	window.setScene(mainGame.getRenderedScene());
+        	//mainGame.start(window);
+        	//window.setScene(mainGame.getRenderedScene());
+            ArityPopup.display(window, mainGame.getRenderedScene());
         });
         grid1.setConstraints(start, 0, 3);
         //load the start button text
-        Image startText = new Image(getClass().getResource("start.png").toString());
+        Image startText = new Image(getClass().getResource("img/start.png").toString());
         ImageView startView = new ImageView(startText); //make an imageview for the start button's text
         start.setGraphic(startView); //add the image to the button
 
@@ -62,7 +63,7 @@ public class MainMenu2 {
         audio.setOnAction(e -> System.out.println("Opening audio popup..."));
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
-        Image audioText = new Image(getClass().getResource("audio.png").toString());
+        Image audioText = new Image(getClass().getResource("img/audio.png").toString());
         ImageView audioView = new ImageView(audioText); //make image view for audio button's text
         audio.setGraphic(audioView); //add image to button
 
@@ -73,7 +74,7 @@ public class MainMenu2 {
         help.setOnAction(e-> System.out.println("Opening help screen..."));
         grid1.setConstraints(help, 0, 5);
         //load the help button's text
-        Image helpText = new Image(getClass().getResource("help.png").toString());
+        Image helpText = new Image(getClass().getResource("img/help.png").toString());
         ImageView helpView = new ImageView(helpText); //make image view for help button's text
         help.setGraphic(helpView); //add image to button
 
@@ -81,7 +82,7 @@ public class MainMenu2 {
 
         //**************************LOGO****************************
         //load the logo image
-        Image logo = new Image(getClass().getResource("cubefacelogo.png").toString());
+        Image logo = new Image(getClass().getResource("img/cubefacelogo.png").toString());
 
         //set the imageview
         ImageView logoView = new ImageView(logo);
@@ -124,7 +125,7 @@ public class MainMenu2 {
         //CUBEFACE IMAGE
 
         //load the cubeface image
-        Image cubeface = new Image(getClass().getResource("cubeface.png").toString());
+        Image cubeface = new Image(getClass().getResource("img/cubeface.png").toString());
 
         //set the imageview
         ImageView cubefaceView = new ImageView(cubeface);
@@ -143,7 +144,7 @@ public class MainMenu2 {
         //ZOMBIE IMAGE
 
         //load the zombie image
-        Image zombie = new Image(getClass().getResource("zombie.png").toString());
+        Image zombie = new Image(getClass().getResource("img/zombie.png").toString());
 
         //set the imageview
         ImageView zombieView = new ImageView(zombie);

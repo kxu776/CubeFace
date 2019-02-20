@@ -81,7 +81,7 @@ public class MainGame {
 					player.update(1);
 				}
 				dealWithKeyInput();
-				sendNetworkUpdate();
+				//sendNetworkUpdate();
 				updateEnemies();
 			}
 		};
@@ -145,10 +145,10 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	private void sendNetworkUpdate() {
+	/*private void sendNetworkUpdate() {
 		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
 		// actually send the packets here
-	}
+	}*/
 
 	private void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
