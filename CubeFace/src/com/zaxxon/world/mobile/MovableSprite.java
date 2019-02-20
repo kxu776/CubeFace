@@ -34,6 +34,10 @@ public abstract class MovableSprite extends Sprite {
 		this.setY(pos.y);
 	}
 	
+	public void setHealth(double health) {
+		this.health = health;
+	}
+	
 	public Vector2 getPosition() {
 		
 		return new Vector2 (this.getX(), this.getY());

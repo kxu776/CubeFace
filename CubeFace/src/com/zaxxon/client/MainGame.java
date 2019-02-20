@@ -12,10 +12,12 @@ import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
 import javafx.animation.AnimationTimer;
+import javafx.collections.ModifiableObservableListBase;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -165,6 +167,21 @@ public class MainGame {
 		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
 		// actually send the packets here
 	}*/
+	
+	private void getUpdatesFromQueue() {
+		while(!inputUpdateQueue.isEmpty()) {
+			ClientSender data = inputUpdateQueue.poll();
+			for(Sprite s : spriteList) {
+				if(data.getID() == Integer.parseInt(s.getId())) {
+					s.setX(data.getX());
+					s.setY(data.getY());
+					if(s instanceof MovableSprite) {
+						((MovableSprite) s).setHealth(data.getHealth());
+					}
+				}
+			}
+		}
+	}
 
 	private void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
