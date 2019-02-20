@@ -2,7 +2,6 @@ package com.zaxxon.sound;
 
 
 import javax.sound.sampled.*;
-import javax.sound.sampled.AudioSystem;
 
 public class MusicPlayer {
 	
@@ -43,9 +42,19 @@ public class MusicPlayer {
 		if(clip.isRunning()) clip.stop();
 	}
 	
+	public void loop() {
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+	}
+	
+	public void setVol(float sound) {
+		FloatControl volume = 
+			    (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		volume.setValue(sound);
+		
+	}
+	
 	public void close() {
 		stop();
 		clip.close();
 	}
-
 }

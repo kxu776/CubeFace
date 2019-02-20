@@ -134,7 +134,7 @@ public class Server {
 			
 			
 			clie.put(packet.getPort(),(new ServerClient(action.substring(3),packet.getAddress(), packet.getPort(), ID)));			
-			System.out.println("Sending connection to clients");
+			//System.out.println("Sending connection to clients");
 			send("/c/Connected".getBytes(), address, port);
 			ID++;
 			}

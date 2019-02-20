@@ -48,7 +48,7 @@ public class ClientMain extends Application {
 
 	private void initialise() {
 		camera = new Camera();
-		gameMusic = new MusicPlayer("/mainmenu/flossin.mp3");
+		gameMusic = new MusicPlayer("/mainmenu/mm.wav");
 	}
 
 //	public void start() {
