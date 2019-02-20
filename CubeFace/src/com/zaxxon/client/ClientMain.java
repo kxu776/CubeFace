@@ -3,7 +3,6 @@ package com.zaxxon.client;
 import com.zaxxon.ui.MainMenu2;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -22,7 +21,6 @@ public class ClientMain extends Application{
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
 		primaryStage.show();
-
 	}
 
 }

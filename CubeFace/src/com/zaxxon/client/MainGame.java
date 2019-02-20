@@ -9,6 +9,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
+import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
@@ -37,6 +38,7 @@ public class MainGame {
 	}
 
 	public void reset() {
+		// set up groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
 		world = new Group();
@@ -52,16 +54,21 @@ public class MainGame {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+		// set up new arrays and objects
+		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
 		camera = new Camera();
-		
+
+		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
 
+		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
-		
+
+		// loads the level
 		SampleLevel.generateLevel(this);
 	}
 
@@ -87,7 +94,7 @@ public class MainGame {
 		};
 		mainGameLoop.start();
 	}
-	
+
 	public Scene getRenderedScene() {
 		return renderedScene;
 	}

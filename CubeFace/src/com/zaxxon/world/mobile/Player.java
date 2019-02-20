@@ -3,20 +3,27 @@ package com.zaxxon.world.mobile;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.Wall;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.ImagePattern;
+import javafx.util.Pair;
+
+
+//Written by Dan
 
 public class Player extends MovableSprite{
-
+	
 	FacingDir facingDir; 
 	
 	int width = 64;
@@ -50,9 +57,10 @@ public class Player extends MovableSprite{
         setHeight(height);
         heal(100.0);
         isAlive = true;
-
         
         facingDir = FacingDir.up;
+        this.setX(500);
+        this.setY(800);
     }
     
     public void update(double time) {
@@ -153,8 +161,10 @@ public class Player extends MovableSprite{
     
     private void collision() {
     	
-    	
+    	Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
+    	this.translate(toMove);
     }
+    
     
     public void draw() {
     	
@@ -178,10 +188,8 @@ public class Player extends MovableSprite{
     		
     	default:
     		//error
-
     	}
     }
-
 
     
     private void getSpriteImages() {
