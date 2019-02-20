@@ -4,9 +4,11 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
+import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -32,6 +34,8 @@ public class MainGame {
 	private Client networkingClient;
 	private ArrayList<Player> playerList;
 	private Scene renderedScene;
+	
+	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public MainGame() {
 		reset();
