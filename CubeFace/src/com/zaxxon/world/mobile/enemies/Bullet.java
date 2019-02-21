@@ -62,6 +62,7 @@ public class Bullet extends MovableSprite {
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
+				MainGame.removeSprite(this);
 			}
 		}
 	}
