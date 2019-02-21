@@ -79,11 +79,34 @@ public class Player extends MovableSprite{
 		collision();
 		
 		Vector2 playerPos = new Vector2 (this.getX(), this.getY());
-		weapon.update(deltaTime, playerPos, facingDir);
+		
+		
+		Vector2 dir = getFacingDirAsVector();
+		weapon.update(deltaTime, playerPos, dir);
 		
 		draw();
     }
     
+    private Vector2 getFacingDirAsVector() {
+    	
+    	switch (facingDir) {
+    		
+    	case up:
+    		return new Vector2(0, -1);
+    		
+    	case down:
+    		return new Vector2(0, 1);
+    		
+    	case left:
+    		return new Vector2(-1, 0);
+    		
+    	case right:
+    		return new Vector2(1, 0);
+    		
+    	default:
+    		return new Vector2();
+    	}
+    }
     
     private void movement() {
     	
