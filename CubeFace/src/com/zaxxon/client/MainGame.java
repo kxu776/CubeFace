@@ -69,7 +69,9 @@ public class MainGame {
 		addSpriteToForeground(player1);
 
 		Enemy enemy = new Enemy(600,600);
+		Enemy enemy2 = new Enemy(1800, 1700);
 		addSpriteToForeground(enemy);
+		addSpriteToForeground(enemy2);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
