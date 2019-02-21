@@ -154,6 +154,17 @@ public class MainGame {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
+	
+	public void removeSprite(Sprite s) {
+		for(Sprite searchingSprite : spriteList) {
+			if(searchingSprite == s) {
+				((Group) s.getParent()).getChildren().remove(s);
+				spriteList.remove(searchingSprite);
+				s = null;
+				return;
+			}
+		}
+	}
 
 	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
