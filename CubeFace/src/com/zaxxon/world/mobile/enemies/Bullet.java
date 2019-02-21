@@ -1,16 +1,28 @@
 package com.zaxxon.world.mobile.enemies;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import com.zaxxon.client.MainGame;
+import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 
 //Written by Dan
 
 import com.zaxxon.world.mobile.MovableSprite;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.paint.ImagePattern;
+
 public class Bullet extends MovableSprite {
 	
+	ImagePattern imgPat;
+	
 	private Vector2 direction;
-	private double speed;
+	private double speed = 10;
 	
 	public Bullet (Vector2 dir, Vector2 pos) {
 		
@@ -19,6 +31,11 @@ public class Bullet extends MovableSprite {
 		this.setX(pos.x);
 		this.setY(pos.y);
 		this.direction = dir;
+		
+		getSpriteImage();
+		this.setFill(imgPat);
+		this.setWidth(8);
+		this.setHeight(8);
 	}
 	
 	public void update(double deltaTime) {
@@ -34,4 +51,12 @@ public class Bullet extends MovableSprite {
 		
 		
 	}
+	
+	private void getSpriteImage() {
+		
+		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
+		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
+		
+	}
 }
+
