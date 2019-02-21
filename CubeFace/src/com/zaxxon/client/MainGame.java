@@ -36,6 +36,7 @@ public class MainGame {
 	private static ArrayList<Player> playerList;
 	private Client networkingClient;
 	private Scene renderedScene;
+	private double FPSreduction;
 	
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -75,6 +76,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
+		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
@@ -96,7 +98,7 @@ public class MainGame {
 			public void handle(long currentNanoTime) {
 				transformWorld();
 				for (Player player : playerList) {
-					player.update(1);
+					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
 				//sendNetworkUpdate();
@@ -199,7 +201,7 @@ public class MainGame {
 							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 						}
 					}
-					((Enemy) sprite).update(1, closestPlayer.getValue());
+					((Enemy) sprite).update(FPSreduction, closestPlayer.getValue());
 				}
 			}
 		}
