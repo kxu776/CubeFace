@@ -40,6 +40,11 @@ public class MusicPlayer {
 	
 	public void stop() {
 		if(clip.isRunning()) clip.stop();
+		
+		else {
+			clip.start();
+			loop();
+		}
 	}
 	
 	public void loop() {
