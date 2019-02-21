@@ -1,5 +1,6 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.client.MainGame;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -66,7 +67,8 @@ public class JoinGamePopup {
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
             popupwindow.close();
-            primaryStage.setScene(renderedScene);
+            primaryStage.setScene(MainGame.getRenderedScene());
+            MainGame.start(primaryStage);
         });
 
 
