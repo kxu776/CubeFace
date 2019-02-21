@@ -10,6 +10,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.Camera;
+import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
@@ -17,7 +18,6 @@ import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
 import javafx.animation.AnimationTimer;
-import javafx.collections.ModifiableObservableListBase;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -80,7 +80,7 @@ public class MainGame {
 		renderedScene = new Scene(grpGame, width, height);
 
 		// loads the level
-		SampleLevel.generateLevel(this);
+		Levels.generateLevel(this, Levels.LEVEL1, 256);
 	}
 
 	public void start(Stage primaryStage) {
@@ -111,10 +111,10 @@ public class MainGame {
 	}
 
 	private void transformWorld() {
-		world.setTranslateX(camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
-				+ renderedScene.getWindow().getWidth() / 2);
-		world.setTranslateY(camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
-				+ renderedScene.getWindow().getHeight() / 2);
+		world.setTranslateX((int) (camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
+				+ renderedScene.getWindow().getWidth() / 2));
+		world.setTranslateY((int) (camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
+				+ renderedScene.getWindow().getHeight() / 2));
 		world.setScaleX(camera.getScaleX());
 		world.setScaleY(camera.getScaleY());
 	}
