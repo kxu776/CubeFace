@@ -15,7 +15,7 @@ public class ClientMain extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("CubeFace");
-		MainGame game = new MainGame();
+		MainGame.reset();
 		MainMenu mainMenu2 = new MainMenu();
 		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);
 		primaryStage.setMaximized(true);

@@ -37,6 +37,7 @@ public class ArityPopup {
             public void handle(ActionEvent event) {
                 popupwindow.close();
                 primaryStage.setScene(MainGame.getRenderedScene());
+                MainGame.start(primaryStage);
             }
         });
 
