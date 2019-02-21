@@ -14,6 +14,7 @@ public class SpriteImages {
 	public static final String MUTANT_ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/mutant-zombie-sprite-sheet.png";
 	public static final String WALL_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/wall-sprite-sheet.png";
 	public static final String ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/zombie-sprite-sheet.png";
+	public static final String BULLET_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/bullet.png";
 
 
 	public static final BufferedImage BRUTE_ZOMBIE_SPRITESHEET_IMAGE = getBufferedImageFromURL(
@@ -25,6 +26,7 @@ public class SpriteImages {
 			MUTANT_ZOMBIE_SPRITESHEET_URL);
 	public static final BufferedImage WALL_SPRITESHEET_IMAGE = getBufferedImageFromURL(WALL_SPRITESHEET_URL);
 	public static final BufferedImage ZOMBIE_SPRITESHEET_IMAGE = getBufferedImageFromURL(ZOMBIE_SPRITESHEET_URL);
+	public static final BufferedImage BULLET_SPRITESHEET_IMAGE = getBufferedImageFromURL(BULLET_SPRITESHEET_URL);
 
 	private static BufferedImage getBufferedImageFromURL(String url) {
 		File imageFile = new File(url);
