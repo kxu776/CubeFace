@@ -59,7 +59,7 @@ public class WallCollision {
     		
     		for (int i = 0; i < 3; i++) {
     			
-    			if (intersections.get(i).getKey() == 0 || intersections.get(i).getKey() == 1) {
+    			if (intersections.get(i).getKey() == 1) {
     				
     				intersections.remove(i);
     				System.out.println("found corner");
