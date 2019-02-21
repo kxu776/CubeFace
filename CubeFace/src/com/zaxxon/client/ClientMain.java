@@ -20,6 +20,8 @@ public class ClientMain extends Application{
 		Scene mainmenu = mainMenu2.makeMainMenu(game, primaryStage);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
+		primaryStage.setMinWidth(MainMenu.WIDTH);
+		primaryStage.setMinHeight(MainMenu.HEIGHT + 37);
 		primaryStage.show();
 	}
 
