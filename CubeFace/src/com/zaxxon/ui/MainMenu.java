@@ -17,6 +17,9 @@ import javafx.stage.Stage;
 
 public class MainMenu {
 
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 575;
+	
     Button start;
     Button audio;
     Button help;
@@ -165,7 +168,7 @@ public class MainMenu {
         //********************************ROOTPANE**************************************
         //make a rootpane
         GridPane rootPane = new GridPane();
-        Scene mainmenu = new Scene(rootPane, 600, 575);
+        Scene mainmenu = new Scene(rootPane, WIDTH, HEIGHT);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
 

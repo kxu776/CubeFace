@@ -1,6 +1,7 @@
 package com.zaxxon.networking;
 
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.world.Sprite;
 
 import java.io.ByteArrayInputStream;
@@ -106,6 +107,8 @@ public class Client extends Thread {
 				in = new ObjectInputStream(bais);
 
 				ClientSender data = (ClientSender) in.readObject();
+				
+				MainGame.inputUpdateQueue.add(data);
 				//System.out.println("Health is: " + data.getHealth());
 				//System.out.println("Position is:" + data.getX() + " " + data.getY());
 				//System.out.println("ID is: " + data.getID());

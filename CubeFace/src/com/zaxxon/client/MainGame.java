@@ -4,12 +4,16 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
+import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.Camera;
+import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
@@ -22,16 +26,19 @@ import javafx.util.Pair;
 
 public class MainGame {
 
-	private Group grpGame;
-	private Group world;
-	private Group background;
-	private Group foreground;
-	private Group overlay;
+	private static Group grpGame;
+	private static Group world;
+	private static Group background;
+	private static Group foreground;
+	private static Group overlay;
 	private Camera camera;
-	private LinkedList<Sprite> spriteList = new LinkedList<>();
+	private static LinkedList<Sprite> spriteList = new LinkedList<>();
+	private static ArrayList<Player> playerList;
 	private Client networkingClient;
-	private ArrayList<Player> playerList;
 	private Scene renderedScene;
+	private double FPSreduction;
+	
+	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public MainGame() {
 		reset();
@@ -72,12 +79,13 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
+		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
 
 		// loads the level
-		SampleLevel.generateLevel(this);
+		Levels.generateLevel(this, Levels.LEVEL1, 256);
 	}
 
 	public void start(Stage primaryStage) {
@@ -93,7 +101,7 @@ public class MainGame {
 			public void handle(long currentNanoTime) {
 				transformWorld();
 				for (Player player : playerList) {
-					player.update(1);
+					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
 				//sendNetworkUpdate();
@@ -108,10 +116,10 @@ public class MainGame {
 	}
 
 	private void transformWorld() {
-		world.setTranslateX(camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
-				+ renderedScene.getWindow().getWidth() / 2);
-		world.setTranslateY(camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
-				+ renderedScene.getWindow().getHeight() / 2);
+		world.setTranslateX((int) (camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
+				+ renderedScene.getWindow().getWidth() / 2));
+		world.setTranslateY((int) (camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
+				+ renderedScene.getWindow().getHeight() / 2));
 		world.setScaleX(camera.getScaleX());
 		world.setScaleY(camera.getScaleY());
 	}
@@ -147,7 +155,7 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	public void addSpriteToForeground(Sprite s) {
+	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
 		spriteList.add(s);
 		if (s.getClass() == Player.class) {
@@ -164,6 +172,21 @@ public class MainGame {
 		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
 		// actually send the packets here
 	}*/
+	
+	private void getUpdatesFromQueue() {
+		while(!inputUpdateQueue.isEmpty()) {
+			ClientSender data = inputUpdateQueue.poll();
+			for(Sprite s : spriteList) {
+				if(data.getID() == Integer.parseInt(s.getId())) {
+					s.setX(data.getX());
+					s.setY(data.getY());
+					if(s instanceof MovableSprite) {
+						((MovableSprite) s).setHealth(data.getHealth());
+					}
+				}
+			}
+		}
+	}
 
 	private void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
@@ -181,7 +204,7 @@ public class MainGame {
 							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 						}
 					}
-					((Enemy) sprite).update(1, closestPlayer.getValue());
+					((Enemy) sprite).update(FPSreduction, closestPlayer.getValue());
 				}
 			}
 		}

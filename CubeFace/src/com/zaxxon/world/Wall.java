@@ -7,6 +7,10 @@ import com.zaxxon.gameart.SpriteImages;
 import javafx.geometry.Bounds;
 import javafx.util.Pair;
 
+/**
+ * @author philip
+ *
+ */
 public class Wall extends Sprite {
 
 	public static final int WALL_CORNER = 0;
@@ -62,16 +66,26 @@ public class Wall extends Sprite {
 		return allBounds;
 	}
 	
+	/**
+	 * Returns an ArrayList of all Wall types and their bounding box so that collisions can be detected.
+	 * 
+	 * @return 		the ArrayList<Pair<Integer, Bounds>>of all Walls
+	 */
 	public static ArrayList<Pair<Integer, Bounds>> getAllWallBoundsWithType(){
 		ArrayList<Pair<Integer, Bounds>> allBoundPairs = new ArrayList<Pair<Integer, Bounds>>();
 		ArrayList<Wall> allWalls = getAllWalls();
-		ArrayList<Bounds> allBounds = getAllWallBounds();
 		for (int i = 0; i < allWalls.size(); i++) {
-			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allBounds.get(i)));
+			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allWalls.get(i).getBoundsInParent()));
 		}
 		return allBoundPairs;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * Walls are considered alive so that they are not removed from the game, despite having no health
+	 * 
+	 * @see com.zaxxon.world.Sprite#isAlive()
+	 */
 	@Override
 	public Boolean isAlive() {
 		return true;
