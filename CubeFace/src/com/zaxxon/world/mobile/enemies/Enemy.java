@@ -116,7 +116,6 @@ public class Enemy extends MovableSprite {
 
 
     private void collision() {
-
         Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
         this.translate(toMove);
     }
