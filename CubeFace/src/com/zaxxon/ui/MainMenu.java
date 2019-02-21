@@ -63,8 +63,8 @@ public class MainMenu {
         //AUDIO BUTTON
 
         audio = new Button();
-        audio.setOnAction(e -> 
-        music.stop());
+//        audio.setOnAction(e -> 
+//        music.stop());
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
         Image audioText = new Image(getClass().getResource("img/audio.png").toString());
