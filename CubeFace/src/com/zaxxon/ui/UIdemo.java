@@ -156,12 +156,12 @@ public class UIdemo extends Application {
         //current weapon label
         Label weaponLbl = new Label("CURRENT WEAPON:");
         weaponLbl.setId("health");
-        weaponLbl.setPadding(new Insets(10, 0, 0, 0));
+        weaponLbl.setPadding(new Insets(14, 0, 0, 0));
 
         //weapon
         Label weapon = new Label("*weapon");
         weapon.setId("weapon");
-        weapon.setPadding(new Insets(10, 0, 0, 0));
+        weapon.setPadding(new Insets(14, 0, 0, 0));
 
         //Hbox for weapon
         HBox bottom = new HBox();
@@ -179,7 +179,7 @@ public class UIdemo extends Application {
         
 
         //borderPane.setMaxHeight(300);
-        borderPane.setMaxSize(270, 150);
+        borderPane.setMaxSize(270, 125);
 
 
 
