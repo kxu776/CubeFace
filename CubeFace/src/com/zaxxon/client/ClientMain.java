@@ -17,7 +17,7 @@ public class ClientMain extends Application{
 		primaryStage.setTitle("CubeFace");
 		MainGame game = new MainGame();
 		MainMenu mainMenu2 = new MainMenu();
-		Scene mainmenu = mainMenu2.makeMainMenu(game, primaryStage);
+		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
 		primaryStage.setMinWidth(MainMenu.WIDTH);

@@ -31,20 +31,16 @@ public class MainGame {
 	private static Group background;
 	private static Group foreground;
 	private static Group overlay;
-	private Camera camera;
+	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	private Client networkingClient;
-	private Scene renderedScene;
-	private double FPSreduction;
+	private static Client networkingClient;
+	private static Scene renderedScene;
+	private static double FPSreduction;
 	
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public MainGame() {
-		reset();
-	}
-
-	public void reset() {
+	public static void reset() {
 		// set up groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -70,10 +66,10 @@ public class MainGame {
 		Player player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
-		this.addSpriteToForeground(player1);
+		addSpriteToForeground(player1);
 
 		Enemy enemy = new Enemy(600,600);
-		this.addSpriteToForeground(enemy);
+		addSpriteToForeground(enemy);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -85,10 +81,10 @@ public class MainGame {
 		renderedScene = new Scene(grpGame, width, height);
 
 		// loads the level
-		Levels.generateLevel(this, Levels.LEVEL1, 256);
+		Levels.generateLevel(Levels.LEVEL1, 256);
 	}
 
-	public void start(Stage primaryStage) {
+	public static void start(Stage primaryStage) {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		grpGame.requestFocus();
@@ -111,11 +107,11 @@ public class MainGame {
 		mainGameLoop.start();
 	}
 
-	public Scene getRenderedScene() {
+	public static Scene getRenderedScene() {
 		return renderedScene;
 	}
 
-	private void transformWorld() {
+	private static void transformWorld() {
 		world.setTranslateX((int) (camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
 				+ renderedScene.getWindow().getWidth() / 2));
 		world.setTranslateY((int) (camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
@@ -124,7 +120,7 @@ public class MainGame {
 		world.setScaleY(camera.getScaleY());
 	}
 
-	private void dealWithKeyInput() {
+	private static void dealWithKeyInput() {
 		if (Input.isKeyPressed(KeyCode.W)) {
 			camera.setPositionY(camera.getPositionY() + 1);
 		}
@@ -150,12 +146,12 @@ public class MainGame {
 		}
 	}
 
-	public void addSpriteToBackground(Sprite s) {
+	public static void addSpriteToBackground(Sprite s) {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
 	
-	public void removeSprite(Sprite s) {
+	public static void removeSprite(Sprite s) {
 		for(Sprite searchingSprite : spriteList) {
 			if(searchingSprite == s) {
 				((Group) s.getParent()).getChildren().remove(s);
@@ -174,7 +170,7 @@ public class MainGame {
 		}
 	}
 
-	public void addSpriteToOverlay(Sprite s) {
+	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
 	}
@@ -184,7 +180,7 @@ public class MainGame {
 		// actually send the packets here
 	}*/
 	
-	private void getUpdatesFromQueue() {
+	private static void getUpdatesFromQueue() {
 		while(!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
 			for(Sprite s : spriteList) {
@@ -199,7 +195,7 @@ public class MainGame {
 		}
 	}
 
-	private void updateEnemies() {
+	private static void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
 		for (Sprite sprite : spriteList) {

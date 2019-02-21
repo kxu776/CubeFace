@@ -35,14 +35,14 @@ public class Levels {
 		return w;
 	}
 
-	public static void generateLevel(MainGame gameWindow, int[][] level, int size) {
+	public static void generateLevel(int[][] level, int size) {
 		Wall[] bg = generateBackground(level, size);
 		for (int i = 0; i < bg.length; i++) {
 			Wall s = bg[i];
 			if (s != null) {
 				s.setX(size * (i % level.length));
 				s.setY(size * (i / level.length));
-				gameWindow.addSpriteToBackground(s);
+				MainGame.addSpriteToBackground(s);
 			}
 		}
 	}

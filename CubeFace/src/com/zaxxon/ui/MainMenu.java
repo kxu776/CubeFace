@@ -26,7 +26,7 @@ public class MainMenu {
 
 
     //a method that makes the main menu scene
-    public Scene makeMainMenu(MainGame mainGame, Stage window) {
+    public Scene makeMainMenu(Stage window) {
 
         //******************************GRIDPANE 1***********************************
 
@@ -51,7 +51,7 @@ public class MainMenu {
         start.setOnAction(e -> {
         	//mainGame.start(window);
         	//window.setScene(mainGame.getRenderedScene());
-            ArityPopup.display(window, mainGame.getRenderedScene(), mainGame);
+            ArityPopup.display(window, MainGame.getRenderedScene());
         });
         grid1.setConstraints(start, 0, 3);
         //load the start button text

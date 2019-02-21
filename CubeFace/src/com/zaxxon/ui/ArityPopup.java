@@ -15,7 +15,7 @@ import javafx.stage.*;
 public class ArityPopup {
 
 
-    public static void display(Stage primaryStage, Scene renderedScene, MainGame mainGame)
+    public static void display(Stage primaryStage, Scene renderedScene)
     {
         Stage popupwindow = new Stage();
 
@@ -36,10 +36,7 @@ public class ArityPopup {
             @Override
             public void handle(ActionEvent event) {
                 popupwindow.close();
-                primaryStage.setScene(renderedScene);
-                if(mainGame != null) {
-                	mainGame.start(primaryStage);
-                }
+                primaryStage.setScene(MainGame.getRenderedScene());
             }
         });
 
