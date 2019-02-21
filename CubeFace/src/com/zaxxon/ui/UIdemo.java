@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
@@ -139,12 +140,14 @@ public class UIdemo extends Application {
         scoreLbl.setId("scoreLbl");
         scoreLbl.setMaxWidth(80);
         scoreLbl.setMinWidth(80);
+        scoreLbl.setTextAlignment(TextAlignment.CENTER);
 
         //score
         Label score = new Label("*");
         score.setId("score");
         score.setMaxWidth(80);
         score.setMinWidth(80);
+        score.setTextAlignment(TextAlignment.CENTER);
 
         //vbox for score
         VBox right = new VBox();
@@ -155,13 +158,13 @@ public class UIdemo extends Application {
 
         //current weapon label
         Label weaponLbl = new Label("CURRENT WEAPON:");
-        weaponLbl.setId("health");
-        weaponLbl.setPadding(new Insets(14, 0, 0, 0));
+        weaponLbl.setId("weaponLbl");
+        weaponLbl.setPadding(new Insets(17, 0, 5, 0));
 
         //weapon
-        Label weapon = new Label("*weapon");
+        Label weapon = new Label("*WEAPON");
         weapon.setId("weapon");
-        weapon.setPadding(new Insets(14, 0, 0, 0));
+        weapon.setPadding(new Insets(17, 0, 5, 0));
 
         //Hbox for weapon
         HBox bottom = new HBox();
@@ -180,6 +183,9 @@ public class UIdemo extends Application {
 
         //borderPane.setMaxHeight(300);
         borderPane.setMaxSize(270, 125);
+
+
+
 
 
 
