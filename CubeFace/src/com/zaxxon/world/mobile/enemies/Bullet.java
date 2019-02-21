@@ -3,19 +3,23 @@ package com.zaxxon.world.mobile.enemies;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.Wall;
 
 //Written by Dan
 
 import com.zaxxon.world.mobile.MovableSprite;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.paint.ImagePattern;
+import javafx.util.Pair;
 
 public class Bullet extends MovableSprite {
 	
@@ -44,12 +48,22 @@ public class Bullet extends MovableSprite {
 		toMove = new Vector2 (direction.x * speed * deltaTime, direction.y * speed * deltaTime);
 		this.translate(toMove);
 		
+		collision();
 		draw();
 	}
 	
 	private void draw() {
 		
 		
+	}
+	
+	private void collision() {
+		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
+		for(int i = 0;i < walls.size(); i++) {
+			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
+				speed = 0;
+			}
+		}
 	}
 	
 	private void getSpriteImage() {
