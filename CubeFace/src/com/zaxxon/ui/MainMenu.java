@@ -1,6 +1,7 @@
 package com.zaxxon.ui;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.sound.MusicPlayer;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -19,6 +20,7 @@ public class MainMenu {
 
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 575;
+	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
 	
     Button start;
     Button audio;
@@ -61,7 +63,8 @@ public class MainMenu {
         //AUDIO BUTTON
 
         audio = new Button();
-        audio.setOnAction(e -> System.out.println("Opening audio popup..."));
+        audio.setOnAction(e -> 
+        music.stop());
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
         Image audioText = new Image(getClass().getResource("img/audio.png").toString());
