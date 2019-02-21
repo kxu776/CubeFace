@@ -20,7 +20,7 @@ public class MainMenu {
 
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 575;
-	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
+	//public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
 	
     Button start;
     Button audio;
