@@ -1,6 +1,8 @@
 package com.zaxxon.ui;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.networking.Client;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -66,6 +68,8 @@ public class JoinGamePopup {
         Button startGame = new Button("Go");
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
+            MainGame.networkingClient = new Client("localhost", Integer.parseInt(portField.getText()), nameField.getText());
+            MainGame.networkingClient.start();
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());
             MainGame.start(primaryStage);

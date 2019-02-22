@@ -34,10 +34,11 @@ public class MainGame {
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	private static Client networkingClient;
+	public  static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
-	
+	public static ClientSender client;
+
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public static void reset() {
@@ -66,6 +67,7 @@ public class MainGame {
 		Player player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
+		client = new ClientSender(player1.getX(),player1.getY(),player1.getHealth());
 		addSpriteToForeground(player1);
 
 		Enemy enemy = new Enemy(600,600);
@@ -102,7 +104,7 @@ public class MainGame {
 					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
-				//sendNetworkUpdate();
+				sendNetworkUpdate();
 				updateEnemies();
 			}
 		};
@@ -177,10 +179,12 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	/*private void sendNetworkUpdate() {
-		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
+	private static void sendNetworkUpdate() {
+		networkingClient.sendPlayerObj(client);
+			
+		//networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
 		// actually send the packets here
-	}*/
+	}
 	
 	private static void getUpdatesFromQueue() {
 		while(!inputUpdateQueue.isEmpty()) {
