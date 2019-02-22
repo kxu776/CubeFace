@@ -206,7 +206,15 @@ public class UIdemo extends Application {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid1, borderPane);
 
-        Scene mainmenu = new Scene(rootPane, 600, 575);
+        //trying an anchor pane instead
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setBottomAnchor(borderPane, 0.0);
+        anchorPane.setRightAnchor(borderPane, 0.0);
+        anchorPane.getChildren().add(borderPane);
+
+
+
+        Scene mainmenu = new Scene(anchorPane, 600, 575);
         mainmenu.getStylesheets().add(getClass().getResource("demo.css").toString()); //add the stylesheet
 
         //set the scene to be the one displayed on the window

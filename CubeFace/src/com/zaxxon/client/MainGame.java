@@ -1,12 +1,13 @@
 package com.zaxxon.client;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.sun.org.glassfish.external.statistics.Stats;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
+import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
@@ -16,6 +17,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -57,20 +60,45 @@ public class MainGame {
 		camera = new Camera();
 		
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
+		//int width = gd.getDisplayMode().getWidth();
+		//int height = gd.getDisplayMode().getHeight();
 
-		renderedScene = new Scene(grpGame, width, height);
-		
+		//get screen dimension
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		//get StatsBox
+		StatsBox statsBox = new StatsBox();
+		BorderPane borderPane = statsBox.statsBox();
+
+
+		//make an anchor pane as the new layout
+		AnchorPane anchorPane = new AnchorPane();
+		anchorPane.setBottomAnchor(borderPane, 30.0);
+		anchorPane.setRightAnchor(borderPane, 30.0);
+		anchorPane.setTopAnchor(grpGame,0.0);
+		anchorPane.setCenterShape(true);
+		anchorPane.getChildren().addAll(grpGame, borderPane);
+
+
+		renderedScene = new Scene(anchorPane, screenSize.getWidth(), screenSize.getHeight());
+
+		//add stylesheet to the scene
+		renderedScene.getStylesheets().add(getClass().getResource("demo.css").toString()); //add the stylesheet
+
+
 		SampleLevel.generateLevel(this);
 	}
 
 	public void start(Stage primaryStage) {
-		primaryStage.setScene(renderedScene);
+
+
+
 		grpGame.setFocusTraversable(true);
 		grpGame.requestFocus();
-		primaryStage.setWidth(renderedScene.getWindow().getWidth());
-		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		primaryStage.setMaximized(true);
+		primaryStage.setScene(renderedScene);
+		//primaryStage.setWidth(renderedScene.getWindow().getWidth());
+		//primaryStage.setHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
 
