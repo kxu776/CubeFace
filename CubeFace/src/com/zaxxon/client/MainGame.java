@@ -38,6 +38,7 @@ public class MainGame {
 	private static Scene renderedScene;
 	private static double FPSreduction;
 	public static ClientSender client;
+	public static boolean multiplayer = false;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -104,7 +105,9 @@ public class MainGame {
 					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
-				sendNetworkUpdate();
+				if (multiplayer) {
+					sendNetworkUpdate();
+				}
 				updateEnemies();
 			}
 		};

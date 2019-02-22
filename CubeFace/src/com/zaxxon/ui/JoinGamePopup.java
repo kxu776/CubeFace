@@ -70,6 +70,7 @@ public class JoinGamePopup {
         startGame.setOnAction(e -> {
             MainGame.networkingClient = new Client("localhost", Integer.parseInt(portField.getText()), nameField.getText());
             MainGame.networkingClient.start();
+            MainGame.multiplayer = true;
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());
             MainGame.start(primaryStage);
