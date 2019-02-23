@@ -66,10 +66,10 @@ public class Server {
 		}
 	}
 
-	private byte[] editObj(DatagramPacket packet, int ID, InetAddress inet, int port) {
-
+	private byte[] editObj(byte[] bs, int ID, InetAddress inet, int port) {
+		
 		try {
-			bais = new ByteArrayInputStream(packet.getData());
+			bais = new ByteArrayInputStream(bs);
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
@@ -84,9 +84,10 @@ public class Server {
 				e.printStackTrace();
 			}
 		} catch (ClassNotFoundException | IOException e) {
+			System.out.println(new String( bs));
 			e.printStackTrace();
 		}
-		return packet.getData();
+		return bs;
 	}
 
 	private void broadcastPlayers(DatagramPacket packet) {
@@ -94,7 +95,7 @@ public class Server {
 			// Can't have the port of the client sending the info be the same as the port
 			// from a different machine
 			if (packet.getPort() != c.getKey() && packet.getAddress() != c.getValue().getAddress()) {
-				byte[] b = editObj(packet, c.getValue().getID(), c.getValue().getAddress(),
+				byte[] b = editObj(packet.getData(), c.getValue().getID(), c.getValue().getAddress(),
 						c.getKey() - c.getValue().getID());
 
 				send(b, (c.getValue()).getAddress(), c.getKey());
@@ -130,6 +131,9 @@ public class Server {
 			waiting = true;
 			return;
 		} else {
+			if (action.startsWith("/C/")) {
+				return;
+			}
 			waiting = false;
 			broadcastPlayers(packet);
 		}

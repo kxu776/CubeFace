@@ -9,6 +9,7 @@ public class ClientSender implements Serializable{
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
+	public boolean spawn = false;
 	private int ID;
 	
 	public ClientSender(double d, double e, double health) {

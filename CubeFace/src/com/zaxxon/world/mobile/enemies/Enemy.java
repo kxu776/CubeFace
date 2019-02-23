@@ -124,7 +124,7 @@ public class Enemy extends MovableSprite {
     private void damage(Player player){
         if(this.getBoundsInLocal().intersects(player.getX(),player.getY(),player.getWidth(),player.getHeight())){   //collision check
             player.takeDamage(this.damage);
-            System.out.println("Health: " + String.valueOf(player.getHealth()));
+            //System.out.println("Health: " + String.valueOf(player.getHealth()));
         }
     }
 

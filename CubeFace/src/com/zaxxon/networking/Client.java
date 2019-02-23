@@ -33,7 +33,6 @@ public class Client extends Thread {
 		this.port = port;
 		this.ipAddress = host;
 		this.player = player;
-
 	}
 
 	public void run() {
@@ -42,6 +41,7 @@ public class Client extends Thread {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
+				//System.out.println("dd");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -66,10 +66,10 @@ public class Client extends Thread {
 	private void sendConnectionPacket() {
 		byte[] data = ("/C/" + player).getBytes();
 		send(data);
+		running = true;
 	}
 
 	private void getPlayerObj(DatagramPacket packet) {
-		System.out.println("Incoming from server......");
 		String message = new String(packet.getData());
 		if (message.trim().startsWith("/c/")) {
 			System.out.println("Server >: " + message.substring(3));
@@ -89,7 +89,9 @@ public class Client extends Thread {
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
+				//System.out.println(data.getX() +" "+ data.getY()); 
 				MainGame.inputUpdateQueue.add(data);
+				//System.out.println(":)");
 				Thread.sleep(25);
 
 				// socket.close();
