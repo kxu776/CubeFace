@@ -34,11 +34,14 @@ public class MainGame {
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	public  static Client networkingClient;
+	public static  Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
 	public static ClientSender client;
 	public static boolean multiplayer = false;
+	private static Player player1;
+	private static Player player2;
+
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -65,13 +68,18 @@ public class MainGame {
 		playerList = new ArrayList<Player>();
 		camera = new Camera();
 		
-		Player player1 = new Player();
+		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
-		client = new ClientSender(player1.getX(),player1.getY(),player1.getHealth());
 		addSpriteToForeground(player1);
+		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
+		
+		player2 = new Player();
+		player2.setX(600);
+		player2.setY(600);
+		addSpriteToForeground(player2);
 
-		Enemy enemy = new Enemy(600,600);
+		Enemy enemy = new Enemy(600, 600);
 		Enemy enemy2 = new Enemy(1800, 1700);
 		addSpriteToForeground(enemy);
 		addSpriteToForeground(enemy2);
@@ -80,7 +88,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
+		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
@@ -90,12 +98,13 @@ public class MainGame {
 	}
 
 	public static void start(Stage primaryStage) {
+		networkingClient = new Client("localhost",4444,"g");
+		networkingClient.start();
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
-
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -108,6 +117,7 @@ public class MainGame {
 				if (multiplayer) {
 					sendNetworkUpdate();
 				}
+				getUpdatesFromQueue();
 				updateEnemies();
 			}
 		};
@@ -157,10 +167,10 @@ public class MainGame {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public static void removeSprite(Sprite s) {
-		for(Sprite searchingSprite : spriteList) {
-			if(searchingSprite == s) {
+		for (Sprite searchingSprite : spriteList) {
+			if (searchingSprite == s) {
 				((Group) s.getParent()).getChildren().remove(s);
 				spriteList.remove(searchingSprite);
 				s = null;
@@ -183,24 +193,30 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
+		client.setX(player1.getX());client.setY(player1.getY());client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
-			
-		//networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
+		// networkingClient.spritesToString(spriteList); // Compiles ArrayList<string>
+		// of concatenated sprite attributes.
 		// actually send the packets here
 	}
-	
+
 	private static void getUpdatesFromQueue() {
-		while(!inputUpdateQueue.isEmpty()) {
+		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			for(Sprite s : spriteList) {
-				if(data.getID() == Integer.parseInt(s.getId())) {
+			player2.setId(""+data.getID());
+			data.spawn = true;
+			for (Sprite s : spriteList) {
+				if (data.getID() == Integer.parseInt(s.getId()) && data.spawn == true) {
+				//	System.out.println("i run");
 					s.setX(data.getX());
 					s.setY(data.getY());
-					if(s instanceof MovableSprite) {
+					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}
-				}
+				} 
+					//addSpriteToForeground((Player) s);
 			}
+
 		}
 	}
 
