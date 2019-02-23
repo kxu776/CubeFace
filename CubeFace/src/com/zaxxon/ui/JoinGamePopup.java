@@ -68,8 +68,9 @@ public class JoinGamePopup {
         Button startGame = new Button("Go");
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
-        	MainGame.multiplayer = true;
-
+        		MainGame.networkingClient = new Client("localhost",Integer.parseInt((portField.getText())),nameField.getText());
+    			MainGame.networkingClient.start();
+    			MainGame.multiplayer = true;
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());
             MainGame.start(primaryStage);

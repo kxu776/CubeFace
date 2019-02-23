@@ -34,7 +34,7 @@ public class MainGame {
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	public static  Client networkingClient;
+	public  static  Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
 	public static ClientSender client;
@@ -79,10 +79,10 @@ public class MainGame {
 		player2.setY(600);
 		addSpriteToForeground(player2);
 
-		Enemy enemy = new Enemy(600, 600);
-		Enemy enemy2 = new Enemy(1800, 1700);
-		addSpriteToForeground(enemy);
-		addSpriteToForeground(enemy2);
+		//Enemy enemy = new Enemy(600, 600);
+		//Enemy enemy2 = new Enemy(1800, 1700);
+		//addSpriteToForeground(enemy);
+		//addSpriteToForeground(enemy2);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -98,8 +98,6 @@ public class MainGame {
 	}
 
 	public static void start(Stage primaryStage) {
-		networkingClient = new Client("localhost",4444,"g");
-		networkingClient.start();
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		grpGame.requestFocus();
