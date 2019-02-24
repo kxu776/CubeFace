@@ -17,7 +17,7 @@ public class Server {
 	private Thread listenThread;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
-	public static HashMap<Integer, ServerClient> clie = new HashMap<>();
+	public static HashMap<Integer, ServerClient> clients = new HashMap<>();
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -66,38 +66,43 @@ public class Server {
 		}
 	}
 
-	private byte[] editObj(byte[] bs, int ID, InetAddress inet, int port) {
-		
+	private byte[] editObj(byte[] bs, int ID) {
+
 		try {
 			bais = new ByteArrayInputStream(bs);
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
+			bais.close();
+			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
 				out = new ObjectOutputStream(baos);
 				out.writeObject(data);
 				out.flush();
 				byte[] playerinfo = baos.toByteArray();
+				out.close();
+				baos.close();
 				return playerinfo;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} catch (ClassNotFoundException | IOException e) {
-			System.out.println(new String( bs));
+			System.out.println(new String(bs));
 			e.printStackTrace();
 		}
 		return bs;
 	}
 
 	private void broadcastPlayers(DatagramPacket packet) {
-		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
+		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			// Can't have the port of the client sending the info be the same as the port
 			// from a different machine
+			// each client has a unique IP
+			// so we have to account for that and make sure we only send info to those who
+			// need it.
 			if (packet.getPort() != c.getKey() && packet.getAddress() != c.getValue().getAddress()) {
-				byte[] b = editObj(packet.getData(), c.getValue().getID(), c.getValue().getAddress(),
-						c.getKey() - c.getValue().getID());
-
+				byte[] b = editObj(packet.getData(), c.getValue().getID());				
 				send(b, (c.getValue()).getAddress(), c.getKey());
 			}
 		}
@@ -115,14 +120,27 @@ public class Server {
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 
-			clie.put(packet.getPort(),
+			clients.put(packet.getPort(),
 					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), ID)));
 			// System.out.println("Sending connection to clients");
 			send("/c/Connected".getBytes(), address, port);
 			ID++;
 		}
 
-		if (clie.size() < 2) {
+		if (action.startsWith("/b/")) {
+			broadcastGen(packet, "/b/");
+		}
+
+		if (action.startsWith("/d/")) {
+			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+				if (port == c.getKey() && address != c.getValue().getAddress()) {
+					clients.remove(c.getKey(), c.getValue());
+					return;
+				}
+			}
+		}
+
+		if (clients.size() < 2) {
 			if (waiting) {
 				return;
 			}
@@ -139,13 +157,25 @@ public class Server {
 		}
 	}
 
+	private void broadcastGen(DatagramPacket p, String packetIdentifier) {
+		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+			if (p.getPort() != c.getKey() && p.getAddress() != c.getValue().getAddress()) {
+				send(packetIdentifier.getBytes(), c.getValue().getAddress(), c.getKey());
+			}
+		}
+	}
+
 	public InetAddress getServerIP() {
 		return serverSocket.getInetAddress();
-
 	}
 
 	public void close() {
-		serverSocket.close();
 		listening = false;
+		serverSocket.close();
+		try {
+			listenThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
