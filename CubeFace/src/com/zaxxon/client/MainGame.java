@@ -34,14 +34,13 @@ public class MainGame {
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	public  static  Client networkingClient;
+	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static Player player1;
-	private static Player player2;
-
+	private static ArrayList<Integer> players = new ArrayList<>();
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -67,22 +66,17 @@ public class MainGame {
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
 		camera = new Camera();
-		
+
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-		
-		player2 = new Player();
-		player2.setX(600);
-		player2.setY(600);
-		addSpriteToForeground(player2);
 
-		//Enemy enemy = new Enemy(600, 600);
-		//Enemy enemy2 = new Enemy(1800, 1700);
-		//addSpriteToForeground(enemy);
-		//addSpriteToForeground(enemy2);
+		Enemy enemy = new Enemy(600, 600);
+		Enemy enemy2 = new Enemy(1800, 1700);
+		addSpriteToForeground(enemy);
+		addSpriteToForeground(enemy2);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -114,8 +108,8 @@ public class MainGame {
 				dealWithKeyInput();
 				if (multiplayer) {
 					sendNetworkUpdate();
+					getUpdatesFromQueue();
 				}
-				getUpdatesFromQueue();
 				updateEnemies();
 			}
 		};
@@ -191,7 +185,9 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
-		client.setX(player1.getX());client.setY(player1.getY());client.setHealth(player1.getHealth());
+		client.setX(player1.getX());
+		client.setY(player1.getY());
+		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
 		// networkingClient.spritesToString(spriteList); // Compiles ArrayList<string>
 		// of concatenated sprite attributes.
@@ -201,18 +197,23 @@ public class MainGame {
 	private static void getUpdatesFromQueue() {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			player2.setId(""+data.getID());
-			data.spawn = true;
+			if (players.contains(data.getID()) == false) {
+				Player player2 = new Player();
+				players.add(data.getID());
+				String uid = "" + data.getID();
+				player2.setY(500);
+				player2.setX(500);
+				player2.setId(uid);
+				addSpriteToBackground(player2);
+			}
 			for (Sprite s : spriteList) {
-				if (data.getID() == Integer.parseInt(s.getId()) && data.spawn == true) {
-				//	System.out.println("i run");
+				if (data.getID() == Integer.parseInt(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
 					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}
-				} 
-					//addSpriteToForeground((Player) s);
+				}
 			}
 
 		}
