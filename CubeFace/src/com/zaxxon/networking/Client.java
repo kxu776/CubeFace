@@ -1,6 +1,5 @@
 package com.zaxxon.networking;
 
-import com.zaxxon.client.MainGame;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,6 +10,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+
+import com.zaxxon.client.MainGame;
 
 public class Client extends Thread {
 
@@ -27,6 +28,7 @@ public class Client extends Thread {
 	private ByteArrayInputStream bais;
 	private boolean running = false;
 	private String player;
+	
 
 	public Client(String host, int port, String player) {
 		// port refers to port of the server
@@ -47,6 +49,7 @@ public class Client extends Thread {
 			}
 			getPlayerObj(packet);
 		}
+		
 	}
 
 	public void connect() {
@@ -82,17 +85,15 @@ public class Client extends Thread {
 			return;
 		}
 
-		else
+		else		
 			try {
 
 				// Here is where we should update the client.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
-				//System.out.println(data.getX() +" "+ data.getY()); 
 				MainGame.inputUpdateQueue.add(data);
-				//System.out.println(":)");
-				Thread.sleep(25);
+				Thread.sleep(20);
 
 				// socket.close();
 				// running = false;
@@ -117,7 +118,11 @@ public class Client extends Thread {
 			byte[] playerinfo = baos.toByteArray();
 
 			send(playerinfo);
+			out.close();
+			baos.close();
+			
 			Thread.sleep(30);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -128,11 +133,11 @@ public class Client extends Thread {
 	public void disconnect() {
 		send("/d/.".getBytes());
 		System.out.println("No, closing socket");
-		socket.close();
 		running = false;
 		try {
 			bais.close();
 			in.close();
+			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
