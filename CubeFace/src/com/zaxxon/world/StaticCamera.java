@@ -1,15 +1,11 @@
 package com.zaxxon.world;
 
-public class Camera {
+public class StaticCamera {
 	
 	private double positionX = 0;
 	private double positionY = 0;
 	private double scaleX = 1;
 	private double scaleY = 1;
-	
-	public Camera() {
-		
-	}
 
 	public void setPosition(double positionX, double positionY) {
 		setPositionX(positionX);

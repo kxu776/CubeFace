@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
-import com.zaxxon.world.Camera;
+import com.zaxxon.world.StaticCamera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -31,7 +31,7 @@ public class MainGame {
 	private static Group background;
 	private static Group foreground;
 	private static Group overlay;
-	private static Camera camera;
+	private static StaticCamera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
 	private static Client networkingClient;
@@ -61,7 +61,7 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-		camera = new Camera();
+		camera = new StaticCamera();
 		
 		Player player1 = new Player();
 		player1.setX(500);
