@@ -62,7 +62,7 @@ public class WallCollision {
     			if (intersections.get(i).getKey() == 1) {
     				
     				intersections.remove(i);
-    				System.out.println("found corner");
+    				//System.out.println("found corner");
     				break;
     			}
     		}

@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
-import com.zaxxon.world.Camera;
+import com.zaxxon.world.StaticCamera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -31,13 +31,17 @@ public class MainGame {
 	private static Group background;
 	private static Group foreground;
 	private static Group overlay;
-	private static Camera camera;
+	private static StaticCamera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	private static Client networkingClient;
+	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
-	
+	public static ClientSender client;
+	public static boolean multiplayer = false;
+	private static Player player1;
+	private static ArrayList<Integer> players = new ArrayList<>();
+
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public static void reset() {
@@ -61,14 +65,16 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-		camera = new Camera();
+		camera = new StaticCamera();
 		
-		Player player1 = new Player();
+		player1 = new Player();
+
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
+		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Enemy enemy = new Enemy(600,600);
+		Enemy enemy = new Enemy(600, 600);
 		Enemy enemy2 = new Enemy(1800, 1700);
 		addSpriteToForeground(enemy);
 		addSpriteToForeground(enemy2);
@@ -77,7 +83,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
+		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
@@ -92,7 +98,6 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
-
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -102,7 +107,10 @@ public class MainGame {
 					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
-				//sendNetworkUpdate();
+				if (multiplayer) {
+					sendNetworkUpdate();
+					getUpdatesFromQueue();
+				}
 				updateEnemies();
 			}
 		};
@@ -152,10 +160,10 @@ public class MainGame {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public static void removeSprite(Sprite s) {
-		for(Sprite searchingSprite : spriteList) {
-			if(searchingSprite == s) {
+		for (Sprite searchingSprite : spriteList) {
+			if (searchingSprite == s) {
 				((Group) s.getParent()).getChildren().remove(s);
 				spriteList.remove(searchingSprite);
 				s = null;
@@ -177,23 +185,38 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	/*private void sendNetworkUpdate() {
-		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
+	private static void sendNetworkUpdate() {
+		client.setX(player1.getX());
+		client.setY(player1.getY());
+		client.setHealth(player1.getHealth());
+		networkingClient.sendPlayerObj(client);
+		// networkingClient.spritesToString(spriteList); // Compiles ArrayList<string>
+		// of concatenated sprite attributes.
 		// actually send the packets here
-	}*/
-	
+	}
+
 	private static void getUpdatesFromQueue() {
-		while(!inputUpdateQueue.isEmpty()) {
+		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			for(Sprite s : spriteList) {
-				if(data.getID() == Integer.parseInt(s.getId())) {
+			if (players.contains(data.getID()) == false) {
+				Player player2 = new Player();
+				players.add(data.getID());
+				String uid = "" + data.getID();
+				player2.setY(500);
+				player2.setX(500);
+				player2.setId(uid);
+				addSpriteToBackground(player2);
+			}
+			for (Sprite s : spriteList) {
+				if (data.getID() == Integer.parseInt(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
-					if(s instanceof MovableSprite) {
+					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}
 				}
 			}
+
 		}
 	}
 

@@ -5,10 +5,12 @@ import java.net.InetAddress;
 
 public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
+	public String name;
 	public double x;
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
+	public boolean spawn = false;
 	private int ID;
 	
 	public ClientSender(double d, double e, double health) {

@@ -29,7 +29,7 @@ public class Weapon {
 		Bullet bullet = new Bullet(dir, weaponPos);
 		allBullets.add(bullet);
 		
-		System.out.println("Bullet created");
+		//System.out.println("Bullet created");
 	}
 	
 	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 dir) {

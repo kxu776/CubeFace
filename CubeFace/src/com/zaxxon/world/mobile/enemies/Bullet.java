@@ -49,12 +49,6 @@ public class Bullet extends MovableSprite {
 		this.translate(toMove);
 		
 		collision();
-		draw();
-	}
-	
-	private void draw() {
-		
-		
 	}
 	
 	private void collision() {

@@ -1,5 +1,7 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.networking.Server;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -50,7 +52,7 @@ public class NewServerPopup {
             public void handle(ActionEvent event) {
 
                 //get info from text field and pass to networking
-
+            		new Server(Integer.parseInt(portField.getText())).start();;
                 popupwindow.close();
                 //open server confirmation popup
 
