@@ -67,7 +67,7 @@ public class MainGame {
 		playerList = new ArrayList<Player>();
 		camera = new StaticCamera();
 		
-		Player player1 = new Player();
+		player1 = new Player();
 
 		player1.setX(500);
 		player1.setY(500);
