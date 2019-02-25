@@ -93,8 +93,7 @@ public class Client extends Thread {
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
 				MainGame.inputUpdateQueue.add(data);
-				Thread.sleep(20);
-
+				
 				// socket.close();
 				// running = false;
 				// try {
@@ -110,6 +109,7 @@ public class Client extends Thread {
 	}
 
 	public void sendPlayerObj(ClientSender c) {
+		c.name = player;
 		baos = new ByteArrayOutputStream();
 		try {
 			out = new ObjectOutputStream(baos);
@@ -121,7 +121,7 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			Thread.sleep(30);
+			Thread.sleep(20);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

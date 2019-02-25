@@ -5,6 +5,7 @@ import java.net.InetAddress;
 
 public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
+	public String name;
 	public double x;
 	public double y;
 	public double health;
