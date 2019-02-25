@@ -1,15 +1,15 @@
 package com.zaxxon.client;
 
-import java.awt.*;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.sun.org.glassfish.external.statistics.Stats;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
-import com.zaxxon.ui.StatsBox;
 import com.zaxxon.networking.ClientSender;
+import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
@@ -22,8 +22,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -32,7 +32,8 @@ public class MainGame {
 	private static Group grpGame;
 	private static Group world;
 	private static Group background;
-	private static Group foreground;
+	//private static Group foreground;
+	private static BorderPane foreground;
 	private static Group overlay;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
@@ -40,7 +41,7 @@ public class MainGame {
 	private static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
-	
+
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public static void reset() {
@@ -51,7 +52,8 @@ public class MainGame {
 		world.setId("world");
 		background = new Group();
 		background.setId("background");
-		foreground = new Group();
+		//foreground = new Group();
+		foreground = (new StatsBox().statsBox());
 		foreground.setId("foreground");
 		overlay = new Group();
 		overlay.setId("overlay");
@@ -65,7 +67,7 @@ public class MainGame {
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
 		camera = new Camera();
-		
+
 		Player player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
@@ -78,26 +80,6 @@ public class MainGame {
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		//int width = gd.getDisplayMode().getWidth();
-		//int height = gd.getDisplayMode().getHeight();
-
-		//get screen dimension
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		//get StatsBox
-		StatsBox statsBox = new StatsBox();
-		BorderPane borderPane = statsBox.statsBox();
-
-
-		//make an anchor pane as the new layout
-		AnchorPane anchorPane = new AnchorPane();
-		anchorPane.setBottomAnchor(borderPane, 30.0);
-		anchorPane.setRightAnchor(borderPane, 30.0);
-		anchorPane.setTopAnchor(grpGame,0.0);
-		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane);
-
-
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
 		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
@@ -105,21 +87,21 @@ public class MainGame {
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
 
-		//add stylesheet to the scene
-		//renderedScene.getStylesheets().add(getClass().getResource("demo.css").toString()); //add the stylesheet
-
-
+		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
+
+		//add the stylesheet
+		renderedScene.getStylesheets().add("CubeFace/src/com/zaxxon/ui/demo.css");
+
+
 	}
 
 	public static void start(Stage primaryStage) {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		grpGame.requestFocus();
-		primaryStage.setMaximized(true);
-		primaryStage.setScene(renderedScene);
-		//primaryStage.setWidth(renderedScene.getWindow().getWidth());
-		//primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		primaryStage.setWidth(renderedScene.getWindow().getWidth());
+		primaryStage.setHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
 
@@ -180,7 +162,7 @@ public class MainGame {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public static void removeSprite(Sprite s) {
 		for(Sprite searchingSprite : spriteList) {
 			if(searchingSprite == s) {
@@ -209,7 +191,7 @@ public class MainGame {
 		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
 		// actually send the packets here
 	}*/
-	
+
 	private static void getUpdatesFromQueue() {
 		while(!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
