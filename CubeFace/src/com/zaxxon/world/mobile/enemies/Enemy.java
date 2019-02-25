@@ -2,6 +2,7 @@ package com.zaxxon.world.mobile.enemies;
 
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.Levels;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.WallCollision;
@@ -10,9 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
 import javax.imageio.ImageIO;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import static java.lang.Math.abs;
@@ -57,8 +61,12 @@ public class Enemy extends MovableSprite {
     }
 
     public void update(double time, Player player) {
-        pX = player.getX();
+        Point2D.Double closestNode = closestPoint();
+        /*pX = player.getX();
         pY = player.getY();
+        */
+        pX = closestNode.x;
+        pY = closestNode.y;
         damage(player);
         //collision();
         deltaTime = time;
@@ -188,6 +196,16 @@ public class Enemy extends MovableSprite {
             Image img = SwingFXUtils.toFXImage(sprites[i], null);
             imgPats[i] = new ImagePattern(img);
         }
+    }
+
+    public Point2D.Double closestPoint(){
+        ArrayList<Point2D.Double> waypoints = new ArrayList<Point2D.Double>();
+        for(int i=0;i<Levels.L1_WAYPOINTS.length;i++){
+            waypoints.add(Levels.L1_WAYPOINTS[i]);
+        }
+        Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
+        Point2D.Double closest = Collections.min(waypoints, (p1, p2) -> (int) p1.distanceSq(p2));
+        return closest;
     }
 
     @Override
