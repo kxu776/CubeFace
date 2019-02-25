@@ -53,16 +53,5 @@ public class Levels {
 			}
 		}
 	}
-
-	//WIP, still very inefficient (Remove converison to arraylist with each call.
-	public Point2D.Double closestPoint(double pX, double pY){
-		ArrayList<Point2D.Double> waypoints = new ArrayList<Point2D.Double>();
-		for(int i=0;i<L1_WAYPOINTS.length;i++){
-			waypoints.add(L1_WAYPOINTS[i]);
-		}
-		Point2D.Double playerPoint = new Point2D.Double(pX, pY);
-		Point2D.Double closest = Collections.min(waypoints, (p1, p2) -> (int) p1.distanceSq(p2));
-		return closest;
-	}
-
+	
 }
