@@ -3,20 +3,30 @@ package com.zaxxon.world.mobile;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.enemies.Weapon;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.ImagePattern;
+import javafx.util.Pair;
+
+
+//Written by Dan
 
 public class Player extends MovableSprite{
-
+	
+	Weapon weapon;
+	
 	FacingDir facingDir; 
 	
 	int width = 64;
@@ -50,9 +60,11 @@ public class Player extends MovableSprite{
         setHeight(height);
         heal(100.0);
         isAlive = true;
-
         
         facingDir = FacingDir.up;
+        this.setX(500);
+        this.setY(800);
+        weapon = new Weapon();
     }
     
     public void update(double time) {
@@ -65,7 +77,35 @@ public class Player extends MovableSprite{
 		this.translate(toMove);
 		
 		collision();
+		
+		Vector2 playerPos = new Vector2 (this.getX(), this.getY());
+		
+		
+		Vector2 dir = getFacingDirAsVector();
+		weapon.update(deltaTime, playerPos, dir);
+		
 		draw();
+    }
+    
+    private Vector2 getFacingDirAsVector() {
+    	
+    	switch (facingDir) {
+    		
+    	case up:
+    		return new Vector2(0, -1);
+    		
+    	case down:
+    		return new Vector2(0, 1);
+    		
+    	case left:
+    		return new Vector2(-1, 0);
+    		
+    	case right:
+    		return new Vector2(1, 0);
+    		
+    	default:
+    		return new Vector2();
+    	}
     }
     
     private void movement() {
@@ -153,8 +193,10 @@ public class Player extends MovableSprite{
     
     private void collision() {
     	
-    	
+    	Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
+    	this.translate(toMove);
     }
+    
     
     public void draw() {
     	
@@ -178,10 +220,8 @@ public class Player extends MovableSprite{
     		
     	default:
     		//error
-
     	}
     }
-
 
     
     private void getSpriteImages() {

@@ -15,13 +15,15 @@ public class ClientMain extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("CubeFace");
-		MainGame game = new MainGame();
+		MainGame.reset();
 		MainMenu mainMenu2 = new MainMenu();
-		Scene mainmenu = mainMenu2.makeMainMenu(game, primaryStage);
+		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
+		primaryStage.setMinWidth(MainMenu.WIDTH);
+		primaryStage.setMinHeight(MainMenu.HEIGHT + 37);
 		primaryStage.show();
-
+		//MainMenu.music.loop();
 	}
 
 }

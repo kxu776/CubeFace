@@ -1,26 +1,16 @@
 package com.zaxxon.client;
 
-import java.awt.image.*;
-import java.io.*;
 import java.util.*;
 
-import javax.imageio.*;
-
 import com.zaxxon.input.Input;
-import com.zaxxon.world.Sprite;
 import com.zaxxon.world.mobile.Player;
 
 
 import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.animation.*;
 import javafx.application.*;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.scene.*;
-import javafx.scene.image.*;
 import javafx.scene.input.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
 import javafx.stage.*;
 
 public class ClientDemo extends Application {

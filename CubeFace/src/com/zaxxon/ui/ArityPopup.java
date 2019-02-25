@@ -1,5 +1,7 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.client.MainGame;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -34,7 +36,8 @@ public class ArityPopup {
             @Override
             public void handle(ActionEvent event) {
                 popupwindow.close();
-                primaryStage.setScene(renderedScene);
+                primaryStage.setScene(MainGame.getRenderedScene());
+                MainGame.start(primaryStage);
             }
         });
 

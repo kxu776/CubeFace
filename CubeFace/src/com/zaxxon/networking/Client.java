@@ -1,6 +1,7 @@
 package com.zaxxon.networking;
 
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.world.Sprite;
 
 import java.io.ByteArrayInputStream;
@@ -14,6 +15,9 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
+import java.util.Timer;
+
+
 
 
 public class Client extends Thread {
@@ -103,10 +107,12 @@ public class Client extends Thread {
 				in = new ObjectInputStream(bais);
 
 				ClientSender data = (ClientSender) in.readObject();
-				System.out.println("Health is: " + data.getHealth());
-				System.out.println("Position is:" + data.getX() + " " + data.getY());
-				System.out.println("ID is: " + data.getID());
 				
+				MainGame.inputUpdateQueue.add(data);
+				//System.out.println("Health is: " + data.getHealth());
+				//System.out.println("Position is:" + data.getX() + " " + data.getY());
+				//System.out.println("ID is: " + data.getID());
+				//50 packets per second
 				Thread.sleep(20);
 			
 //				socket.close();
@@ -118,7 +124,7 @@ public class Client extends Thread {
 //					e.printStackTrace();
 //			}
 
-		} catch (ClassNotFoundException | IOException | InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

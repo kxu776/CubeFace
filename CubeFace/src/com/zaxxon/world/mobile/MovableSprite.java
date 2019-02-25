@@ -14,7 +14,7 @@ public abstract class MovableSprite extends Sprite {
 	public boolean controllable;
 	protected boolean isAlive;
 
-	protected enum FacingDir {
+	public enum FacingDir {
 		up, down, left, right
 	}
 
@@ -32,6 +32,10 @@ public abstract class MovableSprite extends Sprite {
 		
 		this.setX(pos.x);
 		this.setY(pos.y);
+	}
+	
+	public void setHealth(double health) {
+		this.health = health;
 	}
 	
 	public Vector2 getPosition() {

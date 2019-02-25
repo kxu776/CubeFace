@@ -4,6 +4,7 @@ import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
+import com.zaxxon.world.mobile.WallCollision;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -59,9 +60,11 @@ public class Enemy extends MovableSprite {
         pX = player.getX();
         pY = player.getY();
         damage(player);
+        //collision();
         deltaTime = time;
         movement(pX, pY);
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
+        collision();
         this.translate(toMove);
 
         collision();
@@ -113,6 +116,8 @@ public class Enemy extends MovableSprite {
 
 
     private void collision() {
+        Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
+        this.translate(toMove);
     }
 
     //Inflicts damage to player if collision occurs
@@ -150,6 +155,7 @@ public class Enemy extends MovableSprite {
     private void attack() {
         //TODO: implement damage system.
     }
+
 
     private void getSpriteImages() {
         BufferedImage enemySS = null;

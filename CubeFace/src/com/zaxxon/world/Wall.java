@@ -1,13 +1,16 @@
 package com.zaxxon.world;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import com.zaxxon.gameart.SpriteImages;
 
 import javafx.geometry.Bounds;
 import javafx.util.Pair;
 
+/**
+ * @author philip
+ *
+ */
 public class Wall extends Sprite {
 
 	public static final int WALL_CORNER = 0;
@@ -16,8 +19,9 @@ public class Wall extends Sprite {
 	public static final int WALL_VERTICAL = 3;
 	public static final int WALL_VERTICAL_END = 4;
 	
-	private int wallType;
+	private static ArrayList<Wall> allWalls;
 	
+	private int wallType;
 
 	public Wall() {
 		initialise(0);
@@ -27,23 +31,22 @@ public class Wall extends Sprite {
 		initialise(wallType);
 	}
 	
+	public static void resetWalls() {
+		allWalls = new ArrayList<Wall>();
+	}
+	
 	private void initialise(int wallType) {
 		this.wallType = wallType;
 		this.setImageSpriteSheet(SpriteImages.WALL_SPRITESHEET_IMAGE, 1, 5);
 		this.setImageFromSpriteSheet(wallType);
+		allWalls.add(this);
 	}
 	
 	public int getWallType() {
 		return wallType;
 	}
 	
-	public static ArrayList<Wall> getAllWalls(LinkedList<Sprite> allSprites){
-		ArrayList<Wall> allWalls = new ArrayList<Wall>();
-		for(Sprite s : allSprites) {
-			if(s.getClass() == Wall.class) {
-				allWalls.add((Wall) s);
-			}
-		}
+	public static ArrayList<Wall> getAllWalls(){
 		return allWalls;
 	}
 	
@@ -51,20 +54,11 @@ public class Wall extends Sprite {
 	/**
 	 * Returns an ArrayList of type Bounds so that collisions can be detected.
 	 * <p>
-	 * The ArrayList is generated from all Walls in the scene
+	 * The ArrayList is generated from all Walls
 	 * 
-	 * @param allSprites	LinkedList<Sprite> of all Sprites to iterate over
-	 * @return 				the ArrayList<Bounds> of all Walls
+	 * @return 		the ArrayList<Bounds> of all Walls
 	 */
-	public static ArrayList<Bounds> getAllWallBounds(LinkedList<Sprite> allSprites){
-		ArrayList<Bounds> allBounds = new ArrayList<Bounds>();
-		ArrayList<Wall> allWalls = getAllWalls(allSprites);
-		for (Wall w : allWalls) {
-			allBounds.add(w.getBoundsInParent());
-		}
-		return allBounds;
-	}
-	public static ArrayList<Bounds> getAllWallBounds(ArrayList<Wall> allWalls){
+	public static ArrayList<Bounds> getAllWallBounds(){
 		ArrayList<Bounds> allBounds = new ArrayList<Bounds>();
 		for (Wall w : allWalls) {
 			allBounds.add(w.getBoundsInParent());
@@ -72,16 +66,26 @@ public class Wall extends Sprite {
 		return allBounds;
 	}
 	
-	public static ArrayList<Pair<Integer, Bounds>> getAllWallBoundsWithType(LinkedList<Sprite> allSprites){
+	/**
+	 * Returns an ArrayList of all Wall types and their bounding box so that collisions can be detected.
+	 * 
+	 * @return 		the ArrayList<Pair<Integer, Bounds>>of all Walls
+	 */
+	public static ArrayList<Pair<Integer, Bounds>> getAllWallBoundsWithType(){
 		ArrayList<Pair<Integer, Bounds>> allBoundPairs = new ArrayList<Pair<Integer, Bounds>>();
-		ArrayList<Wall> allWalls = getAllWalls(allSprites);
-		ArrayList<Bounds> allBounds = getAllWallBounds(allWalls);
+		ArrayList<Wall> allWalls = getAllWalls();
 		for (int i = 0; i < allWalls.size(); i++) {
-			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allBounds.get(i)));
+			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allWalls.get(i).getBoundsInParent()));
 		}
 		return allBoundPairs;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * Walls are considered alive so that they are not removed from the game, despite having no health
+	 * 
+	 * @see com.zaxxon.world.Sprite#isAlive()
+	 */
 	@Override
 	public Boolean isAlive() {
 		return true;

@@ -1,6 +1,7 @@
 package com.zaxxon.ui;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.sound.MusicPlayer;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -17,13 +18,17 @@ import javafx.stage.Stage;
 
 public class MainMenu {
 
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 575;
+	//public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
+	
     Button start;
     Button audio;
     Button help;
 
 
     //a method that makes the main menu scene
-    public Scene makeMainMenu(MainGame mainGame, Stage window) {
+    public Scene makeMainMenu(Stage window) {
 
         //******************************GRIDPANE 1***********************************
 
@@ -46,9 +51,7 @@ public class MainMenu {
 
         start = new Button();
         start.setOnAction(e -> {
-        	//mainGame.start(window);
-        	//window.setScene(mainGame.getRenderedScene());
-            ArityPopup.display(window, mainGame.getRenderedScene());
+            ArityPopup.display(window, MainGame.getRenderedScene());
         });
         grid1.setConstraints(start, 0, 3);
         //load the start button text
@@ -60,7 +63,8 @@ public class MainMenu {
         //AUDIO BUTTON
 
         audio = new Button();
-        audio.setOnAction(e -> System.out.println("Opening audio popup..."));
+//        audio.setOnAction(e -> 
+//        music.stop());
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
         Image audioText = new Image(getClass().getResource("img/audio.png").toString());
@@ -165,7 +169,7 @@ public class MainMenu {
         //********************************ROOTPANE**************************************
         //make a rootpane
         GridPane rootPane = new GridPane();
-        Scene mainmenu = new Scene(rootPane, 600, 575);
+        Scene mainmenu = new Scene(rootPane, WIDTH, HEIGHT);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
 

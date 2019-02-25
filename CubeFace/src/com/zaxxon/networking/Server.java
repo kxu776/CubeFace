@@ -79,15 +79,12 @@ public class Server {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
-			
-			
-			
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
 				out = new ObjectOutputStream(baos);
 				out.writeObject(data);
 				out.flush();
-				 byte[] playerinfo = baos.toByteArray();
+				byte[] playerinfo = baos.toByteArray();
 			return playerinfo;
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -99,10 +96,15 @@ public class Server {
 	}
 
 
-	private synchronized void broadcastPlayers(DatagramPacket packet) {	
+	private  void broadcastPlayers(DatagramPacket packet) {	
 		for (HashMap.Entry<Integer, ServerClient> c : clie.entrySet()) {
-			if (packet.getPort() != c.getKey()) {
-				byte [] b = editObj(packet, c.getValue().getID(), c.getValue().getAddress(), c.getKey());
+			
+			// Can't have the port of the client sending the info be the same as the port from a different machine
+			if (packet.getPort() != c.getKey() && packet.getAddress() != c.getValue().getAddress()) {
+				byte [] b = editObj(packet, c.getValue().getID(), c.getValue().getAddress(), c.getKey() - c.getValue().getID());
+				
+				
+				
 				send(b,(c.getValue()).getAddress(),c.getKey());
 			}
 		}	
@@ -114,17 +116,21 @@ public class Server {
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
 
+		String action = new String(data);
+
 		
 		// less than 2 clients then just wait on connection packets only 	
-
-		if (new String(data).trim().startsWith("/C/")) {
+			
+		if (action.startsWith("/C/")) {
+			
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 			
-			clie.put(packet.getPort(),(new ServerClient(packet.getAddress(), packet.getPort(), ID)));			
-			System.out.println("Sending connection to clients");
+			
+			clie.put(packet.getPort(),(new ServerClient(action.substring(3),packet.getAddress(), packet.getPort(), ID)));			
+			//System.out.println("Sending connection to clients");
 			send("/c/Connected".getBytes(), address, port);
 			ID++;
 			}
