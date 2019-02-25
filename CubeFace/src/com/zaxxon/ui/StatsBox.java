@@ -7,6 +7,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class StatsBox {
 
     public static BorderPane statsBox() {
@@ -85,6 +91,12 @@ public class StatsBox {
 
         //borderPane.setMaxHeight(300);
         borderPane.setMaxSize(270, 125);
+
+        borderPane.getStylesheets().add(StatsBox.class.getResource("demo.css").toString());
+
+        //css = Toolkit.getDefaultToolkit().getClass().getResource("img/demo.css");
+        //myImage = Toolkit.getDefaultToolkit().getImage(ThisClassName.class.getResource("mygif.gif"));
+        //borderPane.getStylesheets().add(css.toString());
 
         return borderPane;
 

@@ -22,6 +22,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -33,7 +34,7 @@ public class MainGame {
 	private static Group world;
 	private static Group background;
 	//private static Group foreground;
-	private static BorderPane foreground;
+	private static Group foreground;
 	private static Group overlay;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
@@ -41,19 +42,20 @@ public class MainGame {
 	private static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
+	//private static StatsBox statsbox;
+	private static AnchorPane anchorPane;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset() {
-		// set up groups
+	public static void reset(Stage primaryStage) {
+		// set up game group
 		grpGame = new Group();
 		grpGame.setId("grpGame");
 		world = new Group();
 		world.setId("world");
 		background = new Group();
 		background.setId("background");
-		//foreground = new Group();
-		foreground = (new StatsBox().statsBox());
+		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
 		overlay.setId("overlay");
@@ -61,6 +63,19 @@ public class MainGame {
 		grpGame.getChildren().add(overlay);
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
+
+		//make a statsbox
+		BorderPane borderPane = StatsBox.statsBox();
+
+		//make an anchor pane to hold the game and the stats box
+		anchorPane = new AnchorPane();
+		anchorPane.setBottomAnchor(borderPane, 0.0);
+		anchorPane.setRightAnchor(borderPane, 0.0);
+		anchorPane.setTopAnchor(grpGame,0.0);
+		anchorPane.setCenterShape(true);
+		anchorPane.getChildren().addAll(grpGame, borderPane);
+		//anchorPane.prefWidthProperty().bind(primaryStage.widthProperty());
+
 
 		// set up new arrays and objects
 		Wall.resetWalls();
@@ -85,13 +100,14 @@ public class MainGame {
 		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 
 		// sets up the scene
-		renderedScene = new Scene(grpGame, width, height);
+		renderedScene = new Scene(anchorPane, width, height);
+
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
 
 		//add the stylesheet
-		renderedScene.getStylesheets().add("CubeFace/src/com/zaxxon/ui/demo.css");
+		//renderedScene.getStylesheets().add("CubeFace/src/com/zaxxon/ui/demo.css");
 
 
 	}
@@ -102,6 +118,8 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		//renderedScene.getStylesheets().add("CubeFace/src/com/zaxxon/ui/demo.css");
+
 
 		Input.addHandlers(primaryStage);
 
