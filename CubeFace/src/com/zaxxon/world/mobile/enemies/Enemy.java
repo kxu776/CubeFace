@@ -32,6 +32,8 @@ public class Enemy extends MovableSprite {
     private ImagePattern[] imgPats;
 
     protected static double pX, pY;
+    protected double prevX, prevY;
+    protected boolean pathfinding;
 
     double deltaTime;
 
@@ -58,23 +60,33 @@ public class Enemy extends MovableSprite {
         this.setHeight(height);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
+        pathfinding = false;
     }
 
     public void update(double time, Player player) {
         Point2D.Double closestNode = closestPoint();
-        /*pX = player.getX();
+        pX = player.getX();
         pY = player.getY();
-        */
         damage(player);
         //collision();
         deltaTime = time;
         //movement(pX, pY);
-        movement(closestNode.x, closestNode.y);
+        if(pathfinding){
+            movement(closestNode.x, closestNode.y);
+        }else {
+            movement(pX, pY);
+        }
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
-        collision();
         this.translate(toMove);
         collision();
         draw();
+        if(this.getX()==prevX&&this.getY()==prevY){ //test for offset
+            pathfinding = true;
+        }else if(this.getX()==closestNode.getX()&&this.getY()==closestNode.getY()){
+            pathfinding = false;
+        }
+        prevX = this.getX();
+        prevY = this.getY();
     }
 
     private void movement(double pX, double pY) {
@@ -205,16 +217,6 @@ public class Enemy extends MovableSprite {
         }
         Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
         return closest.getKey();
-        /*
-
-        Point2D.Double closest = Collections.min(waypoints, new Comparable<Point2D.Double>() {
-
-            public int compareTo(final Point2D.Double p2) {
-                return (int) currentPoint.distanceSq(p2);
-            }
-        });
-        return closest;
-        */
     }
 
     @Override
