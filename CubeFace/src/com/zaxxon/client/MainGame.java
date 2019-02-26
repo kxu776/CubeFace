@@ -3,6 +3,7 @@ package com.zaxxon.client;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -40,7 +41,7 @@ public class MainGame {
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static Player player1;
-	private static ArrayList<Integer> players = new ArrayList<>();
+	private static HashMap<String,Player> play = new HashMap<>();
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -190,27 +191,25 @@ public class MainGame {
 		client.setY(player1.getY());
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
-		// networkingClient.spritesToString(spriteList); // Compiles ArrayList<string>
-		// of concatenated sprite attributes.
-		// actually send the packets here
 	}
 
 	private static void getUpdatesFromQueue() {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			if (players.contains(data.getID()) == false) {
-				Player player2 = new Player();
-				players.add(data.getID());
-				String uid = "" + data.getID();
-				player2.setY(500);
-				player2.setX(500);
-				player2.setId(uid);
-				addSpriteToBackground(player2);
+			if (!play.containsKey(data.getID())) {
+				
+				play.put(data.getID(), new Player());;	
+				play.get(data.getID()).setX(500);
+				play.get(data.getID()).setY(500);
+				play.get(data.getID()).setId(data.getID());
+				
+				addSpriteToForeground(play.get(data.getID()));
 			}
 			for (Sprite s : spriteList) {
-				if (data.getID() == Integer.parseInt(s.getId())) {
+				if (data.getID().equals(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
+					
 					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}

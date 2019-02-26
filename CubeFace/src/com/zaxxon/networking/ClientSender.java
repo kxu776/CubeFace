@@ -11,7 +11,7 @@ public class ClientSender implements Serializable{
 	public double health;
 	public InetAddress ipAddress;
 	public boolean spawn = false;
-	private int ID;
+	private String ID;
 	
 	public ClientSender(double d, double e, double health) {
 		this.x = d;
@@ -48,11 +48,11 @@ public class ClientSender implements Serializable{
 		return ipAddress;
 	}
 
-	public int getID() {
+	public String getID() {
 		return ID;
 	}
 
-	public void setID(int iD) {
+	public void setID(String iD) {
 		ID = iD;
 	}
 	
