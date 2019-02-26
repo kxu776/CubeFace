@@ -46,6 +46,8 @@ public class Enemy extends MovableSprite {
     double currentSpeed = 0;
     private double damage = 0.1;
 
+    final double pfOffset = 1.0;
+
     public Enemy(double spawnX, double spawnY) {
         controllable = false;
         this.setX(spawnX);
@@ -80,13 +82,16 @@ public class Enemy extends MovableSprite {
         this.translate(toMove);
         collision();
         draw();
-        if(this.getX()==prevX&&this.getY()==prevY){ //test for offset
+        if(this.getX()>(closestNode.getX()-pfOffset) && this.getX()<(closestNode.getX()+pfOffset) && this.getY()>(closestNode.getY()-pfOffset) && this.getY()<(closestNode.getY()+pfOffset)){
+            pathfinding=false;
+        }
+        else if(this.getX()>(prevX-pfOffset) && this.getY()<(prevX+pfOffset) && this.getY()>(prevY-pfOffset) && this.getY()<(prevY+pfOffset)){
             pathfinding = true;
-        }else if(this.getX()==closestNode.getX()&&this.getY()==closestNode.getY()){
-            pathfinding = false;
         }
         prevX = this.getX();
         prevY = this.getY();
+        //System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" + String.valueOf(this.getY()));
+        System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
     }
 
     private void movement(double pX, double pY) {
