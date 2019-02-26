@@ -28,6 +28,7 @@ public class Client extends Thread {
 	private ByteArrayInputStream bais;
 	private boolean running = false;
 	private String player;
+	private String ID;
 	
 
 	public Client(String host, int port, String player) {

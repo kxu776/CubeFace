@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Server {
 
@@ -22,7 +23,6 @@ public class Server {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
-	private int ID = 1;
 	private boolean waiting = false;
 
 	public Server(int serverPort) {
@@ -66,7 +66,7 @@ public class Server {
 		}
 	}
 
-	private byte[] editObj(byte[] bs, int ID) {
+	private byte[] editObj(byte[] bs, String ID) {
 
 		try {
 			bais = new ByteArrayInputStream(bs);
@@ -121,10 +121,12 @@ public class Server {
 			System.out.println("------------");
 
 			clients.put(packet.getPort(),
-					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), ID)));
-			// System.out.println("Sending connection to clients");
+			(new ServerClient(action.substring(3),
+			packet.getAddress(),
+			packet.getPort(),
+			UUID.randomUUID().toString())));
+			
 			send("/c/Connected".getBytes(), address, port);
-			ID++;
 		}
 
 		if (action.startsWith("/b/")) {
