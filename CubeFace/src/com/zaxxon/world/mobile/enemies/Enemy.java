@@ -205,16 +205,6 @@ public class Enemy extends MovableSprite {
         }
         Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
         return closest.getKey();
-        /*
-
-        Point2D.Double closest = Collections.min(waypoints, new Comparable<Point2D.Double>() {
-
-            public int compareTo(final Point2D.Double p2) {
-                return (int) currentPoint.distanceSq(p2);
-            }
-        });
-        return closest;
-        */
     }
 
     @Override
