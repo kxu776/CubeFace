@@ -61,7 +61,6 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-		camera = new StaticCamera();
 		
 		Player player1 = new Player();
 		player1.setX(500);
@@ -81,6 +80,7 @@ public class MainGame {
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
+		camera = new StaticCamera(renderedScene, world);
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
@@ -94,10 +94,11 @@ public class MainGame {
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
+		camera.start();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				transformWorld();
+//				transformWorld();
 				for (Player player : playerList) {
 					player.update(FPSreduction);
 				}
@@ -111,6 +112,10 @@ public class MainGame {
 
 	public static Scene getRenderedScene() {
 		return renderedScene;
+	}
+
+	public static Group getWorld() {
+		return world;
 	}
 
 	private static void transformWorld() {
