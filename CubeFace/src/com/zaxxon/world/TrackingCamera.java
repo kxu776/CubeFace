@@ -1,53 +1,31 @@
 package com.zaxxon.world;
 
-public class TrackingCamera extends Thread {
-	
-	double positionX = 0;
-	double positionY = 0;
-	double scaleX = 1;
-	double scaleY = 1;
-	private Sprite spriteToFollow;
-	private boolean running = false;
-	
+import com.zaxxon.client.MainGame;
+
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
+import javafx.stage.Window;
+
+public class TrackingCamera extends Camera {
+
+	protected Sprite spriteToFollow;
+
 	public TrackingCamera(Sprite s) {
 		spriteToFollow = s;
 	}
-	
-	public void run() {
-		running = true;
-		while(running) {
-			positionX = spriteToFollow.getX();
-			positionY = spriteToFollow.getY();
-		}
-		running = false;
-	}
-	
-	public void kill() {
-		running = false;
-	}
-	
-	public double getPositionX() {
-		return positionX;
-	}
 
-	public double getPositionY() {
-		return positionY;
-	}
-
-	public double getScaleX() {
-		return scaleX;
-	}
-	
-	public void setScaleX(double scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	public double getScaleY() {
-		return scaleY;
-	}
-	
-	public void setScaleY(double scaleY) {
-		this.scaleY = scaleY;
+	@Override
+	public void update() {
+		Bounds spriteBounds = spriteToFollow.getBoundsInParent();
+		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
+		Window displayWindow = MainGame.getRenderedScene().getWindow();
+		Group world = MainGame.getWorld();
+		double offsetX = spriteBounds.getMaxX() - spriteBounds.getMinX();
+		double offsetY = spriteBounds.getMaxY() - spriteBounds.getMinY();
+		world.setTranslateX((int) (positionX * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2) + offsetX);
+		world.setTranslateY((int) (positionY * scaleY - worldBounds.getHeight() / 2 + displayWindow.getHeight() / 2) + offsetY);
+		world.setScaleX(scaleX);
+		world.setScaleY(scaleY);
 	}
 
 }

@@ -10,6 +10,8 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.StaticCamera;
+import com.zaxxon.world.TrackingCamera;
+import com.zaxxon.world.Camera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -31,7 +33,7 @@ public class MainGame {
 	private static Group background;
 	private static Group foreground;
 	private static Group overlay;
-	private static StaticCamera camera;
+	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
 	private static Client networkingClient;
@@ -80,7 +82,8 @@ public class MainGame {
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
-		camera = new StaticCamera(renderedScene, world);
+//		camera = new StaticCamera();
+		camera = new TrackingCamera(player1);
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
@@ -94,11 +97,10 @@ public class MainGame {
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
-		camera.start();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-//				transformWorld();
+				camera.update();
 				for (Player player : playerList) {
 					player.update(FPSreduction);
 				}
