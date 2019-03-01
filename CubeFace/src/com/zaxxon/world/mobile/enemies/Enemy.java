@@ -91,7 +91,7 @@ public class Enemy extends MovableSprite {
         prevX = this.getX();
         prevY = this.getY();
         //System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" + String.valueOf(this.getY()));
-        System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
+        //System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
     }
 
     private void movement(double pX, double pY) {
