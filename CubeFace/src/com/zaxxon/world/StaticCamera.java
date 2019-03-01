@@ -6,6 +6,14 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.stage.Window;
 
+/**
+ * A simple camera that remains fixed in position as the scene changes
+ * <p>
+ * The StaticCamera's movement and zoom is relative to the centre of the viewport. Its default position is the world's centre
+ * 
+ * @author philip
+ *
+ */
 public class StaticCamera extends Camera {
 	
 	@Override
