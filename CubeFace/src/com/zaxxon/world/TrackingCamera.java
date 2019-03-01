@@ -12,6 +12,9 @@ public class TrackingCamera extends Camera {
 
 	public TrackingCamera(Sprite s) {
 		spriteToFollow = s;
+		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
+		positionX = worldBounds.getWidth() / 2;
+		positionY = worldBounds.getHeight() / 2;
 	}
 
 	@Override
@@ -20,10 +23,10 @@ public class TrackingCamera extends Camera {
 		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
 		Window displayWindow = MainGame.getRenderedScene().getWindow();
 		Group world = MainGame.getWorld();
-		double offsetX = spriteBounds.getMaxX() - spriteBounds.getMinX();
-		double offsetY = spriteBounds.getMaxY() - spriteBounds.getMinY();
-		world.setTranslateX((int) (positionX * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2) + offsetX);
-		world.setTranslateY((int) (positionY * scaleY - worldBounds.getHeight() / 2 + displayWindow.getHeight() / 2) + offsetY);
+		double offsetX = (spriteBounds.getMaxX() + spriteBounds.getMinX()) / 2;
+		double offsetY = (spriteBounds.getMaxY() + spriteBounds.getMinY()) / 2;
+		world.setTranslateX((int) ((positionX - offsetX) * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2));
+		world.setTranslateY((int) ((positionY - offsetY) * scaleY - worldBounds.getHeight() / 2 + displayWindow.getHeight() / 2));
 		world.setScaleX(scaleX);
 		world.setScaleY(scaleY);
 	}

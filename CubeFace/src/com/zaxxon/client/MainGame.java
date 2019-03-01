@@ -82,11 +82,13 @@ public class MainGame {
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
-//		camera = new StaticCamera();
-		camera = new TrackingCamera(player1);
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
+		
+		// sets up the game camera
+//		camera = new StaticCamera();
+		camera = new TrackingCamera(player1);
 	}
 
 	public static void start(Stage primaryStage) {
