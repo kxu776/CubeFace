@@ -32,6 +32,8 @@ public class Enemy extends MovableSprite {
     private ImagePattern[] imgPats;
 
     protected static double pX, pY;
+    protected double prevX, prevY;
+    protected boolean pathfinding;
 
     double deltaTime;
 
@@ -43,6 +45,8 @@ public class Enemy extends MovableSprite {
     final double deceleration = -0.6;
     double currentSpeed = 0;
     private double damage = 0.1;
+
+    final double pfOffset = 1.0;
 
     public Enemy(double spawnX, double spawnY) {
         controllable = false;
@@ -58,23 +62,36 @@ public class Enemy extends MovableSprite {
         this.setHeight(height);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
+        pathfinding = false;
     }
 
     public void update(double time, Player player) {
         Point2D.Double closestNode = closestPoint();
-        /*pX = player.getX();
+        pX = player.getX();
         pY = player.getY();
-        */
         damage(player);
         //collision();
         deltaTime = time;
         //movement(pX, pY);
-        movement(closestNode.x, closestNode.y);
+        if(pathfinding){
+            movement(closestNode.x, closestNode.y);
+        }else {
+            movement(pX, pY);
+        }
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
-        collision();
         this.translate(toMove);
         collision();
         draw();
+        if(this.getX()>(closestNode.getX()-pfOffset) && this.getX()<(closestNode.getX()+pfOffset) && this.getY()>(closestNode.getY()-pfOffset) && this.getY()<(closestNode.getY()+pfOffset)){
+            pathfinding=false;
+        }
+        else if(this.getX()>(prevX-pfOffset) && this.getY()<(prevX+pfOffset) && this.getY()>(prevY-pfOffset) && this.getY()<(prevY+pfOffset)){
+            pathfinding = true;
+        }
+        prevX = this.getX();
+        prevY = this.getY();
+        //System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" + String.valueOf(this.getY()));
+        System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
     }
 
     private void movement(double pX, double pY) {
