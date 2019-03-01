@@ -7,9 +7,8 @@ public class ServerClient {
 	public String name;
 	public InetAddress address;
 	public int port;
-	private final int ID;
-
-	public ServerClient(String user,InetAddress address, int port, final int ID) {
+	private final String ID;
+	public ServerClient(String user,InetAddress address, int port, final String ID) {
 		this.name = user;
 		this.address = address;
 		this.port = port;
@@ -25,8 +24,7 @@ public class ServerClient {
 		return port;
 	}
 
-	public int getID() {
+	public String getID() {
 		return ID;
 	}
-
 }

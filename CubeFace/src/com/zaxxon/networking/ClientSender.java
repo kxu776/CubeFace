@@ -5,11 +5,13 @@ import java.net.InetAddress;
 
 public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
+	public String name;
 	public double x;
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
-	private int ID;
+	public boolean spawn = false;
+	private String ID;
 	
 	public ClientSender(double d, double e, double health) {
 		this.x = d;
@@ -46,11 +48,11 @@ public class ClientSender implements Serializable{
 		return ipAddress;
 	}
 
-	public int getID() {
+	public String getID() {
 		return ID;
 	}
 
-	public void setID(int iD) {
+	public void setID(String iD) {
 		ID = iD;
 	}
 	

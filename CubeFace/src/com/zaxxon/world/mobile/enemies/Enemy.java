@@ -2,6 +2,7 @@ package com.zaxxon.world.mobile.enemies;
 
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.Levels;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.WallCollision;
@@ -10,11 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.util.*;
 
+import static com.zaxxon.world.Levels.L1_WAYPOINTS;
 import static java.lang.Math.abs;
 
 public class Enemy extends MovableSprite {
@@ -57,16 +61,18 @@ public class Enemy extends MovableSprite {
     }
 
     public void update(double time, Player player) {
-        pX = player.getX();
+        Point2D.Double closestNode = closestPoint();
+        /*pX = player.getX();
         pY = player.getY();
+        */
         damage(player);
         //collision();
         deltaTime = time;
-        movement(pX, pY);
+        //movement(pX, pY);
+        movement(closestNode.x, closestNode.y);
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         collision();
         this.translate(toMove);
-
         collision();
         draw();
     }
@@ -76,11 +82,11 @@ public class Enemy extends MovableSprite {
         inputDir = new Vector2();
         //ordering swaps to handle diagonal facing directions in the correct order
         if (abs(pX-this.getX())>abs(pY-this.getY())) {
-            moveY();
-            moveX();
+            moveY(pY);
+            moveX(pX);
         } else {
-            moveX();
-            moveY();
+            moveX(pX);
+            moveY(pY);
         
         }
         inputDir = Vector2.normalise(inputDir);
@@ -94,7 +100,7 @@ public class Enemy extends MovableSprite {
         velocity = new Vector2(moveDir.x * currentSpeed, moveDir.y * currentSpeed);
     }
 
-    private void moveX() {
+    private void moveX(double pX) {
         if (this.getX()<pX) {  //enemy is to the left of the player
             inputDir.x = 1;
             facingDir = Enemy.FacingDir.right;
@@ -104,7 +110,7 @@ public class Enemy extends MovableSprite {
         } else inputDir.x = 0;      //enemy is horizontally inline with the player.
     }
 
-    private void moveY() {
+    private void moveY(double pY) {
         if (this.getY()<pY) {  //enemy is above the player
             inputDir.y = 1;
             facingDir = Enemy.FacingDir.down;
@@ -124,7 +130,7 @@ public class Enemy extends MovableSprite {
     private void damage(Player player){
         if(this.getBoundsInLocal().intersects(player.getX(),player.getY(),player.getWidth(),player.getHeight())){   //collision check
             player.takeDamage(this.damage);
-            System.out.println("Health: " + String.valueOf(player.getHealth()));
+            //System.out.println("Health: " + String.valueOf(player.getHealth()));
         }
     }
 
@@ -189,6 +195,16 @@ public class Enemy extends MovableSprite {
             Image img = SwingFXUtils.toFXImage(sprites[i], null);
             imgPats[i] = new ImagePattern(img);
         }
+    }
+
+    public Point2D.Double closestPoint(){
+        Map<Point2D.Double, Double> dists = new HashMap<>();
+        Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
+        for(int i = 0; i< L1_WAYPOINTS.length; i++){
+            dists.put(L1_WAYPOINTS[i], currentPoint.distanceSq(L1_WAYPOINTS[i]));
+        }
+        Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
+        return closest.getKey();
     }
 
     @Override

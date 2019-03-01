@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 
 public class Weapon {
 
+	private FacingDir facingDir;
 	private Vector2 dir;
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
@@ -29,22 +30,40 @@ public class Weapon {
 		Bullet bullet = new Bullet(dir, weaponPos);
 		allBullets.add(bullet);
 		
-		System.out.println("Bullet created");
 	}
 	
-	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 dir) {
+	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
 		
-		return playerPos;
+		switch (facingDir) {
+		
+    	case up:
+    		return new Vector2(playerPos.x + playerDimensions.x/1.3, playerPos.y + playerDimensions.y/3);
+    		
+    	case down:
+    		return new Vector2(playerPos.x + playerDimensions.x/8, playerPos.y + playerDimensions.y/1.5);
+    		
+    	case left:
+    		return new Vector2(playerPos.x + playerDimensions.x/16, playerPos.y + playerDimensions.y/2.8);
+    		
+    	case right:
+    		return new Vector2(playerPos.x + playerDimensions.x/1.4, playerPos.y + playerDimensions.y/1.8);
+    		
+    	default:
+    		return playerPos;
+    	}
+		
+		
 	}
 	
-	public void update(double deltaTime, Vector2 playerPos, Vector2 dir) {
+	public void update(double deltaTime, Vector2 playerPos, Vector2 playerDimensions, FacingDir facingDir) {
 		
 		this.playerPos = playerPos;
-		this.dir = dir;
+		this.dir = getFacingDirAsVector(facingDir);
+		this.facingDir = facingDir;
 		
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
     		
-			this.weaponPos = getWeaponPos(playerPos, dir);
+			this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
     		fire();
     	}
 		
@@ -53,4 +72,25 @@ public class Weapon {
 			allBullets.get(i).update(deltaTime);
 		}
 	}
+	
+	 public Vector2 getFacingDirAsVector(FacingDir facingDir) {
+	    	
+	    	switch (facingDir) {
+	    		
+	    	case up:
+	    		return new Vector2(0, -1);
+	    		
+	    	case down:
+	    		return new Vector2(0, 1);
+	    		
+	    	case left:
+	    		return new Vector2(-1, 0);
+	    		
+	    	case right:
+	    		return new Vector2(1, 0);
+	    		
+	    	default:
+	    		return new Vector2();
+	    	}
+	    }
 }

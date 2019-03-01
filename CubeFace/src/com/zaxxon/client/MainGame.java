@@ -3,6 +3,7 @@ package com.zaxxon.client;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -35,10 +36,14 @@ public class MainGame {
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	private static ArrayList<Player> playerList;
-	private static Client networkingClient;
+	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
-	
+	public static ClientSender client;
+	public static boolean multiplayer = false;
+	private static Player player1;
+	private static HashMap<String,Player> play = new HashMap<>();
+
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
 	public static void reset() {
@@ -63,12 +68,14 @@ public class MainGame {
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
 		
-		Player player1 = new Player();
+		player1 = new Player();
+
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
+		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Enemy enemy = new Enemy(600,600);
+		Enemy enemy = new Enemy(600, 600);
 		Enemy enemy2 = new Enemy(1800, 1700);
 		addSpriteToForeground(enemy);
 		addSpriteToForeground(enemy2);
@@ -77,7 +84,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
+		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
@@ -95,7 +102,6 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
-
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -105,7 +111,10 @@ public class MainGame {
 					player.update(FPSreduction);
 				}
 				dealWithKeyInput();
-				//sendNetworkUpdate();
+				if (multiplayer) {
+					sendNetworkUpdate();
+					getUpdatesFromQueue();
+				}
 				updateEnemies();
 			}
 		};
@@ -150,10 +159,10 @@ public class MainGame {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
-	
+
 	public static void removeSprite(Sprite s) {
-		for(Sprite searchingSprite : spriteList) {
-			if(searchingSprite == s) {
+		for (Sprite searchingSprite : spriteList) {
+			if (searchingSprite == s) {
 				((Group) s.getParent()).getChildren().remove(s);
 				spriteList.remove(searchingSprite);
 				s = null;
@@ -175,23 +184,36 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
-	/*private void sendNetworkUpdate() {
-		networkingClient.spritesToString(spriteList); // Compiles ArrayList<string> of concatenated sprite attributes.
-		// actually send the packets here
-	}*/
-	
+	private static void sendNetworkUpdate() {
+		client.setX(player1.getX());
+		client.setY(player1.getY());
+		client.setHealth(player1.getHealth());
+		networkingClient.sendPlayerObj(client);
+	}
+
 	private static void getUpdatesFromQueue() {
-		while(!inputUpdateQueue.isEmpty()) {
+		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			for(Sprite s : spriteList) {
-				if(data.getID() == Integer.parseInt(s.getId())) {
+			if (!play.containsKey(data.getID())) {
+				
+				play.put(data.getID(), new Player());;	
+				play.get(data.getID()).setX(500);
+				play.get(data.getID()).setY(500);
+				play.get(data.getID()).setId(data.getID());
+				
+				addSpriteToForeground(play.get(data.getID()));
+			}
+			for (Sprite s : spriteList) {
+				if (data.getID().equals(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
-					if(s instanceof MovableSprite) {
+					
+					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}
 				}
 			}
+
 		}
 	}
 
