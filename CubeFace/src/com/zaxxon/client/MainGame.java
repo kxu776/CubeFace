@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
-import com.zaxxon.world.StaticCamera;
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Levels;
@@ -87,7 +86,6 @@ public class MainGame {
 		Levels.generateLevel(Levels.LEVEL1, 256);
 		
 		// sets up the game camera
-//		camera = new StaticCamera();
 		camera = new TrackingCamera(player1);
 	}
 
@@ -120,15 +118,6 @@ public class MainGame {
 
 	public static Group getWorld() {
 		return world;
-	}
-
-	private static void transformWorld() {
-		world.setTranslateX((int) (camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
-				+ renderedScene.getWindow().getWidth() / 2));
-		world.setTranslateY((int) (camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
-				+ renderedScene.getWindow().getHeight() / 2));
-		world.setScaleX(camera.getScaleX());
-		world.setScaleY(camera.getScaleY());
 	}
 
 	private static void dealWithKeyInput() {
