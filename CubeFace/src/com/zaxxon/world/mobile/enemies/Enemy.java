@@ -3,10 +3,12 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Levels;
+import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.WallCollision;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
@@ -238,8 +240,13 @@ public class Enemy extends MovableSprite {
 
     public boolean lineOfSight(){
             boolean lineOfSight=false;
+            ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
             Line line = new Line(this.getX(),this.getY(),pX,pY);
-            //for()
+            for(Bounds bounds : wallBounds){
+                if(line.intersects(bounds)){
+                   return false;
+                }
+            }
             return true;
     }
 
