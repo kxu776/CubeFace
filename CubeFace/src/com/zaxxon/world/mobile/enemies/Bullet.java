@@ -20,6 +20,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Pair;
+import sun.applet.Main;
 
 public class Bullet extends MovableSprite {
 	
@@ -57,8 +58,17 @@ public class Bullet extends MovableSprite {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
 				MainGame.removeSprite(this);
+				return;
+			}
+		}for(Enemy enemy : MainGame.enemiesList){
+			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
+				//TODO: Enemy takes damage
+				speed = 0;
+				MainGame.removeSprite(this);
+				return;
 			}
 		}
+
 	}
 	
 	private void getSpriteImage() {

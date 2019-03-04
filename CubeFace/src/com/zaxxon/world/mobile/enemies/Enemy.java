@@ -1,5 +1,6 @@
 package com.zaxxon.world.mobile.enemies;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Levels;
@@ -24,7 +25,7 @@ import java.util.*;
 import static com.zaxxon.world.Levels.L1_WAYPOINTS;
 import static java.lang.Math.abs;
 
-public class Enemy extends MovableSprite {
+public abstract class Enemy extends MovableSprite {
 
     FacingDir facingDir;
 
@@ -52,6 +53,16 @@ public class Enemy extends MovableSprite {
     private double damage = 0.1;
 
     final double pfOffset = 1.0;
+    
+    public Enemy() {
+    	controllable = false;
+    	setX(0);
+    	setY(0);
+        facingDir = Enemy.FacingDir.up;
+        isAlive = true;
+        pathfinding = false;
+        MainGame.enemiesList.add(this);
+    }
 
     public Enemy(double spawnX, double spawnY) {
         controllable = false;
@@ -63,6 +74,7 @@ public class Enemy extends MovableSprite {
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
+        MainGame.enemiesList.add(this);
     }
 
     public Enemy(double spawnX, double spawnY, String spritesheet) {
@@ -75,9 +87,8 @@ public class Enemy extends MovableSprite {
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
+        MainGame.enemiesList.add(this);
     }
-
-
 
     public void update(double time, Player player) {
         Point2D.Double closestNode = closestPoint();
@@ -95,7 +106,7 @@ public class Enemy extends MovableSprite {
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         this.translate(toMove);
         collision();
-        draw();
+        rotate(pX, pY);
         if(this.getX()>(closestNode.getX()-pfOffset) && this.getX()<(closestNode.getX()+pfOffset) && this.getY()>(closestNode.getY()-pfOffset) && this.getY()<(closestNode.getY()+pfOffset)){
             pathfinding=false;
         }
@@ -134,21 +145,51 @@ public class Enemy extends MovableSprite {
     protected void moveX(double pX) {
         if (this.getX()<pX) {  //enemy is to the left of the player
             inputDir.x = 1;
-            facingDir = Enemy.FacingDir.right;
         } else if (this.getX()>pX) {    //enemy is to the right of the player
             inputDir.x = -1;
-            facingDir = Enemy.FacingDir.left;
         } else inputDir.x = 0;      //enemy is horizontally inline with the player.
     }
 
     protected void moveY(double pY) {
         if (this.getY()<pY) {  //enemy is above the player
             inputDir.y = 1;
-            facingDir = Enemy.FacingDir.down;
         } else if (this.getY()>pY) {    //enemy is below the player
             inputDir.y = -1;
-            facingDir = Enemy.FacingDir.up;
         } else inputDir.y = 0;      //enemy is vertically inline with the player.
+    }
+    
+    protected void rotate(double pX, double pY) {
+    	double deltaX = getX() - pX;
+    	double deltaY = getY() - pY;
+    	int roughDir = (int) Math.round(Math.atan2(deltaY, deltaX) / Math.PI * 4);
+    	roughDir = (roughDir + 8 + 6) % 8;
+    	setImageFromSpriteSheet(roughDir);
+    	switch (roughDir) {
+		case 0:
+			this.facingDir = FacingDir.up;
+			return;
+		case 1:
+			this.facingDir = FacingDir.upRight;
+			return;
+		case 2:
+			this.facingDir = FacingDir.right;
+			return;
+		case 3:
+			this.facingDir = FacingDir.downRight;
+			return;
+		case 4:
+			this.facingDir = FacingDir.down;
+			return;
+		case 5:
+			this.facingDir = FacingDir.downLeft;
+			return;
+		case 6:
+			this.facingDir = FacingDir.left;
+			return;
+		case 7:
+			this.facingDir = FacingDir.upLeft;
+			return;
+    	}
     }
 
 
@@ -165,33 +206,7 @@ public class Enemy extends MovableSprite {
         }
     }
 
-    public void draw() {
-
-        switch (facingDir) {
-            case up:
-                this.setFill(imgPats[0]);
-                return;
-
-            case down:
-                this.setFill(imgPats[4]);
-                return;
-
-            case left:
-                this.setFill(imgPats[6]);
-                return;
-
-            case right:
-                this.setFill(imgPats[2]);
-                return;
-
-            default:
-                //error
-        }
-    }
-
-    private void attack() {
-        //TODO: implement damage system.
-    }
+    protected abstract void attack();
 
 
     protected void getSpriteImages(String spritesheet) {

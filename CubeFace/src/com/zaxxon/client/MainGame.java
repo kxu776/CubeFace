@@ -18,6 +18,8 @@ import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
+import com.zaxxon.world.mobile.enemies.Hunter;
+import com.zaxxon.world.mobile.enemies.Zombie;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
@@ -35,7 +37,8 @@ public class MainGame {
 	private static Group overlay;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
-	private static ArrayList<Player> playerList;
+	public static ArrayList<Player> playerList;
+	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
@@ -67,6 +70,7 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
+		enemiesList = new ArrayList<Enemy>();
 		
 		player1 = new Player();
 
@@ -75,8 +79,8 @@ public class MainGame {
 		addSpriteToForeground(player1);
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Enemy enemy = new Enemy(600, 600);
-		Enemy enemy2 = new Enemy(1800, 1700);
+		Zombie enemy = new Zombie(600, 600);
+		Hunter enemy2 = new Hunter(1800, 1700);
 		addSpriteToForeground(enemy);
 		addSpriteToForeground(enemy2);
 
@@ -221,9 +225,10 @@ public class MainGame {
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
 		for (Sprite sprite : spriteList) {
-			if (sprite.getClass() == Enemy.class) { // Typechecks for enemies
+			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
 					spriteList.remove(sprite);
+					enemiesList.remove(sprite);
 				} else {
 					Pair<Double, Player> closestPlayer = null;
 					for (Player player : playerList) {
