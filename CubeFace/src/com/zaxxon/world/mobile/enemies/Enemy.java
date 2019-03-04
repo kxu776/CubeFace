@@ -9,6 +9,7 @@ import com.zaxxon.world.mobile.WallCollision;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Line;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,8 +29,10 @@ public class Enemy extends MovableSprite {
     int width = 64;
     int height = 64;
 
-    private BufferedImage[] sprites;
-    private ImagePattern[] imgPats;
+    protected BufferedImage[] sprites;
+    protected ImagePattern[] imgPats;
+
+    protected final String DEFAULT_SPRITESHEET = SpriteImages.ZOMBIE_SPRITESHEET_URL;
 
     protected static double pX, pY;
     protected double prevX, prevY;
@@ -52,18 +55,27 @@ public class Enemy extends MovableSprite {
         controllable = false;
         this.setX(spawnX);
         this.setY(spawnY);
-
-        init();
-    }
-
-    private void init() {
-        getSpriteImages();
+        this.getSpriteImages(SpriteImages.ZOMBIE_SPRITESHEET_URL);
         this.setWidth(width);
         this.setHeight(height);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
     }
+
+    public Enemy(double spawnX, double spawnY, String spritesheet) {
+        controllable = false;
+        setX(spawnX);
+        setY(spawnY);
+        getSpriteImages(spritesheet);
+        setWidth(width);
+        setHeight(height);
+        facingDir = Enemy.FacingDir.up;
+        isAlive = true;
+        pathfinding = false;
+    }
+
+
 
     public void update(double time, Player player) {
         Point2D.Double closestNode = closestPoint();
@@ -94,7 +106,7 @@ public class Enemy extends MovableSprite {
         //System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
     }
 
-    private void movement(double pX, double pY) {
+    protected void movement(double pX, double pY) {
 
         inputDir = new Vector2();
         //ordering swaps to handle diagonal facing directions in the correct order
@@ -117,7 +129,7 @@ public class Enemy extends MovableSprite {
         velocity = new Vector2(moveDir.x * currentSpeed, moveDir.y * currentSpeed);
     }
 
-    private void moveX(double pX) {
+    protected void moveX(double pX) {
         if (this.getX()<pX) {  //enemy is to the left of the player
             inputDir.x = 1;
             facingDir = Enemy.FacingDir.right;
@@ -127,7 +139,7 @@ public class Enemy extends MovableSprite {
         } else inputDir.x = 0;      //enemy is horizontally inline with the player.
     }
 
-    private void moveY(double pY) {
+    protected void moveY(double pY) {
         if (this.getY()<pY) {  //enemy is above the player
             inputDir.y = 1;
             facingDir = Enemy.FacingDir.down;
@@ -138,13 +150,13 @@ public class Enemy extends MovableSprite {
     }
 
 
-    private void collision() {
+    protected void collision() {
         Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
         this.translate(toMove);
     }
 
     //Inflicts damage to player if collision occurs
-    private void damage(Player player){
+    protected void damage(Player player){
         if(this.getBoundsInLocal().intersects(player.getX(),player.getY(),player.getWidth(),player.getHeight())){   //collision check
             player.takeDamage(this.damage);
             //System.out.println("Health: " + String.valueOf(player.getHealth()));
@@ -180,11 +192,11 @@ public class Enemy extends MovableSprite {
     }
 
 
-    private void getSpriteImages() {
+    protected void getSpriteImages(String spritesheet) {
         BufferedImage enemySS = null;
 
         try {
-            File f = new File(SpriteImages.ZOMBIE_SPRITESHEET_URL);
+            File f = new File(spritesheet);
             enemySS = ImageIO.read(f);
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,6 +234,13 @@ public class Enemy extends MovableSprite {
         }
         Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
         return closest.getKey();
+    }
+
+    public boolean lineOfSight(){
+            boolean lineOfSight=false;
+            Line line = new Line(this.getX(),this.getY(),pX,pY);
+            //for()
+            return true;
     }
 
     @Override
