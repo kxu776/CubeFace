@@ -82,7 +82,7 @@ public class MainGame {
 		anchorPane.setTopAnchor(grpGame,0.0);
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().addAll(grpGame, borderPane);
-		//anchorPane.prefWidthProperty().bind(primaryStage.widthProperty());
+
 
 
 		// set up new arrays and objects
@@ -111,7 +111,7 @@ public class MainGame {
 		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
-		renderedScene = new Scene(anchorPane, width, height);
+		renderedScene = new Scene(anchorPane, width, height/2);
 
 
 		// loads the level

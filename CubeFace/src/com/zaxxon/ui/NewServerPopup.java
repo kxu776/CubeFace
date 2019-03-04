@@ -94,7 +94,7 @@ public class NewServerPopup {
         Scene scene1= new Scene(borderPane, 400, 150);
 
         popupwindow.setScene(scene1);
-
+        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         popupwindow.show();
 
     }

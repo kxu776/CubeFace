@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -22,6 +23,8 @@ public class ArityPopup {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Player mode");
         popupwindow.setResizable(false);
+        popupwindow.initStyle(StageStyle.UNDECORATED); //remove automatic formatting for the stage
+
 
 
         //****************************CONTENTS
@@ -75,6 +78,7 @@ public class ArityPopup {
 
         //Scene
         Scene scene1= new Scene(borderPane, 400, 150);
+        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
 
