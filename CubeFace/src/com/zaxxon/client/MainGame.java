@@ -28,7 +28,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -77,26 +76,24 @@ public class MainGame {
 
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
-		anchorPane.setBottomAnchor(borderPane, 0.0);
+		anchorPane.setBottomAnchor(borderPane, borderPane.getMaxHeight() / 2);
 		anchorPane.setRightAnchor(borderPane, 0.0);
-		anchorPane.setTopAnchor(grpGame,0.0);
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane);
-		//anchorPane.prefWidthProperty().bind(primaryStage.widthProperty());
+		anchorPane.getChildren().add(borderPane);
+		overlay.getChildren().add(anchorPane);
+		
 
 
 		// set up new arrays and objects
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-
 		enemiesList = new ArrayList<Enemy>();
-		
 		player1 = new Player();
-
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
+		
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
 		Zombie enemy = new Zombie(600, 600);
@@ -106,17 +103,13 @@ public class MainGame {
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / 60;
-
+		double width = gd.getDisplayMode().getWidth();
+		double height = gd.getDisplayMode().getHeight();
+		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 		// sets up the scene
-		renderedScene = new Scene(anchorPane, width, height);
-
-
+		renderedScene = new Scene(grpGame, width, height);
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
-		
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
@@ -127,6 +120,8 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
+		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
 
