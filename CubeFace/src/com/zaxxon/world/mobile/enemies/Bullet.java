@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -27,7 +28,8 @@ public class Bullet extends MovableSprite {
 	ImagePattern imgPat;
 	
 	private Vector2 direction;
-	private double speed = 10;
+	private double speed = 10.0;
+	private double damage = 10;
 	
 	public Bullet (Vector2 dir, Vector2 pos) {
 		
@@ -60,14 +62,28 @@ public class Bullet extends MovableSprite {
 				MainGame.removeSprite(this);
 				return;
 			}
-		}for(Enemy enemy : MainGame.enemiesList){
+		}
+		for(Enemy enemy: MainGame.enemiesList){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
-				//TODO: Enemy takes damage
+				enemy.takeDamage(damage);
+				System.out.println("Health = " + String.valueOf(enemy.getHealth()));
 				speed = 0;
 				MainGame.removeSprite(this);
 				return;
 			}
 		}
+		/*Iterator<Enemy> enemyIter = MainGame.enemiesList.iterator();
+		while(enemyIter.hasNext()){
+			Enemy enemy = enemyIter.next();
+			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
+				enemy.takeDamage(damage);
+				System.out.println("Health = " + String.valueOf(enemy.getHealth()));
+				speed = 0;
+				MainGame.removeSprite(this);
+				return;
+			}
+		}
+		*/
 
 	}
 	
