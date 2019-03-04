@@ -50,6 +50,14 @@ public class Enemy extends MovableSprite {
     private double damage = 0.1;
 
     final double pfOffset = 1.0;
+    
+    public Enemy() {
+    	controllable = false;
+    	setX(0);
+    	setY(0);
+        isAlive = true;
+        pathfinding = false;
+    }
 
     public Enemy(double spawnX, double spawnY) {
         controllable = false;
@@ -167,19 +175,19 @@ public class Enemy extends MovableSprite {
 
         switch (facingDir) {
             case up:
-                this.setFill(imgPats[0]);
+            	setImageFromSpriteSheet(0);
                 return;
 
             case down:
-                this.setFill(imgPats[4]);
+            	setImageFromSpriteSheet(4);
                 return;
 
             case left:
-                this.setFill(imgPats[6]);
+            	setImageFromSpriteSheet(6);
                 return;
 
             case right:
-                this.setFill(imgPats[2]);
+            	setImageFromSpriteSheet(2);
                 return;
 
             default:

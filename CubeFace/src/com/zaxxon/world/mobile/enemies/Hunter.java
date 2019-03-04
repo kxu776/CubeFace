@@ -13,21 +13,21 @@ import java.io.IOException;
 
 public class Hunter extends Enemy {
 
-    protected final String DEFAULT_SPRITESHEET = SpriteImages.HUNTER_ZOMBIE_SPRITESHEET_URL;
-
-
     public Hunter(double spawnX, double spawnY){
-        super(spawnX,spawnY, SpriteImages.HUNTER_ZOMBIE_SPRITESHEET_URL);
-    }
-
-    /*private void init() {
-        getSpriteImages();
-        this.setWidth(super.width);
-        this.setHeight(super.height);
+        controllable = false;
+        this.setX(spawnX);
+        this.setY(spawnY);
+        setImageSpriteSheet(SpriteImages.HUNTER_ZOMBIE_SPRITESHEET_IMAGE, 2, 4);
+        setImageFromSpriteSheet(0);
+        this.setWidth(width);
+        this.setHeight(height);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
-    }*/
-
+    }
+    
+    protected void init() {
+    	
+    }
 
 }
