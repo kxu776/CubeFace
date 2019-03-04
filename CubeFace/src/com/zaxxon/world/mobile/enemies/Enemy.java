@@ -1,5 +1,6 @@
 package com.zaxxon.world.mobile.enemies;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Levels;
@@ -60,6 +61,7 @@ public abstract class Enemy extends MovableSprite {
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
+        MainGame.enemiesList.add(this);
     }
 
     public Enemy(double spawnX, double spawnY) {
@@ -72,6 +74,7 @@ public abstract class Enemy extends MovableSprite {
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
+        MainGame.enemiesList.add(this);
     }
 
     public Enemy(double spawnX, double spawnY, String spritesheet) {
@@ -84,6 +87,7 @@ public abstract class Enemy extends MovableSprite {
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
+        MainGame.enemiesList.add(this);
     }
 
     public void update(double time, Player player) {

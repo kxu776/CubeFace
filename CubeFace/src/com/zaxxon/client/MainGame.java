@@ -37,7 +37,8 @@ public class MainGame {
 	private static Group overlay;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
-	private static ArrayList<Player> playerList;
+	public static ArrayList<Player> playerList;
+	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
@@ -69,6 +70,7 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
+		enemiesList = new ArrayList<Enemy>();
 		
 		player1 = new Player();
 
@@ -226,6 +228,7 @@ public class MainGame {
 			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
 					spriteList.remove(sprite);
+					enemiesList.remove(sprite);
 				} else {
 					Pair<Double, Player> closestPlayer = null;
 					for (Player player : playerList) {
