@@ -1,4 +1,4 @@
-package com.zaxxon.client;
+/*package com.zaxxon.client;
 
 import java.util.*;
 
@@ -65,4 +65,4 @@ public class ClientDemo extends Application {
 		animator.start();
 	}
 
-}
+}*/

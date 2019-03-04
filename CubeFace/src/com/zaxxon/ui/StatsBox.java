@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 import java.awt.*;
@@ -13,9 +14,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
+
 public class StatsBox {
 
     public static BorderPane statsBox() {
+
+        //load font
+        Font.loadFont(StatsBox.class.getResourceAsStream("img/VCR_OSD_MONO.ttf"), 9);
 
         //******CENTER
 
@@ -92,11 +98,7 @@ public class StatsBox {
         //borderPane.setMaxHeight(300);
         borderPane.setMaxSize(270, 125);
 
-        borderPane.getStylesheets().add(StatsBox.class.getResource("demo.css").toString());
-
-        //css = Toolkit.getDefaultToolkit().getClass().getResource("img/demo.css");
-        //myImage = Toolkit.getDefaultToolkit().getImage(ThisClassName.class.getResource("mygif.gif"));
-        //borderPane.getStylesheets().add(css.toString());
+        borderPane.getStylesheets().add(StatsBox.class.getResource("statsbox.css").toString());
 
         return borderPane;
 

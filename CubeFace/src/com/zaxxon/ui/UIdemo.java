@@ -14,9 +14,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.scene.control.Label;
+import sun.awt.resources.awt;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class UIdemo extends Application {
 
@@ -32,6 +39,11 @@ public class UIdemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        //load font
+        Font.loadFont(getClass().getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
+
+
 
         Label label1= new Label("game will b here");
         GridPane tempgrid = new GridPane();
@@ -214,8 +226,11 @@ public class UIdemo extends Application {
 
 
 
+
+
+
         Scene mainmenu = new Scene(anchorPane, 600, 575);
-        mainmenu.getStylesheets().add(getClass().getResource("demo.css").toString()); //add the stylesheet
+        mainmenu.getStylesheets().add(getClass().getResource("statsbox.css").toString()); //add the stylesheet
 
         //set the scene to be the one displayed on the window
         window.setScene(mainmenu);
