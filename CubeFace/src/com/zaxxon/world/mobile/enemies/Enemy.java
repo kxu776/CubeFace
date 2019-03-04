@@ -139,20 +139,16 @@ public abstract class Enemy extends MovableSprite {
     protected void moveX(double pX) {
         if (this.getX()<pX) {  //enemy is to the left of the player
             inputDir.x = 1;
-            facingDir = Enemy.FacingDir.right;
         } else if (this.getX()>pX) {    //enemy is to the right of the player
             inputDir.x = -1;
-            facingDir = Enemy.FacingDir.left;
         } else inputDir.x = 0;      //enemy is horizontally inline with the player.
     }
 
     protected void moveY(double pY) {
         if (this.getY()<pY) {  //enemy is above the player
             inputDir.y = 1;
-            facingDir = Enemy.FacingDir.down;
         } else if (this.getY()>pY) {    //enemy is below the player
             inputDir.y = -1;
-            facingDir = Enemy.FacingDir.up;
         } else inputDir.y = 0;      //enemy is vertically inline with the player.
     }
     
@@ -160,7 +156,34 @@ public abstract class Enemy extends MovableSprite {
     	double deltaX = getX() - pX;
     	double deltaY = getY() - pY;
     	int roughDir = (int) Math.round(Math.atan2(deltaY, deltaX) / Math.PI * 4);
-    	setImageFromSpriteSheet((roughDir + 8 + 6) % 8);
+    	roughDir = (roughDir + 8 + 6) % 8;
+    	setImageFromSpriteSheet(roughDir);
+    	switch (roughDir) {
+		case 0:
+			this.facingDir = FacingDir.up;
+			return;
+		case 1:
+			this.facingDir = FacingDir.upRight;
+			return;
+		case 2:
+			this.facingDir = FacingDir.right;
+			return;
+		case 3:
+			this.facingDir = FacingDir.downRight;
+			return;
+		case 4:
+			this.facingDir = FacingDir.down;
+			return;
+		case 5:
+			this.facingDir = FacingDir.downLeft;
+			return;
+		case 6:
+			this.facingDir = FacingDir.left;
+			return;
+		case 7:
+			this.facingDir = FacingDir.upLeft;
+			return;
+    	}
     }
 
 
