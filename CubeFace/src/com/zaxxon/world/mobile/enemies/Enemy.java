@@ -84,8 +84,6 @@ public abstract class Enemy extends MovableSprite {
         pathfinding = false;
     }
 
-
-
     public void update(double time, Player player) {
         Point2D.Double closestNode = closestPoint();
         pX = player.getX();
@@ -102,7 +100,6 @@ public abstract class Enemy extends MovableSprite {
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         this.translate(toMove);
         collision();
-//        draw();
         rotate(pX, pY);
         if(this.getX()>(closestNode.getX()-pfOffset) && this.getX()<(closestNode.getX()+pfOffset) && this.getY()>(closestNode.getY()-pfOffset) && this.getY()<(closestNode.getY()+pfOffset)){
             pathfinding=false;
@@ -177,46 +174,6 @@ public abstract class Enemy extends MovableSprite {
         if(this.getBoundsInLocal().intersects(player.getX(),player.getY(),player.getWidth(),player.getHeight())){   //collision check
             player.takeDamage(this.damage);
             //System.out.println("Health: " + String.valueOf(player.getHealth()));
-        }
-    }
-
-    public void draw() {
-
-        switch (facingDir) {
-            case up:
-            	setImageFromSpriteSheet(0);
-                return;
-
-            case down:
-            	setImageFromSpriteSheet(4);
-                return;
-
-            case left:
-            	setImageFromSpriteSheet(6);
-                return;
-
-            case right:
-            	setImageFromSpriteSheet(2);
-                return;
-
-            case upRight:
-            	setImageFromSpriteSheet(1);
-                return;
-
-            case upLeft:
-            	setImageFromSpriteSheet(7);
-                return;
-
-            case downRight:
-            	setImageFromSpriteSheet(3);
-                return;
-
-            case downLeft:
-            	setImageFromSpriteSheet(5);
-                return;
-
-            default:
-                //error
         }
     }
 
