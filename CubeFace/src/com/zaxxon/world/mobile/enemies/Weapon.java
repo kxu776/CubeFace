@@ -18,6 +18,8 @@ public class Weapon {
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
 	
+	Boolean fired = false;
+	
 	private ArrayList<Bullet> allBullets;
 	
 	public Weapon () {
@@ -29,6 +31,7 @@ public class Weapon {
 		
 		Bullet bullet = new Bullet(dir, weaponPos);
 		allBullets.add(bullet);
+		fired = true;
 		
 	}
 	
@@ -63,9 +66,17 @@ public class Weapon {
 		
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
     		
-			this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-    		fire();
+			if (!fired) {
+				
+				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
+	    		fire();
+			}
     	}
+		
+		else {
+			
+			fired = false;
+		}
 		
 		for (int i = 0; i < allBullets.size(); i++) {
 			
