@@ -59,6 +59,7 @@ public class JoinGamePopup {
         GridPane.setConstraints(port, 0, 1);
 
         TextField portField = new TextField();
+        portField.setPromptText("1111");
         GridPane.setConstraints(portField,1, 1);
 
 
@@ -83,7 +84,7 @@ public class JoinGamePopup {
         GridPane.setConstraints(newServer,1,2);
         newServer.setOnAction(e -> {
             popupwindow.close();
-            NewServerPopup.display(primaryStage,renderedScene);
+            NewServerPopup.display(primaryStage, renderedScene);
         });
 
 

@@ -11,6 +11,7 @@ import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.TrackingCamera;
+import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
@@ -25,6 +26,9 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -33,6 +37,7 @@ public class MainGame {
 	private static Group grpGame;
 	private static Group world;
 	private static Group background;
+	//private static Group foreground;
 	private static Group foreground;
 	private static Group overlay;
 	private static Camera camera;
@@ -46,11 +51,12 @@ public class MainGame {
 	public static boolean multiplayer = false;
 	private static Player player1;
 	private static HashMap<String,Player> play = new HashMap<>();
+	private static AnchorPane anchorPane;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset() {
-		// set up groups
+	public static void reset(Stage primaryStage) {
+		// set up game group
 		grpGame = new Group();
 		grpGame.setId("grpGame");
 		world = new Group();
@@ -66,10 +72,24 @@ public class MainGame {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+		//make a statsbox
+		BorderPane borderPane = StatsBox.statsBox();
+
+		//make an anchor pane to hold the game and the stats box
+		anchorPane = new AnchorPane();
+		anchorPane.setBottomAnchor(borderPane, 0.0);
+		anchorPane.setRightAnchor(borderPane, 0.0);
+		anchorPane.setTopAnchor(grpGame,0.0);
+		anchorPane.setCenterShape(true);
+		anchorPane.getChildren().addAll(grpGame, borderPane);
+		//anchorPane.prefWidthProperty().bind(primaryStage.widthProperty());
+
+
 		// set up new arrays and objects
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
+
 		enemiesList = new ArrayList<Enemy>();
 		
 		player1 = new Player();
@@ -91,7 +111,8 @@ public class MainGame {
 		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
-		renderedScene = new Scene(grpGame, width, height);
+		renderedScene = new Scene(anchorPane, width, height);
+
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
@@ -106,6 +127,7 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -188,12 +210,14 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
+
 	private static void sendNetworkUpdate() {
 		client.setX(player1.getX());
 		client.setY(player1.getY());
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
 	}
+
 
 	private static void getUpdatesFromQueue() {
 		while (!inputUpdateQueue.isEmpty()) {
