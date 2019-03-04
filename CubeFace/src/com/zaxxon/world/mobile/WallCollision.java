@@ -23,7 +23,7 @@ public class WallCollision {
     		if (walls.get(i).getValue().intersects(movingObject)) {
     			
     			Vector2 intersection = calcIntersection(walls.get(i).getValue(), movingObject);
-    			intersections.add(new Pair<Integer, Vector2>(walls.get(i).getKey(),intersection));
+    			intersections.add(new Pair<Integer, Vector2>(walls.get(i).getKey(), intersection));
     		}
     	}
     	

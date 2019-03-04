@@ -19,35 +19,44 @@ public class Wall extends Sprite {
 	public static final int WALL_VERTICAL = 3;
 	public static final int WALL_VERTICAL_END = 4;
 	
-	private static ArrayList<Wall> allWalls;
+	private static ArrayList<CollidableRectangle> allWallCollidables;
 	
 	private int wallType;
-
-	public Wall() {
-		initialise(0);
-	}
+	private CollidableRectangle hitBox;
 	
-	public Wall(int wallType) {
-		initialise(wallType);
+	public Wall(double width, double height, double x, double y, int wallType) {
+		initialise(width, height, x, y, wallType);
 	}
 	
 	public static void resetWalls() {
-		allWalls = new ArrayList<Wall>();
+		allWallCollidables = new ArrayList<CollidableRectangle>();
 	}
 	
-	private void initialise(int wallType) {
+	private void initialise(double width, double height, double x, double y, int wallType) {
 		this.wallType = wallType;
 		this.setImageSpriteSheet(SpriteImages.WALL_SPRITESHEET_IMAGE, 1, 5);
 		this.setImageFromSpriteSheet(wallType);
-		allWalls.add(this);
+		switch (wallType) {
+			case 0:
+				hitBox = new CollidableRectangle(width, height, x, y, wallType);
+			case 1:
+				hitBox = new CollidableRectangle(width, height, x, y, wallType);
+			case 2:
+				hitBox = new CollidableRectangle(width, height * 217/256, x, y + 5/128 * height, wallType);
+			case 3:
+				hitBox = new CollidableRectangle(0.5 * width, height, x + 1/4 * width, y, wallType);
+			case 4:
+				hitBox = new CollidableRectangle(0.5 * width, height, x + 1/4 * width, y, wallType);
+		}
+		allWallCollidables.add(hitBox);
 	}
 	
 	public int getWallType() {
 		return wallType;
 	}
 	
-	public static ArrayList<Wall> getAllWalls(){
-		return allWalls;
+	public static ArrayList<CollidableRectangle> getAllWalls(){
+		return allWallCollidables;
 	}
 	
 	
@@ -60,8 +69,8 @@ public class Wall extends Sprite {
 	 */
 	public static ArrayList<Bounds> getAllWallBounds(){
 		ArrayList<Bounds> allBounds = new ArrayList<Bounds>();
-		for (Wall w : allWalls) {
-			allBounds.add(w.getBoundsInParent());
+		for (CollidableRectangle c : allWallCollidables) {
+			allBounds.add(c.getBoundsInParent());
 		}
 		return allBounds;
 	}
@@ -73,7 +82,7 @@ public class Wall extends Sprite {
 	 */
 	public static ArrayList<Pair<Integer, Bounds>> getAllWallBoundsWithType(){
 		ArrayList<Pair<Integer, Bounds>> allBoundPairs = new ArrayList<Pair<Integer, Bounds>>();
-		ArrayList<Wall> allWalls = getAllWalls();
+		ArrayList<CollidableRectangle> allWalls = getAllWalls();
 		for (int i = 0; i < allWalls.size(); i++) {
 			allBoundPairs.add(new Pair<Integer, Bounds>(allWalls.get(i).getWallType(), allWalls.get(i).getBoundsInParent()));
 		}

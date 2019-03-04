@@ -27,7 +27,7 @@ public class Levels {
 			for (int j = 0; j < level.length; j++) {
 				Wall w = null;
 				if (level[i][j] != 0) {
-					w = newWall(level[i][j] - 1, size);
+					w = newWall(level[i][j] - 1, size, i*size, j*size);
 				}
 				allWalls[i * level.length + j] = w;
 			}
@@ -35,22 +35,21 @@ public class Levels {
 		return allWalls;
 	}
 
-	private static Wall newWall(int wallSprite, int size) {
-		Wall w = new Wall(wallSprite);
-		w.setWidth(size);
-		w.setHeight(size);
+	private static Wall newWall(int wallSprite, int size, int x, int y) {
+		Wall w = new Wall(size, size, x, y, wallSprite);
 		return w;
 	}
 
 	public static void generateLevel(int[][] level, int size) {
 		Wall[] bg = generateBackground(level, size);
-		for (int i = 0; i < bg.length; i++) {
-			Wall s = bg[i];
-			if (s != null) {
-				s.setX(size * (i % level.length));
-				s.setY(size * (i / level.length));
-				MainGame.addSpriteToBackground(s);
+		for (Wall w : bg) {
+			if(w != null) {
+				MainGame.addSpriteToBackground(w);
 			}
+		}
+		ArrayList<CollidableRectangle> allWallCollidables = Wall.getAllWalls();
+		for(CollidableRectangle c : allWallCollidables) {
+			MainGame.addCollidable(c);
 		}
 	}
 	

@@ -13,6 +13,7 @@ import com.zaxxon.networking.ClientSender;
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
+import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -36,9 +37,9 @@ public class MainGame {
 	private static Group grpGame;
 	private static Group world;
 	private static Group background;
-	//private static Group foreground;
 	private static Group foreground;
 	private static Group overlay;
+	private static Group collidables;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	public static ArrayList<Player> playerList;
@@ -60,6 +61,8 @@ public class MainGame {
 		grpGame.setId("grpGame");
 		world = new Group();
 		world.setId("world");
+		collidables = new Group();
+		collidables.setId("collidables");
 		background = new Group();
 		background.setId("background");
 		foreground = new Group();
@@ -70,6 +73,7 @@ public class MainGame {
 		grpGame.getChildren().add(overlay);
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
+		world.getChildren().add(collidables);
 
 		//make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
@@ -203,6 +207,10 @@ public class MainGame {
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
+	}
+
+	public static void addCollidable(CollidableRectangle c) {
+		overlay.getChildren().add(c);
 	}
 
 
