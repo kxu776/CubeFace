@@ -25,9 +25,11 @@ public class Hunter extends Enemy {
         isAlive = true;
         pathfinding = false;
     }
-    
-    protected void init() {
-    	
-    }
+
+	@Override
+	protected void attack() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

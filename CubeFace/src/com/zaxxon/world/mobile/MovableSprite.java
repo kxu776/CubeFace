@@ -15,7 +15,7 @@ public abstract class MovableSprite extends Sprite {
 	protected boolean isAlive;
 
 	public enum FacingDir {
-		up, down, left, right
+		up, down, left, right, upRight, upLeft, downRight, downLeft
 	}
 
 	public MovableSprite() {

@@ -17,4 +17,10 @@ public class Zombie extends Enemy {
         pathfinding = false;
 	}
 
+	@Override
+	protected void attack() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

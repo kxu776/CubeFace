@@ -22,7 +22,7 @@ import java.util.*;
 import static com.zaxxon.world.Levels.L1_WAYPOINTS;
 import static java.lang.Math.abs;
 
-public class Enemy extends MovableSprite {
+public abstract class Enemy extends MovableSprite {
 
     FacingDir facingDir;
 
@@ -55,6 +55,7 @@ public class Enemy extends MovableSprite {
     	controllable = false;
     	setX(0);
     	setY(0);
+        facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
     }
@@ -101,7 +102,8 @@ public class Enemy extends MovableSprite {
         Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
         this.translate(toMove);
         collision();
-        draw();
+//        draw();
+        rotate(pX, pY);
         if(this.getX()>(closestNode.getX()-pfOffset) && this.getX()<(closestNode.getX()+pfOffset) && this.getY()>(closestNode.getY()-pfOffset) && this.getY()<(closestNode.getY()+pfOffset)){
             pathfinding=false;
         }
@@ -156,6 +158,13 @@ public class Enemy extends MovableSprite {
             facingDir = Enemy.FacingDir.up;
         } else inputDir.y = 0;      //enemy is vertically inline with the player.
     }
+    
+    protected void rotate(double pX, double pY) {
+    	double deltaX = getX() - pX;
+    	double deltaY = getY() - pY;
+    	int roughDir = (int) Math.round(Math.atan2(deltaY, deltaX) / Math.PI * 4);
+    	setImageFromSpriteSheet((roughDir + 8 + 6) % 8);
+    }
 
 
     protected void collision() {
@@ -190,14 +199,28 @@ public class Enemy extends MovableSprite {
             	setImageFromSpriteSheet(2);
                 return;
 
+            case upRight:
+            	setImageFromSpriteSheet(1);
+                return;
+
+            case upLeft:
+            	setImageFromSpriteSheet(7);
+                return;
+
+            case downRight:
+            	setImageFromSpriteSheet(3);
+                return;
+
+            case downLeft:
+            	setImageFromSpriteSheet(5);
+                return;
+
             default:
                 //error
         }
     }
 
-    private void attack() {
-        //TODO: implement damage system.
-    }
+    protected abstract void attack();
 
 
     protected void getSpriteImages(String spritesheet) {
