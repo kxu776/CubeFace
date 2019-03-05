@@ -10,18 +10,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
-import com.zaxxon.world.StaticCamera;
+import com.zaxxon.world.TrackingCamera;
+import com.zaxxon.ui.StatsBox;
+import com.zaxxon.world.Camera;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
+import com.zaxxon.world.mobile.enemies.Hunter;
+import com.zaxxon.world.mobile.enemies.Zombie;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -30,11 +37,13 @@ public class MainGame {
 	private static Group grpGame;
 	private static Group world;
 	private static Group background;
+	//private static Group foreground;
 	private static Group foreground;
 	private static Group overlay;
-	private static StaticCamera camera;
+	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
-	private static ArrayList<Player> playerList;
+	public static ArrayList<Player> playerList;
+	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static double FPSreduction;
@@ -42,11 +51,12 @@ public class MainGame {
 	public static boolean multiplayer = false;
 	private static Player player1;
 	private static HashMap<String,Player> play = new HashMap<>();
+	private static AnchorPane anchorPane;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset() {
-		// set up groups
+	public static void reset(Stage primaryStage) {
+		// set up game group
 		grpGame = new Group();
 		grpGame.setId("grpGame");
 		world = new Group();
@@ -62,11 +72,25 @@ public class MainGame {
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
+		//make a statsbox
+		BorderPane borderPane = StatsBox.statsBox();
+
+		//make an anchor pane to hold the game and the stats box
+		anchorPane = new AnchorPane();
+		anchorPane.setBottomAnchor(borderPane, 0.0);
+		anchorPane.setRightAnchor(borderPane, 0.0);
+		anchorPane.setTopAnchor(grpGame,0.0);
+		anchorPane.setCenterShape(true);
+		anchorPane.getChildren().addAll(grpGame, borderPane);
+
+
+
 		// set up new arrays and objects
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-		camera = new StaticCamera();
+
+		enemiesList = new ArrayList<Enemy>();
 		
 		player1 = new Player();
 
@@ -75,8 +99,8 @@ public class MainGame {
 		addSpriteToForeground(player1);
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Enemy enemy = new Enemy(600, 600);
-		Enemy enemy2 = new Enemy(1800, 1700);
+		Zombie enemy = new Zombie(600, 600);
+		Hunter enemy2 = new Hunter(1800, 1700);
 		addSpriteToForeground(enemy);
 		addSpriteToForeground(enemy2);
 
@@ -87,10 +111,14 @@ public class MainGame {
 		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
-		renderedScene = new Scene(grpGame, width, height);
+		renderedScene = new Scene(anchorPane, width, height/2);
+
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);
+		
+		// sets up the game camera
+		camera = new TrackingCamera(player1);
 	}
 
 	public static void start(Stage primaryStage) {
@@ -99,11 +127,12 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+
 		Input.addHandlers(primaryStage);
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				transformWorld();
+				camera.update();
 				for (Player player : playerList) {
 					player.update(FPSreduction);
 				}
@@ -122,13 +151,8 @@ public class MainGame {
 		return renderedScene;
 	}
 
-	private static void transformWorld() {
-		world.setTranslateX((int) (camera.getPositionX() * camera.getScaleX() - world.getLayoutBounds().getWidth() / 2
-				+ renderedScene.getWindow().getWidth() / 2));
-		world.setTranslateY((int) (camera.getPositionY() * camera.getScaleY() - world.getLayoutBounds().getHeight() / 2
-				+ renderedScene.getWindow().getHeight() / 2));
-		world.setScaleX(camera.getScaleX());
-		world.setScaleY(camera.getScaleY());
+	public static Group getWorld() {
+		return world;
 	}
 
 	private static void dealWithKeyInput() {
@@ -186,6 +210,7 @@ public class MainGame {
 		spriteList.add(s);
 	}
 
+
 	private static void sendNetworkUpdate() {
 	if(Input.isKeyPressed(KeyCode.SPACE)){
 		String x = ""+player1.getX();
@@ -204,6 +229,7 @@ public class MainGame {
 		networkingClient.sendPlayerObj(client);
 	}
 	}
+
 
 	private static void getUpdatesFromQueue() {
 		while (!inputUpdateQueue.isEmpty()) {
@@ -234,9 +260,10 @@ public class MainGame {
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
 		for (Sprite sprite : spriteList) {
-			if (sprite.getClass() == Enemy.class) { // Typechecks for enemies
+			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
 					spriteList.remove(sprite);
+					enemiesList.remove(sprite);
 				} else {
 					Pair<Double, Player> closestPlayer = null;
 					for (Player player : playerList) {

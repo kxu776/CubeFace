@@ -1,53 +1,63 @@
 package com.zaxxon.world;
 
-public class TrackingCamera extends Thread {
-	
-	double positionX = 0;
-	double positionY = 0;
-	double scaleX = 1;
-	double scaleY = 1;
-	private Sprite spriteToFollow;
-	private boolean running = false;
-	
-	public TrackingCamera(Sprite s) {
-		spriteToFollow = s;
-	}
-	
-	public void run() {
-		running = true;
-		while(running) {
-			positionX = spriteToFollow.getX();
-			positionY = spriteToFollow.getY();
-		}
-		running = false;
-	}
-	
-	public void kill() {
-		running = false;
-	}
-	
-	public double getPositionX() {
-		return positionX;
+import com.zaxxon.client.MainGame;
+
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
+import javafx.stage.Window;
+
+/**
+ * A simple camera that can tracks a Sprite's position
+ * <p>
+ * The StaticCamera's movement and zoom is relative to the centre of the
+ * viewport. Its default position is the Sprite's centre (calculated by its
+ * Bounds)
+ * 
+ * @author philip
+ *
+ */
+public class TrackingCamera extends Camera {
+
+	/**
+	 * The Sprite that the TrackingCamer follows
+	 */
+	protected Sprite spriteToFollow;
+
+	/**
+	 * Creates a TrackingCamera that follows a specific Sprite
+	 * 
+	 * @param spriteToFollow The Sprite that is being tracked
+	 */
+	public TrackingCamera(Sprite spriteToFollow) {
+		this.spriteToFollow = spriteToFollow;
+		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
+		positionX = worldBounds.getWidth() / 2;
+		positionY = worldBounds.getHeight() / 2;
 	}
 
-	public double getPositionY() {
-		return positionY;
+	/**
+	 * Changes the Sprite that the TrackingCamera follows
+	 * 
+	 * @param spriteToFollow The Sprite that is being tracked
+	 */
+	public void setSpriteToFollow(Sprite spriteToFollow) {
+		this.spriteToFollow = spriteToFollow;
 	}
 
-	public double getScaleX() {
-		return scaleX;
-	}
-	
-	public void setScaleX(double scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	public double getScaleY() {
-		return scaleY;
-	}
-	
-	public void setScaleY(double scaleY) {
-		this.scaleY = scaleY;
+	@Override
+	public void update() {
+		Bounds spriteBounds = spriteToFollow.getBoundsInParent();
+		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
+		Window displayWindow = MainGame.getRenderedScene().getWindow();
+		Group world = MainGame.getWorld();
+		double offsetX = (spriteBounds.getMaxX() + spriteBounds.getMinX()) / 2;
+		double offsetY = (spriteBounds.getMaxY() + spriteBounds.getMinY()) / 2;
+		world.setTranslateX(
+				(int) ((positionX - offsetX) * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2));
+		world.setTranslateY(
+				(int) ((positionY - offsetY) * scaleY - worldBounds.getHeight() / 2 + displayWindow.getHeight() / 2));
+		world.setScaleX(scaleX);
+		world.setScaleY(scaleY);
 	}
 
 }

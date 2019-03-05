@@ -1,47 +1,30 @@
 package com.zaxxon.world;
 
-public class StaticCamera {
+import com.zaxxon.client.MainGame;
+
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
+import javafx.stage.Window;
+
+/**
+ * A simple camera that remains fixed in position as the scene changes
+ * <p>
+ * The StaticCamera's movement and zoom is relative to the centre of the viewport. Its default position is the world's centre
+ * 
+ * @author philip
+ *
+ */
+public class StaticCamera extends Camera {
 	
-	private double positionX = 0;
-	private double positionY = 0;
-	private double scaleX = 1;
-	private double scaleY = 1;
-
-	public void setPosition(double positionX, double positionY) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-	}
-
-	public double getPositionX() {
-		return positionX;
-	}
-
-	public void setPositionX(double positionX) {
-		this.positionX = positionX;
-	}
-
-	public double getPositionY() {
-		return positionY;
-	}
-
-	public void setPositionY(double positionY) {
-		this.positionY = positionY;
-	}
-
-	public double getScaleX() {
-		return scaleX;
-	}
-
-	public void setScaleX(double scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	public double getScaleY() {
-		return scaleY;
-	}
-
-	public void setScaleY(double scaleY) {
-		this.scaleY = scaleY;
+	@Override
+	public void update(){
+		Bounds b = MainGame.getWorld().getLayoutBounds();
+		Window w = MainGame.getRenderedScene().getWindow();
+		Group world = MainGame.getWorld();
+		world.setTranslateX((int) (positionX * scaleX - b.getWidth() / 2 + w.getWidth() / 2));
+		world.setTranslateY((int) (positionY * scaleY - b.getHeight() / 2 + w.getHeight() / 2));
+		world.setScaleX(scaleX);
+		world.setScaleY(scaleY);
 	}
 
 }

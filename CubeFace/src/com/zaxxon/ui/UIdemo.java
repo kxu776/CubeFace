@@ -11,12 +11,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.scene.control.Label;
+import sun.awt.resources.awt;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class UIdemo extends Application {
 
@@ -32,6 +39,11 @@ public class UIdemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        //load font
+        Font.loadFont(getClass().getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
+
+
 
         Label label1= new Label("game will b here");
         GridPane tempgrid = new GridPane();
@@ -65,18 +77,18 @@ public class UIdemo extends Application {
 
         //START BUTTON
 
-        start = new Button();
+        start = new Button("start");
         start.setOnAction(e -> ArityPopup.display(primaryStage, scene1));
         GridPane.setConstraints(start, 0, 3);
         //load the start button text
-        Image startText = new Image(getClass().getResource("start.png").toString());
-        ImageView startView = new ImageView(startText); //make an imageview for the start button's text
-        start.setGraphic(startView); //add the image to the button
+        //Image startText = new Image(getClass().getResource("img\\start.png").toString());
+        //ImageView startView = new ImageView(startText); //make an imageview for the start button's text
+        //start.setGraphic(startView); //add the image to the button
 
 
         //**************************LOGO****************************
         //load the logo image
-        Image logo = new Image(getClass().getResource("cubefacelogo.png").toString());
+        Image logo = new Image(getClass().getResource("img/cubefacelogo.png").toString());
 
         //set the imageview
         ImageView logoView = new ImageView(logo);
@@ -106,6 +118,93 @@ public class UIdemo extends Application {
         stats.getChildren().add(bg);
 
 
+        //***********************************************************************************
+        //***********************************************************************************
+
+        //******CENTER
+
+        //health label
+        Label health = new Label("HEALTH:");
+        health.setId("health");
+
+        //health bar
+        //temporary have a label here until i know how to implememnt a "bar" hahah
+        Label bar = new Label("\"health bar\"");
+
+
+        //opponent health label
+        Label opHealth = new Label("OPPONENT HEALTH:");
+        opHealth.setId("health");
+
+        //opponent health bar
+        //temporary have a label here until i know how to implememnt a "bar" hahah
+        Label opBar = new Label("\"oponent health bar\"");
+
+        //vbox for health
+        VBox center = new VBox(5);
+        center.getChildren().addAll(health, bar, opHealth, opBar);
+
+
+        //*******RIGHT
+
+        //score label
+        Label scoreLbl = new Label("SCORE:");
+        scoreLbl.setId("scoreLbl");
+        scoreLbl.setMaxWidth(80);
+        scoreLbl.setMinWidth(80);
+        scoreLbl.setTextAlignment(TextAlignment.CENTER);
+
+        //score
+        Label score = new Label("*");
+        score.setId("score");
+        score.setMaxWidth(80);
+        score.setMinWidth(80);
+        score.setTextAlignment(TextAlignment.CENTER);
+
+        //vbox for score
+        VBox right = new VBox();
+        right.getChildren().addAll(scoreLbl, score);
+
+
+        //*******BOTTOM
+
+        //current weapon label
+        Label weaponLbl = new Label("CURRENT WEAPON:");
+        weaponLbl.setId("weaponLbl");
+        weaponLbl.setPadding(new Insets(17, 0, 5, 0));
+
+        //weapon
+        Label weapon = new Label("*WEAPON");
+        weapon.setId("weapon");
+        weapon.setPadding(new Insets(17, 0, 5, 0));
+
+        //Hbox for weapon
+        HBox bottom = new HBox();
+        bottom.getChildren().addAll(weaponLbl, weapon);
+
+
+
+        //BORDER PANE for it all
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(center);
+        borderPane.setRight(right);
+        borderPane.setBottom(bottom);
+        borderPane.setId("pane");
+        
+
+        //borderPane.setMaxHeight(300);
+        borderPane.setMaxSize(270, 125);
+
+
+
+
+
+
+        //***********************************************************************************
+        //***********************************************************************************
+
+
         //****************************GRIDPANES AND SCENE************************************
 
         //add all buttons to gridpane
@@ -117,16 +216,27 @@ public class UIdemo extends Application {
         //make a scene (haha)
         GridPane rootPane = new GridPane();
         rootPane.setAlignment(Pos.CENTER);
-        rootPane.getChildren().add(grid1);
+        rootPane.getChildren().addAll(grid1, borderPane);
 
-        Scene mainmenu = new Scene(rootPane, 600, 575);
-        mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
+        //trying an anchor pane instead
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setBottomAnchor(borderPane, 0.0);
+        anchorPane.setRightAnchor(borderPane, 0.0);
+        anchorPane.getChildren().add(borderPane);
+
+
+
+
+
+
+        Scene mainmenu = new Scene(anchorPane, 600, 575);
+        mainmenu.getStylesheets().add(getClass().getResource("statsbox.css").toString()); //add the stylesheet
 
         //set the scene to be the one displayed on the window
         window.setScene(mainmenu);
 
         //load the window
         window.show();
-        System.out.println(getClass().getResource("cubefacelogo.png").toString());
+//        System.out.println(getClass().getResource("cubefacelogo.png").toString());
     }
 }
