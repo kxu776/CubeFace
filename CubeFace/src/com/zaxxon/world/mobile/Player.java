@@ -25,7 +25,7 @@ import javafx.util.Pair;
 
 public class Player extends MovableSprite{
 	
-	Weapon weapon;
+	public Weapon weapon;
 	
 	FacingDir facingDir; 
 	

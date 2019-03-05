@@ -89,7 +89,7 @@ public class Client extends Thread {
 		else if(message.startsWith("/b/")) {
 			message = message.substring(3, message.length());
 			String bullet[] = message.split("/");
-		}
+			}
 
 		else		
 			try {

@@ -54,7 +54,7 @@ public class MainGame {
 	private static AnchorPane anchorPane;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
-
+	
 	public static void reset(Stage primaryStage) {
 		// set up game group
 		grpGame = new Group();
@@ -177,7 +177,7 @@ public class MainGame {
 			camera.setScaleY(camera.getScaleX());
 		}
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			System.out.println(renderedScene.getWindow().getWidth() + ", " + renderedScene.getWindow().getHeight());
+		//	System.out.println(renderedScene.getWindow().getWidth() + ", " + renderedScene.getWindow().getHeight());
 		}
 	}
 
@@ -212,22 +212,25 @@ public class MainGame {
 
 
 	private static void sendNetworkUpdate() {
-	if(Input.isKeyPressed(KeyCode.SPACE)){
-		String x = ""+player1.getX();
-		String y = ""+player1.getY();
-		networkingClient.send(("/b/"+x+"/"+y+"/.").getBytes());
-	}
-		
-	if(((player1.getX() - client.getX()) == 0.0 ) & ((player1.getY() - client.getY()) == 0.0)) {
+		// Standing still and shooting
+	if(Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0 ) && ((player1.getY() - client.getY()) == 0.0)){
+		client.setX(player1.getX());
+		client.setY(player1.getY());
+		client.setHealth(player1.getHealth());
+		client.shoot = true;
+		networkingClient.sendPlayerObj(client);
+		client.shoot = false;
 		return;
 	}
-	else {
-		//System.out.println(player1.getX() + "  ||  " + client.getX());
+		// Standing still
+	if(((player1.getX() - client.getX()) == 0.0 ) && ((player1.getY() - client.getY()) == 0.0)) {
+		return;
+	}
+	// Moving
 		client.setX(player1.getX());
 		client.setY(player1.getY());
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
-	}
 	}
 
 
@@ -247,8 +250,12 @@ public class MainGame {
 				if ((data.getID()).equals(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
+					if (data.shoot == true) {
+						((Player) s).weapon.fire();
+					}
 					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
+						
 					}
 				}
 			}
