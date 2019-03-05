@@ -130,7 +130,7 @@ public class Server {
 		}
 
 		if (action.startsWith("/b/")) {
-			broadcastGen(packet, "/b/");
+			broadcastGen(packet);
 		}
 
 		if (action.startsWith("/d/")) {
@@ -151,7 +151,7 @@ public class Server {
 			waiting = true;
 			return;
 		} else {
-			if (action.startsWith("/C/")) {
+			if (action.startsWith("/C/")||action.startsWith("/b/")) {
 				return;
 			}
 			waiting = false;
@@ -159,10 +159,15 @@ public class Server {
 		}
 	}
 
-	private void broadcastGen(DatagramPacket p, String packetIdentifier) {
+	private void broadcastGen(DatagramPacket p) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (p.getPort() != c.getKey() && p.getAddress() != c.getValue().getAddress()) {
-				send(packetIdentifier.getBytes(), c.getValue().getAddress(), c.getKey());
+				p.setPort(c.getKey());p.setAddress(c.getValue().getAddress());
+				try {
+					serverSocket.send(p);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -17,6 +17,7 @@ public class Weapon {
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
 	
+	
 	private ArrayList<Bullet> allBullets;
 	
 	public Weapon () {

@@ -187,10 +187,22 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
+	if(Input.isKeyPressed(KeyCode.SPACE)){
+		String x = ""+player1.getX();
+		String y = ""+player1.getY();
+		networkingClient.send(("/b/"+x+"/"+y+"/.").getBytes());
+	}
+		
+	if(((player1.getX() - client.getX()) == 0.0 ) & ((player1.getY() - client.getY()) == 0.0)) {
+		return;
+	}
+	else {
+		//System.out.println(player1.getX() + "  ||  " + client.getX());
 		client.setX(player1.getX());
 		client.setY(player1.getY());
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
+	}
 	}
 
 	private static void getUpdatesFromQueue() {
@@ -199,17 +211,16 @@ public class MainGame {
 			if (!play.containsKey(data.getID())) {
 				
 				play.put(data.getID(), new Player());;	
-				play.get(data.getID()).setX(500);
-				play.get(data.getID()).setY(500);
+				play.get(data.getID()).setX(900);
+				play.get(data.getID()).setY(900);
 				play.get(data.getID()).setId(data.getID());
-				
 				addSpriteToForeground(play.get(data.getID()));
 			}
+			
 			for (Sprite s : spriteList) {
-				if (data.getID().equals(s.getId())) {
+				if ((data.getID()).equals(s.getId())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
-					
 					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
 					}

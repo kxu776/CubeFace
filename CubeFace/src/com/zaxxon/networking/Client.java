@@ -85,6 +85,11 @@ public class Client extends Thread {
 			System.out.println(message);
 			return;
 		}
+		
+		else if(message.startsWith("/b/")) {
+			message = message.substring(3, message.length());
+			String bullet[] = message.split("/");
+		}
 
 		else		
 			try {
@@ -122,7 +127,7 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			Thread.sleep(20);
+			Thread.sleep(30);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -132,7 +137,7 @@ public class Client extends Thread {
 	}
 
 	public void disconnect() {
-		send("/d/.".getBytes());
+		send("/d/".getBytes());
 		System.out.println("No, closing socket");
 		running = false;
 		try {
@@ -150,6 +155,6 @@ public class Client extends Thread {
 			socket.send(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 }

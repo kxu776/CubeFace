@@ -10,7 +10,7 @@ public class ClientSender implements Serializable{
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
-	public boolean spawn = false;
+	public boolean shoot = false;
 	private String ID;
 	
 	public ClientSender(double d, double e, double health) {
