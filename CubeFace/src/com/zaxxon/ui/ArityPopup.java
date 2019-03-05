@@ -6,11 +6,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.*;
+
+import java.awt.*;
 
 
 public class ArityPopup {
@@ -23,7 +30,7 @@ public class ArityPopup {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Player mode");
         popupwindow.setResizable(false);
-        popupwindow.initStyle(StageStyle.UNDECORATED); //remove automatic formatting for the stage
+        popupwindow.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
 
 
 
@@ -59,25 +66,38 @@ public class ArityPopup {
 
         //********************LAYOUT**************************
 
-        //VBox for the top
-        VBox top = new VBox();
-        top.getChildren().add(label);
-        top.setAlignment(Pos.CENTER);
-        top.setPadding(new Insets(40, 20, 0, 20));
+        //VBox for the middle
+        VBox middle = new VBox();
+        middle.getChildren().add(label);
+        middle.setAlignment(Pos.CENTER);
+        middle.setPadding(new Insets(0, 20, 0, 20));
 
-        //GridPane for the middle
-        GridPane center = new GridPane();
-        center.getChildren().addAll(single, multiplayer);
-        center.setAlignment(Pos.CENTER);
-        center.setHgap(20);
+        //GridPane for the bottom
+        GridPane bottom = new GridPane();
+        bottom.getChildren().addAll(single, multiplayer);
+        bottom.setAlignment(Pos.CENTER);
+        bottom.setHgap(20);
+        bottom.setPadding(new Insets(0, 20, 20, 20));
 
-        //borderPane for both
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, true);
+
+
+        //borderPane for it all
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(top);
-        borderPane.setCenter(center);
+        borderPane.setTop(toolbox);
+        borderPane.setCenter(middle);
+        borderPane.setBottom(bottom);
+
+        //make a rectangle and set clip
+        Rectangle rect = new Rectangle(400,150);
+        rect.setArcHeight(10.0);
+        rect.setArcWidth(10.0);
+        borderPane.setClip(rect);
 
         //Scene
         Scene scene1= new Scene(borderPane, 400, 150);
+        scene1.setFill(Color.TRANSPARENT);
         scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();

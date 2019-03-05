@@ -12,14 +12,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainMenu {
 
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 575;
+	public static final int WIDTH = 1000;
+	public static final int HEIGHT = 500;
 	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
 	
     Button start;
@@ -29,6 +34,11 @@ public class MainMenu {
 
     //a method that makes the main menu scene
     public Scene makeMainMenu(Stage window) {
+
+        //stage settings
+        window.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
+        window.setResizable(false);
+
 
         //******************************GRIDPANE 1***********************************
 
@@ -164,14 +174,30 @@ public class MainMenu {
         grid2.setConstraints(zombieView, 1, 1);
         grid2.getChildren().add(zombieView);
 
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(window, false);
 
 
         //********************************ROOTPANE**************************************
-        //make a rootpane
+        //make a root gridpane for the content
         GridPane rootPane = new GridPane();
-        Scene mainmenu = new Scene(rootPane, WIDTH, HEIGHT);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
+
+        //make a borderpane for everything
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(toolbox);
+        borderPane.setCenter(rootPane);
+
+        //make a rectangle and set clipping
+        Rectangle rect = new Rectangle(1000,500);
+        rect.setArcHeight(10.0);
+        rect.setArcWidth(10.0);
+        borderPane.setClip(rect);
+
+        Scene mainmenu = new Scene(borderPane, WIDTH, HEIGHT);
+        mainmenu.setFill(Color.TRANSPARENT);
+
 
         mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
 

@@ -11,12 +11,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class JoinGamePopup {
@@ -29,6 +29,7 @@ public class JoinGamePopup {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Join A Game");
         popupwindow.setResizable(false);
+        popupwindow.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
 
 
 
@@ -76,6 +77,7 @@ public class JoinGamePopup {
             primaryStage.setScene(MainGame.getRenderedScene());
             MainGame.start(primaryStage);
         });
+        startGame.setId("startgame");
 
 
         //*****NEW SERVER BUTTON*****
@@ -86,42 +88,60 @@ public class JoinGamePopup {
             popupwindow.close();
             NewServerPopup.display(primaryStage, renderedScene);
         });
+        newServer.setId("newsever");
 
 
 
         //******************LAYOUT******************
 
 
-        //gridpane for the center
+        //gridpane for the details
         GridPane gridPane = new GridPane();
         gridPane.getChildren().addAll(nameField, portField, name, port);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        //vbox for title
-        VBox top = new VBox();
-        top.getChildren().add(label);
+        //vbox for content
+        VBox top = new VBox(15);
+        top.getChildren().addAll(label, gridPane);
         top.setAlignment(Pos.CENTER);
-        top.setPadding(new Insets(20, 20, 0, 20));
+        top.setPadding(new Insets(20, 20, 20, 20));
 
         //hbox for the bottom
         HBox bottom = new HBox(20);
-        bottom.getChildren().addAll(startGame, newServer);
+        bottom.getChildren().add(startGame);
         bottom.setAlignment(Pos.CENTER);
         bottom.setPadding(new Insets(0, 20, 20, 20));
 
-        //borderpane for everything
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, true);
+
+        //borderpane for everything - new server button
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(top);
-        borderPane.setCenter(gridPane);
+        borderPane.setTop(toolbox);
+        borderPane.setCenter(top);
         borderPane.setBottom(bottom);
+
+        //another anchorpane
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setTopAnchor(borderPane, 0.0);
+        anchorPane.setRightAnchor(borderPane,0.0);
+        anchorPane.setBottomAnchor(newServer, 1.0);
+        anchorPane.setRightAnchor(newServer, 1.0);
+        anchorPane.getChildren().addAll(borderPane, newServer);
+
+        Rectangle rect = new Rectangle(394,200);
+        rect.setArcHeight(10.0);
+        rect.setArcWidth(10.0);
+        borderPane.setClip(rect);
 
 
         //**********************SCENE******************
 
-        Scene scene1= new Scene(borderPane, 400, 180);
+        Scene scene1= new Scene(anchorPane, 394, 200);
         scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
+        scene1.setFill(Color.TRANSPARENT);
         popupwindow.setScene(scene1);
 
         popupwindow.show();

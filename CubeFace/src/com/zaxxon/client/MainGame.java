@@ -111,7 +111,7 @@ public class MainGame {
 		FPSreduction = 60.0 / 60;
 
 		// sets up the scene
-		renderedScene = new Scene(anchorPane, width, height/2);
+		renderedScene = new Scene(anchorPane, 1000, 500);
 
 
 		// loads the level
