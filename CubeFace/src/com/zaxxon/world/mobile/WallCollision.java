@@ -34,7 +34,7 @@ public class WallCollision {
     		pushBox = intersections.get(0).getValue();
     	}
     	
-    	else if (intersections.size() == 2) { //two joining walls
+    	else if (intersections.size() == 2) { //two joining walls, possibly an inside corner
     		
     		Vector2 b0 = intersections.get(0).getValue();
     		Vector2 b1 = intersections.get(1).getValue();
@@ -47,6 +47,34 @@ public class WallCollision {
     		else if (b0.y == b1.y) {
     			
     			pushBox = new Vector2 (0, b0.y);
+    		}
+    		
+    		else {
+    			
+    			insideCorner = true;
+    			
+    			if (b0.x == 0 || b1.y == 0) {
+    				
+    				pushBox = new Vector2 (b1.x, b0.y);
+    			}
+    			
+    			else if (b1.x == 0 || b0.y == 0) {
+    				
+    				pushBox = new Vector2 (b0.x, b1.y);
+    			}
+    			
+    			else {
+    				
+    				if (Math.abs(b0.x) > Math.abs(b1.x)) {
+    					
+    					pushBox = new Vector2 (b1.x, b0.y);
+    				}
+    				
+    				else if (Math.abs(b1.x) > Math.abs(b0.x)) {
+    					
+    					pushBox = new Vector2 (b0.x, b1.y);
+    				}
+    			}
     		}
     	}
     	
@@ -62,7 +90,6 @@ public class WallCollision {
     			if (intersections.get(i).getKey() == 1) {
     				
     				intersections.remove(i);
-    				//System.out.println("found corner");
     				break;
     			}
     		}
