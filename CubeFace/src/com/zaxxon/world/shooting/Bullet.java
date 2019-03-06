@@ -1,4 +1,4 @@
-package com.zaxxon.world.mobile.enemies;
+package com.zaxxon.world.shooting;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +15,7 @@ import com.zaxxon.world.Wall;
 //Written by Dan
 
 import com.zaxxon.world.mobile.MovableSprite;
+import com.zaxxon.world.mobile.enemies.Enemy;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
@@ -53,14 +54,18 @@ public class Bullet extends MovableSprite {
 	}
 	
 	private void collision() {
+		
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
+		
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
 				MainGame.removeSprite(this);
 				return;
 			}
-		}for(Enemy enemy : MainGame.enemiesList){
+		}
+		
+		for(Enemy enemy : MainGame.enemiesList){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
 				//TODO: Enemy takes damage
 				speed = 0;

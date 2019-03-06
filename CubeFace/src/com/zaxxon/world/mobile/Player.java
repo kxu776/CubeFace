@@ -11,7 +11,7 @@ import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
-import com.zaxxon.world.mobile.enemies.WeaponManager;
+import com.zaxxon.world.shooting.WeaponManager;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;

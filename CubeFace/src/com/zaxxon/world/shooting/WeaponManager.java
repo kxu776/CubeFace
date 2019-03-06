@@ -1,4 +1,4 @@
-package com.zaxxon.world.mobile.enemies;
+package com.zaxxon.world.shooting;
 
 import java.util.ArrayList;
 
@@ -20,19 +20,18 @@ public class WeaponManager {
 	
 	Boolean fired = false;
 	
+	int currentWeapon = 0;
+	private ArrayList<Weapon> weapons;
 	private ArrayList<Bullet> allBullets;
 	
 	public WeaponManager () {
 		
+		weapons = new ArrayList<Weapon>();
+		weapons.add(new Weapon_Default());
+		weapons.add(new Weapon_MG());
+		weapons.add(new Weapon_Shotgun());
+		
 		allBullets = new ArrayList<Bullet>();
-	}
-	
-	public void fire() {
-		
-		Bullet bullet = new Bullet(dir, weaponPos);
-		allBullets.add(bullet);
-		fired = true;
-		
 	}
 	
 	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
@@ -69,7 +68,8 @@ public class WeaponManager {
 			if (!fired) {
 				
 				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    		fire();
+	    		allBullets.add(weapons.get(currentWeapon).fire(dir, weaponPos));
+	    		fired = true;
 			}
     	}
 		
@@ -103,5 +103,11 @@ public class WeaponManager {
 	    	default:
 	    		return new Vector2();
 	    	}
-	    }
+	 }
+	 
+	 	public String getCurrentWeaponName() {
+			
+			return weapons.get(currentWeapon).getWeaponName();
+		}
+	  
 }
