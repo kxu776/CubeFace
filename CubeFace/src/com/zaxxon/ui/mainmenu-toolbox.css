@@ -26,6 +26,7 @@
 #tbTitle {
     -fx-padding: 5 0 0 5;
     -fx-text-fill: white;
+    -fx-font-family: "VCR OSD Mono";
 }
 
 
