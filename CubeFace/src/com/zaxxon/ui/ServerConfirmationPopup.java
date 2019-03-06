@@ -57,7 +57,7 @@ public class ServerConfirmationPopup {
         Scene scene1= new Scene(gridPane, 400, 150);
 
         popupwindow.setScene(scene1);
-
+        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         popupwindow.showAndWait();
 
     }

@@ -85,7 +85,6 @@ public class MainGame {
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().add(borderPane);
 		overlay.getChildren().add(anchorPane);
-		
 
 
 		// set up new arrays and objects

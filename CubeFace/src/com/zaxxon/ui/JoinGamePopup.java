@@ -121,6 +121,7 @@ public class JoinGamePopup {
         //**********************SCENE******************
 
         Scene scene1= new Scene(borderPane, 400, 180);
+        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         popupwindow.setScene(scene1);
 
         popupwindow.show();
