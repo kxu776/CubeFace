@@ -115,7 +115,7 @@ public class JoinGamePopup {
         bottom.setPadding(new Insets(0, 20, 20, 20));
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, true);
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, true, "Join A Game");
 
         //borderpane for everything - new server button
         BorderPane borderPane = new BorderPane();

@@ -1,0 +1,19 @@
+@font-face {
+    src: url(img/VCR_OSD_MONO.ttf);
+}
+
+.root {
+    -fx-background-image: url(img/gui-prototypes.png);
+    -fx-background-repeat: repeat;
+    -fx-font-family: "VCR OSD Mono";
+    -fx-border-style: solid;
+    -fx-border-color:#05abb1;
+    -fx-border-radius:4px;
+    -fx-text-fill:white;
+    }
+
+#toolbox {
+    -fx-background-color: #c1e9b3;
+    -fx-border-width: 0 0 1 0; -fx-border-color: white;
+    -fx-font-family: "VCR OSD Mono";
+}

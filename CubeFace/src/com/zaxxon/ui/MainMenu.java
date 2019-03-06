@@ -59,7 +59,7 @@ public class MainMenu {
 
         //START BUTTON
 
-        start = new Button();
+        start = new Button("START");
         start.setOnAction(e -> {
             ArityPopup.display(window, MainGame.getRenderedScene());
         });
@@ -67,30 +67,30 @@ public class MainMenu {
         //load the start button text
         Image startText = new Image(getClass().getResource("img/start.png").toString());
         ImageView startView = new ImageView(startText); //make an imageview for the start button's text
-        start.setGraphic(startView); //add the image to the button
+        //start.setGraphic(startView); //add the image to the button
 
 
         //AUDIO BUTTON
 
-        audio = new Button();
+        audio = new Button("AUDIO");
         audio.setOnAction(e -> 
         music.stop());
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
         Image audioText = new Image(getClass().getResource("img/audio.png").toString());
         ImageView audioView = new ImageView(audioText); //make image view for audio button's text
-        audio.setGraphic(audioView); //add image to button
+        //audio.setGraphic(audioView); //add image to button
 
 
         //HELP BUTTON
 
-        help = new Button();
+        help = new Button("HELP");
         help.setOnAction(e-> System.out.println("Opening help screen..."));
         grid1.setConstraints(help, 0, 5);
         //load the help button's text
         Image helpText = new Image(getClass().getResource("img/help.png").toString());
         ImageView helpView = new ImageView(helpText); //make image view for help button's text
-        help.setGraphic(helpView); //add image to button
+        //help.setGraphic(helpView); //add image to button
 
 
 
@@ -122,7 +122,7 @@ public class MainMenu {
         //rootPane.getChildren().add(grid1);
 
         /*Scene mainmenu = new Scene(rootPane, 600, 575);
-        mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet*/
+        mainmenu.getStylesheets().add(getClass().getResource("mainmenu.css").toString()); //add the stylesheet*/
 
         //******************************GRIDPANE 2***********************************
 
@@ -175,7 +175,9 @@ public class MainMenu {
         grid2.getChildren().add(zombieView);
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(window, false);
+        AnchorPane toolbox = new Toolbox().toolbar(window, false, "CubeFace");
+        //toolbox.setPadding(new Insets(0, 0, 0, 0));
+        toolbox.setId("toolbox");
 
 
         //********************************ROOTPANE**************************************
@@ -199,7 +201,7 @@ public class MainMenu {
         mainmenu.setFill(Color.TRANSPARENT);
 
 
-        mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
+        mainmenu.getStylesheets().add(getClass().getResource("mainmenu.css").toString()); //add the stylesheet
 
 
         return mainmenu;

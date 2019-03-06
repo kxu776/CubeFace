@@ -10,6 +10,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.Toolbox;
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
@@ -29,6 +31,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -75,13 +78,23 @@ public class MainGame {
 		//make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
 
+		//make a toolbox
+		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, false, "CubeFace");
+		toolbox.setPrefWidth(1000.0);
+		toolbox.setId("toolbox");
+
+
+
+
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
+		anchorPane.setTopAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
-		anchorPane.setTopAnchor(grpGame,0.0);
+		anchorPane.setLeftAnchor(grpGame,0.0);
+
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane);
+		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
 
 
 
@@ -110,9 +123,13 @@ public class MainGame {
 		int height = gd.getDisplayMode().getHeight();
 		FPSreduction = 60.0 / 60;
 
+
+
+
+
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
-
+		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL1, 256);

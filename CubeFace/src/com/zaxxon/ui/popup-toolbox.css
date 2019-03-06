@@ -3,7 +3,6 @@
 }
 
 .root {
-    -fx-background-color: #c1e9b3;
     -fx-background-image: url(img/popup-bg.png);
     -fx-background-repeat: repeat;
     -fx-overflow: hidden;
@@ -17,7 +16,7 @@
 
 
 #toolbarbutton {
-    -fx-padding: 2 5 2 5;
+    -fx-padding: 5 5 5 5;
     -fx-background-color: none;
     -fx-border-width: 0 0 0 1; -fx-border-color: white;
 }
@@ -28,7 +27,6 @@
 
 #tbTitle {
     -fx-padding: 5 0 0 5;
-    -fx-text-fill: white;
 }
 
 

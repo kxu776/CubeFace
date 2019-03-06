@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 
 public class Toolbox {
 
-    public AnchorPane toolbar(Stage popupwindow, boolean popup) {
+    public AnchorPane toolbar(Stage popupwindow, boolean popup, String title) {
 
         //make a toolbar (for the top)
-        Label tbTitle = new Label("Game Mode");
+        Label tbTitle = new Label(title);
         tbTitle.setAlignment(Pos.BASELINE_LEFT);
         tbTitle.setId("tbTitle");
 
@@ -63,7 +63,13 @@ public class Toolbox {
         anchorPane.getChildren().addAll(tbTitle, hbox);
         anchorPane.setId("toolbar");
 
-        anchorPane.getStylesheets().add(ArityPopup.class.getResource("toolbox.css").toString());
+
+        if(popup) {
+            anchorPane.getStylesheets().add(ArityPopup.class.getResource("popup-toolbox.css").toString());
+        } else {
+            anchorPane.getStylesheets().add(ArityPopup.class.getResource("toolbox.css").toString());
+        }
+
 
         return anchorPane;
     }
