@@ -27,4 +27,11 @@ public class StaticCamera extends Camera {
 		world.setScaleY(scaleY);
 	}
 
+	public void update(Bounds b, Window w, Group world){
+		world.setTranslateX((int) (positionX * scaleX - b.getWidth() / 2 + w.getWidth() / 2));
+		world.setTranslateY((int) (positionY * scaleY - b.getHeight() / 2 + w.getHeight() / 2));
+		world.setScaleX(scaleX);
+		world.setScaleY(scaleY);
+	}
+
 }

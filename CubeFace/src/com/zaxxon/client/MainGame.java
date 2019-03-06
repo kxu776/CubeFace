@@ -112,7 +112,7 @@ public class MainGame {
 		// sets up the scene
 		renderedScene = new Scene(grpGame, width, height);
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL1, 256);
+		Levels.generateLevel(Levels.LEVEL2, 256);
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
