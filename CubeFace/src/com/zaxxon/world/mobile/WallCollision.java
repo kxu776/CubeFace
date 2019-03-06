@@ -53,8 +53,6 @@ public class WallCollision {
     			
     			insideCorner = true;
     			
-    			System.out.println(b0.x + " " + b0.y + "," + b1.x + " " + b1.y);
-    			
     			if (b0.x == 0 || b1.y == 0) {
     				
     				pushBox = new Vector2 (b1.x, b0.y);
@@ -92,7 +90,6 @@ public class WallCollision {
     			if (intersections.get(i).getKey() == 1) {
     				
     				intersections.remove(i);
-    				//System.out.println("found corner");
     				break;
     			}
     		}
