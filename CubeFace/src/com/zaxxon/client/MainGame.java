@@ -180,11 +180,6 @@ public class MainGame {
 		}
 	}
 
-	public static void addSpriteToBackground(Sprite s) {
-		background.getChildren().add(s);
-		spriteList.add(s);
-	}
-
 	public static void removeSprite(Sprite s) {
 		for (Sprite searchingSprite : spriteList) {
 			if (searchingSprite == s) {
@@ -194,6 +189,11 @@ public class MainGame {
 				return;
 			}
 		}
+	}
+	
+	public static void addSpriteToBackground(Sprite s) {
+		background.getChildren().add(s);
+		spriteList.add(s);
 	}
 
 	public static void addSpriteToForeground(Sprite s) {
@@ -210,7 +210,7 @@ public class MainGame {
 	}
 
 	public static void addCollidable(CollidableRectangle c) {
-		overlay.getChildren().add(c);
+		collidables.getChildren().add(c);
 	}
 
 

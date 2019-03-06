@@ -27,7 +27,7 @@ public class Levels {
 			for (int j = 0; j < level.length; j++) {
 				Wall w = null;
 				if (level[i][j] != 0) {
-					w = newWall(level[i][j] - 1, size, i*size, j*size);
+					w = newWall(level[i][j] - 1, size, j*size, i*size);
 				}
 				allWalls[i * level.length + j] = w;
 			}
@@ -45,11 +45,8 @@ public class Levels {
 		for (Wall w : bg) {
 			if(w != null) {
 				MainGame.addSpriteToBackground(w);
+				MainGame.addCollidable(w.getHitBox());
 			}
-		}
-		ArrayList<CollidableRectangle> allWallCollidables = Wall.getAllWalls();
-		for(CollidableRectangle c : allWallCollidables) {
-			MainGame.addCollidable(c);
 		}
 	}
 	
