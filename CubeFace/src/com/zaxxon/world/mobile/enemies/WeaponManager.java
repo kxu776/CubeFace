@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 
 //Written by Dan
 
-public class Weapon {
+public class WeaponManager {
 
 	private FacingDir facingDir;
 	private Vector2 dir;
@@ -22,7 +22,7 @@ public class Weapon {
 	
 	private ArrayList<Bullet> allBullets;
 	
-	public Weapon () {
+	public WeaponManager () {
 		
 		allBullets = new ArrayList<Bullet>();
 	}

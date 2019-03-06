@@ -11,7 +11,7 @@ import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
-import com.zaxxon.world.mobile.enemies.Weapon;
+import com.zaxxon.world.mobile.enemies.WeaponManager;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
@@ -25,7 +25,7 @@ import javafx.util.Pair;
 
 public class Player extends MovableSprite{
 	
-	Weapon weapon;
+	WeaponManager weaponManager;
 	
 	FacingDir facingDir; 
 	
@@ -64,7 +64,7 @@ public class Player extends MovableSprite{
         facingDir = FacingDir.up;
         this.setX(500);
         this.setY(800);
-        weapon = new Weapon();
+        weaponManager = new WeaponManager();
     }
     
     public void update(double time) {
@@ -83,7 +83,7 @@ public class Player extends MovableSprite{
 		//System.out.println("\nposX: " + Double.valueOf(this.getX()) + " posY: " + Double.valueOf(this.getY()));
 		
 		
-		weapon.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
+		weaponManager.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
 		
 		draw();
     }
