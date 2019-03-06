@@ -28,10 +28,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -73,6 +70,18 @@ public class MainGame {
 		overlay.setId("overlay");
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
+
+
+		//make a rectangle
+		Rectangle gameRect = new Rectangle(998,498);
+		gameRect.setLayoutX(1);
+		gameRect.setLayoutY(1);
+
+		//clip the group
+		grpGame.setClip(gameRect);
+
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 
@@ -93,11 +102,10 @@ public class MainGame {
 		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
-		anchorPane.setLeftAnchor(grpGame,0.0);
-
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
 		anchorPane.setId("anchorpane");
+
 
 
 
