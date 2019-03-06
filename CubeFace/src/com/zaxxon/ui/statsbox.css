@@ -1,11 +1,4 @@
-.root {
-    -fx-background-image: url(img/gui-prototypes.png), url(img/wallbg.png);
-    -fx-background-repeat: round;
-    }
 
-@font-face {
-    src: url(img/VCR_OSD_MONO.ttf);
-}
 
 
 #health {

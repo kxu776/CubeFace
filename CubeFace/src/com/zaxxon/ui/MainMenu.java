@@ -12,14 +12,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainMenu {
 
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 575;
+	public static final int WIDTH = 1000;
+	public static final int HEIGHT = 500;
 	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
 	
     Button start;
@@ -29,6 +34,11 @@ public class MainMenu {
 
     //a method that makes the main menu scene
     public Scene makeMainMenu(Stage window) {
+
+        //stage settings
+        window.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
+        window.setResizable(false);
+
 
         //******************************GRIDPANE 1***********************************
 
@@ -49,7 +59,7 @@ public class MainMenu {
 
         //START BUTTON
 
-        start = new Button();
+        start = new Button("START");
         start.setOnAction(e -> {
             ArityPopup.display(window, MainGame.getRenderedScene());
         });
@@ -57,30 +67,30 @@ public class MainMenu {
         //load the start button text
         Image startText = new Image(getClass().getResource("img/start.png").toString());
         ImageView startView = new ImageView(startText); //make an imageview for the start button's text
-        start.setGraphic(startView); //add the image to the button
+        //start.setGraphic(startView); //add the image to the button
 
 
         //AUDIO BUTTON
 
-        audio = new Button();
+        audio = new Button("AUDIO");
         audio.setOnAction(e -> 
         music.stop());
         grid1.setConstraints(audio, 0, 4);
         //load the audio button text
         Image audioText = new Image(getClass().getResource("img/audio.png").toString());
         ImageView audioView = new ImageView(audioText); //make image view for audio button's text
-        audio.setGraphic(audioView); //add image to button
+        //audio.setGraphic(audioView); //add image to button
 
 
         //HELP BUTTON
 
-        help = new Button();
+        help = new Button("HELP");
         help.setOnAction(e-> System.out.println("Opening help screen..."));
         grid1.setConstraints(help, 0, 5);
         //load the help button's text
         Image helpText = new Image(getClass().getResource("img/help.png").toString());
         ImageView helpView = new ImageView(helpText); //make image view for help button's text
-        help.setGraphic(helpView); //add image to button
+        //help.setGraphic(helpView); //add image to button
 
 
 
@@ -112,7 +122,7 @@ public class MainMenu {
         //rootPane.getChildren().add(grid1);
 
         /*Scene mainmenu = new Scene(rootPane, 600, 575);
-        mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet*/
+        mainmenu.getStylesheets().add(getClass().getResource("mainmenu.css").toString()); //add the stylesheet*/
 
         //******************************GRIDPANE 2***********************************
 
@@ -164,16 +174,34 @@ public class MainMenu {
         grid2.setConstraints(zombieView, 1, 1);
         grid2.getChildren().add(zombieView);
 
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(window, 2, "CubeFace");
+        //toolbox.setPadding(new Insets(0, 0, 0, 0));
+        toolbox.setId("toolbox");
 
 
         //********************************ROOTPANE**************************************
-        //make a rootpane
+        //make a root gridpane for the content
         GridPane rootPane = new GridPane();
-        Scene mainmenu = new Scene(rootPane, WIDTH, HEIGHT);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().addAll(grid2, grid1); //add both gridpanes
 
-        mainmenu.getStylesheets().add(getClass().getResource("ms.css").toString()); //add the stylesheet
+        //make a borderpane for everything
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(toolbox);
+        borderPane.setCenter(rootPane);
+
+        //make a rectangle and set clipping
+        Rectangle rect = new Rectangle(1000,500);
+        rect.setArcHeight(10.0);
+        rect.setArcWidth(10.0);
+        borderPane.setClip(rect);
+
+        Scene mainmenu = new Scene(borderPane, WIDTH, HEIGHT);
+        mainmenu.setFill(Color.TRANSPARENT);
+
+
+        mainmenu.getStylesheets().add(getClass().getResource("mainmenu.css").toString()); //add the stylesheet
 
 
         return mainmenu;

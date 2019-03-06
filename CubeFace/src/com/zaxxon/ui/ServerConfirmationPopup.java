@@ -49,9 +49,16 @@ public class ServerConfirmationPopup {
 
 
         //LAYOUT
+        //gridpane for actual content
         GridPane gridPane = new GridPane();
         gridPane.getChildren().addAll(label, exit, joinGame);
         gridPane.setAlignment(Pos.CENTER);
+
+        //hbox to hold toolbar
+
+
+        //vbox to hold it all
+
 
 
         Scene scene1= new Scene(gridPane, 400, 150);

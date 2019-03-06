@@ -10,6 +10,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.zaxxon.input.Input;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.Toolbox;
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
@@ -29,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -71,6 +74,18 @@ public class MainGame {
 		overlay.setId("overlay");
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
+
+
+		//make a rectangle
+		Rectangle gameRect = new Rectangle(998,498);
+		gameRect.setLayoutX(1);
+		gameRect.setLayoutY(1);
+
+		//clip the group
+		grpGame.setClip(gameRect);
+
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 		world.getChildren().add(collidables);
@@ -78,13 +93,24 @@ public class MainGame {
 		//make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
 
+		//make a toolbox
+		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
+		toolbox.setPrefWidth(998.0);
+		toolbox.setId("toolbox");
+
+
+
+
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
-		anchorPane.setBottomAnchor(borderPane, borderPane.getMaxHeight() / 2);
+		anchorPane.setTopAnchor(toolbox, 0.0);
+		anchorPane.setLeftAnchor(toolbox, 0.0);
+		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().add(borderPane);
-		overlay.getChildren().add(anchorPane);
+		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
+		anchorPane.setId("anchorpane");
+
 
 
 		// set up new arrays and objects
@@ -106,11 +132,23 @@ public class MainGame {
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		double width = gd.getDisplayMode().getWidth();
-		double height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		FPSreduction = 60.0 / 60;
+
+
+		//make a rectangle
+		Rectangle rect = new Rectangle(1000,500);
+		rect.setArcHeight(10.0);
+		rect.setArcWidth(10.0);
+		anchorPane.setClip(rect);
+
+
+
 		// sets up the scene
-		renderedScene = new Scene(grpGame, width, height);
+		renderedScene = new Scene(anchorPane, 1000, 500);
+		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
+
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL2, 256);
 		// sets up the game camera
