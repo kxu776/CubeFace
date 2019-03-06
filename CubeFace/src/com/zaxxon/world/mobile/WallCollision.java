@@ -210,4 +210,3 @@ public class WallCollision {
 		return new Vector2(xDist, yDist);
 	}
 }
-

@@ -43,7 +43,6 @@ public class Levels {
 				if (level[i][j] != 0) {
 					w = newWall(level[i][j] - 1, size, j * size, i * size);
 				}
-				System.out.println("["+i + ", " + j + "] " + (i * level[0].length + j));
 				allWalls[i * level[0].length + j] = w;
 			}
 		}
