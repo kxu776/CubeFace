@@ -32,6 +32,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -79,8 +80,8 @@ public class MainGame {
 		BorderPane borderPane = StatsBox.statsBox();
 
 		//make a toolbox
-		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, false, "CubeFace");
-		toolbox.setPrefWidth(1000.0);
+		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
+		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
 
@@ -89,12 +90,14 @@ public class MainGame {
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
 		anchorPane.setTopAnchor(toolbox, 0.0);
+		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
 		anchorPane.setLeftAnchor(grpGame,0.0);
 
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
+		anchorPane.setId("anchorpane");
 
 
 
@@ -124,6 +127,11 @@ public class MainGame {
 		FPSreduction = 60.0 / 60;
 
 
+		//make a rectangle
+		Rectangle rect = new Rectangle(1000,500);
+		rect.setArcHeight(10.0);
+		rect.setArcWidth(10.0);
+		anchorPane.setClip(rect);
 
 
 

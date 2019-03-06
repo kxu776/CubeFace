@@ -11,7 +11,12 @@ import javafx.stage.Stage;
 
 public class Toolbox {
 
-    public AnchorPane toolbar(Stage popupwindow, boolean popup, String title) {
+    public AnchorPane toolbar(Stage popupwindow, int type, String title) {
+
+
+        //types of toolbar:
+        //1 = popup, 2= mainmenu, 3= game
+
 
         //make a toolbar (for the top)
         Label tbTitle = new Label(title);
@@ -20,7 +25,8 @@ public class Toolbox {
 
 
         Button minimise = new Button();
-        if (!popup) {
+        //if window is not a popup window
+        if (type != 2) {
             minimise.setOnAction(e -> popupwindow.setIconified(true));
         }
         //load the icon
@@ -30,7 +36,8 @@ public class Toolbox {
         minimise.setId("toolbarbutton");
 
         Button maximise = new Button();
-        if (!popup) {
+        //if window is not a popup window
+        if (type != 2) {
             maximise.setOnAction(e -> popupwindow.setMaximized(true));
         }
         //load the icon
@@ -64,10 +71,12 @@ public class Toolbox {
         anchorPane.setId("toolbar");
 
 
-        if(popup) {
+        if(type == 1) {
             anchorPane.getStylesheets().add(ArityPopup.class.getResource("popup-toolbox.css").toString());
-        } else {
-            anchorPane.getStylesheets().add(ArityPopup.class.getResource("toolbox.css").toString());
+        } else if(type == 2) {
+            anchorPane.getStylesheets().add(ArityPopup.class.getResource("mainmenu-toolbox.css").toString());
+        } else if(type ==3) {
+            anchorPane.getStylesheets().add(ArityPopup.class.getResource("game-toolbox.css").toString());
         }
 
 

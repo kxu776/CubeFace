@@ -175,7 +175,7 @@ public class MainMenu {
         grid2.getChildren().add(zombieView);
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(window, false, "CubeFace");
+        AnchorPane toolbox = new Toolbox().toolbar(window, 2, "CubeFace");
         //toolbox.setPadding(new Insets(0, 0, 0, 0));
         toolbox.setId("toolbox");
 

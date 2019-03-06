@@ -80,7 +80,7 @@ public class ArityPopup {
         bottom.setPadding(new Insets(0, 20, 20, 20));
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, true, "Game Mode");
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Game Mode");
 
 
         //borderPane for it all

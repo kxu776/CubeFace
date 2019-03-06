@@ -1,6 +1,4 @@
-@font-face {
-    src: url(img/VCR_OSD_MONO_1.ttf);
-}
+
 
 .root {
     -fx-background-image: url(img/popup-bg.png);
