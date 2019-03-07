@@ -3,7 +3,6 @@ package com.zaxxon.ui;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.sound.MusicPlayer;
 
-import javafx.animation.TranslateTransition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 public class MainMenu {
 
@@ -169,15 +167,6 @@ public class MainMenu {
         toolbox.setId("toolbox");
 
 
-        //add animations to the background
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(30), logoImage);
-
-        tt.setFromX( -(logoImage.getFitWidth()) );
-        tt.setToX( rootPane.getPrefWidth() );
-        tt.setCycleCount( Timeline.INDEFINITE );
-        tt.play();
-
-
         //********************************ROOTPANE**************************************
         //make a root gridpane for the content
         GridPane rootPane = new GridPane();
@@ -204,5 +193,11 @@ public class MainMenu {
 
         return mainmenu;
     }
+
+
+
+
+
+
 
 }
