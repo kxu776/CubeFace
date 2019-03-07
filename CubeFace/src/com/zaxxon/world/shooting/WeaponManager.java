@@ -18,8 +18,6 @@ public class WeaponManager {
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
 	
-	Boolean fired = false;
-	
 	int currentWeapon = 0;
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
@@ -68,20 +66,9 @@ public class WeaponManager {
 			ChangeWeapon();
 		}
 		
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
-    		
-			if (!fired) {
-				
-				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    		weapons.get(currentWeapon).fire(dir, weaponPos);
-	    		fired = true;
-			}
-    	}
-		
-		else {
-			
-			fired = false;
-		}
+		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
+	    weapons.get(currentWeapon).fire(dir, weaponPos);
+    	
 		
 		for (int i = 0; i < allBullets.size(); i++) {
 			
