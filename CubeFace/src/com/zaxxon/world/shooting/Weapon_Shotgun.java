@@ -11,6 +11,8 @@ public class Weapon_Shotgun extends Weapon {
 	
 	private final double damage = 8;
 	
+	private Boolean fired = false;
+	
 	public Weapon_Shotgun() {
 		
 		super.weaponName = "Shotgun";
@@ -22,8 +24,48 @@ public class Weapon_Shotgun extends Weapon {
 		
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
 			
-			Bullet bullet = new Bullet(dir, weaponPos, bulletDamage);
-			WeaponManager.addBulletToList(bullet);
+			if (!fired) {
+				
+				if (Math.abs(dir.y) > 0) {
+					
+					Bullet b0 = new Bullet(new Vector2 (dir.x-0.2, dir.y), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b0);
+					
+					Bullet b1 = new Bullet(new Vector2 (dir.x-0.5, dir.y), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b1);
+					
+					Bullet b2 = new Bullet(new Vector2 (dir.x+0.2, dir.y), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b2);
+					
+					Bullet b3 = new Bullet(new Vector2 (dir.x+0.5, dir.y), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b3);
+				}
+				
+				else {
+					
+					Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b0);
+					
+					Bullet b1 = new Bullet(new Vector2 (dir.x, dir.y-0.5), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b1);
+					
+					Bullet b2 = new Bullet(new Vector2 (dir.x, dir.y+0.2), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b2);
+					
+					Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage);
+					WeaponManager.addBulletToList(b3);
+				}
+				
+				
+				
+				
+				fired = true;
+			}
+		}
+		
+		else {
+			
+			fired = false;
 		}
 	}
 }
