@@ -21,8 +21,8 @@ public class Bullet extends MovableSprite {
 	ImagePattern imgPat;
 	
 	private Vector2 direction;
-	private double speed = 10;
-	private double damage;
+	private double speed = 10.0;
+	private double damage = 10;
 	
 	public Bullet (Vector2 dir, Vector2 pos, double damage) {
 		
@@ -47,11 +47,11 @@ public class Bullet extends MovableSprite {
 		
 		collision();
 	}
-	
+
 	private void collision() {
-		
+
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
-		
+
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
@@ -59,7 +59,7 @@ public class Bullet extends MovableSprite {
 				return;
 			}
 		}
-		
+
 		for(Enemy enemy : MainGame.enemiesList){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
 				//TODO: Enemy takes damage
@@ -70,12 +70,14 @@ public class Bullet extends MovableSprite {
 		}
 
 	}
-	
+
 	private void getSpriteImage() {
-		
+
 		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
 		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
-		
+
 	}
 }
+
+
 

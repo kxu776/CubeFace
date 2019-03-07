@@ -14,6 +14,7 @@ public class Zombie extends Enemy {
         this.setHeight(height);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
+        health = 100.0;
         pathfinding = false;
 	}
 
