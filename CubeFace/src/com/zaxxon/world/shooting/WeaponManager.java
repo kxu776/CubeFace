@@ -22,7 +22,7 @@ public class WeaponManager {
 	
 	int currentWeapon = 0;
 	private ArrayList<Weapon> weapons;
-	private ArrayList<Bullet> allBullets;
+	private static ArrayList<Bullet> allBullets;
 	
 	public WeaponManager () {  
 		
@@ -73,7 +73,7 @@ public class WeaponManager {
 			if (!fired) {
 				
 				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    		allBullets.add(weapons.get(currentWeapon).fire(dir, weaponPos));
+	    		weapons.get(currentWeapon).fire(dir, weaponPos);
 	    		fired = true;
 			}
     	}
@@ -131,6 +131,11 @@ public class WeaponManager {
 	 public String getCurrentWeaponName() {
 			
 		return weapons.get(currentWeapon).getWeaponName();
-	}
+	 }
+	 
+	 public static void addBulletToList(Bullet b) {
+		 
+		 allBullets.add(b);
+	 }
 	  
 }

@@ -15,9 +15,9 @@ public class Weapon_Shotgun extends Weapon {
 	}
 	
 	@Override
-	public Bullet fire(Vector2 dir, Vector2 weaponPos) {
+	public void fire(Vector2 dir, Vector2 weaponPos) {
 		
 		Bullet bullet = new Bullet(dir, weaponPos, bulletDamage);
-		return bullet;
+		WeaponManager.addBulletToList(bullet);
 	}
 }

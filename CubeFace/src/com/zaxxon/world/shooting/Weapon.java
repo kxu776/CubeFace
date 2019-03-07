@@ -15,9 +15,8 @@ public class Weapon {
 		
 	}
 	
-	public Bullet fire(Vector2 dir, Vector2 weaponPos) {
+	public void fire(Vector2 dir, Vector2 weaponPos) {
 		
-		return null;
 	}
 	
 	public String getWeaponName() {
