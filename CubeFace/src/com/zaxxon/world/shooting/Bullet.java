@@ -1,27 +1,20 @@
 package com.zaxxon.world.shooting;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
-
-//Written by Dan
-
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.enemies.Enemy;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Pair;
-import sun.applet.Main;
+
+
+//Written by Dan
 
 public class Bullet extends MovableSprite {
 	

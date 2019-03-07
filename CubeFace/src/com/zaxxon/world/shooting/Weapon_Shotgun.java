@@ -2,6 +2,8 @@ package com.zaxxon.world.shooting;
 
 import com.zaxxon.maths.Vector2;
 
+//Written by Dan
+
 public class Weapon_Shotgun extends Weapon {
 	
 	private final double damage = 8;

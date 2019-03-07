@@ -63,6 +63,11 @@ public class WeaponManager {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 		
+		if (Input.isKeyPressed(KeyCode.SHIFT)) {
+			
+			ChangeWeapon();
+		}
+		
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
     		
 			if (!fired) {
@@ -84,7 +89,25 @@ public class WeaponManager {
 		}
 	}
 	
-	 public Vector2 getFacingDirAsVector(FacingDir facingDir) {
+	public void ChangeWeapon() {
+		
+		if (Input.isKeyPressed(KeyCode.DIGIT1)) {
+			
+			currentWeapon = 0;
+		}
+		
+		else if (Input.isKeyPressed(KeyCode.DIGIT2)) {
+					
+			currentWeapon = 1;
+		}
+
+		else if (Input.isKeyPressed(KeyCode.DIGIT3)) {
+			
+			currentWeapon = 2;
+		}
+	}
+	
+	public Vector2 getFacingDirAsVector(FacingDir facingDir) {
 	    	
 	    	switch (facingDir) {
 	    		
