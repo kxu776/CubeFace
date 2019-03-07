@@ -19,7 +19,13 @@
     -fx-background-position: center;
     -fx-background-radius: 0;
     -fx-background-insets: 0;
-    -fx-font-size: 20px
+    -fx-font-size: 20px;
+    -fx-webkit-transition: 1.0s;
+}
+
+.button:hover {
+    -fx-background-color: #bce7b1;
+    -fx-text-fill: white;
 }
 
 #toolbox {

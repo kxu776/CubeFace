@@ -126,7 +126,7 @@ public class MainMenu {
         //CUBEFACE IMAGE
 
         //load the cubeface image
-        Image cubeface = new Image(getClass().getResource("img/cubeface.png").toString());
+        Image cubeface = new Image(getClass().getResource("img/cubeface.gif").toString());
 
         //set the imageview
         ImageView cubefaceView = new ImageView(cubeface);
@@ -145,7 +145,7 @@ public class MainMenu {
         //ZOMBIE IMAGE
 
         //load the zombie image
-        Image zombie = new Image(getClass().getResource("img/zombie.png").toString());
+        Image zombie = new Image(getClass().getResource("img/zombie.gif").toString());
 
         //set the imageview
         ImageView zombieView = new ImageView(zombie);
@@ -193,5 +193,11 @@ public class MainMenu {
 
         return mainmenu;
     }
+
+
+
+
+
+
 
 }

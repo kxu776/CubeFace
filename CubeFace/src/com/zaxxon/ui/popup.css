@@ -21,6 +21,11 @@
         -fx-text-fill: #06abb1;
 }
 
+.button:hover {
+    -fx-background-color: #bce7b1;
+    -fx-text-fill: white;
+}
+
 .label {
     -fx-text-fill: white;
 }
