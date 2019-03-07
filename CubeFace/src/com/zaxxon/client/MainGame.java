@@ -11,10 +11,14 @@ import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
-import com.zaxxon.networking.ServerClient;
+
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.Toolbox;
+
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Camera;
+import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
@@ -32,7 +36,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -41,9 +45,9 @@ public class MainGame {
 	private static Group grpGame;
 	private static Group world;
 	private static Group background;
-	//private static Group foreground;
 	private static Group foreground;
 	private static Group overlay;
+	private static Group collidables;
 	private static Camera camera;
 	private static LinkedList<Sprite> spriteList = new LinkedList<>();
 	public static ArrayList<Player> playerList;
@@ -66,6 +70,8 @@ public class MainGame {
 		grpGame.setId("grpGame");
 		world = new Group();
 		world.setId("world");
+		collidables = new Group();
+		collidables.setId("collidables");
 		background = new Group();
 		background.setId("background");
 		foreground = new Group();
@@ -74,19 +80,42 @@ public class MainGame {
 		overlay.setId("overlay");
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
+
+
+		//make a rectangle
+		Rectangle gameRect = new Rectangle(998,498);
+		gameRect.setLayoutX(1);
+		gameRect.setLayoutY(1);
+
+		//clip the group
+		grpGame.setClip(gameRect);
+
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
+		world.getChildren().add(collidables);
 
 		//make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
 
+		//make a toolbox
+		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
+		toolbox.setPrefWidth(998.0);
+		toolbox.setId("toolbox");
+
+
+
+
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
+		anchorPane.setTopAnchor(toolbox, 0.0);
+		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
-		anchorPane.setTopAnchor(grpGame,0.0);
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane);
+		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
+		anchorPane.setId("anchorpane");
 
 
 
@@ -94,14 +123,12 @@ public class MainGame {
 		Wall.resetWalls();
 		spriteList = new LinkedList<Sprite>();
 		playerList = new ArrayList<Player>();
-
 		enemiesList = new ArrayList<Enemy>();
-		
 		player1 = new Player();
-
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
+		
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
 		//Zombie enemy = new Zombie(600, 600);
@@ -115,13 +142,21 @@ public class MainGame {
 		int height = gd.getDisplayMode().getHeight();
 		FPSreduction = 60.0 / 60;
 
-		// sets up the scene
-		renderedScene = new Scene(anchorPane, width, height/2);
 
+		//make a rectangle
+		Rectangle rect = new Rectangle(1000,500);
+		rect.setArcHeight(10.0);
+		rect.setArcWidth(10.0);
+		anchorPane.setClip(rect);
+
+
+
+		// sets up the scene
+		renderedScene = new Scene(anchorPane, 1000, 500);
+		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL1, 256);
-		
+		Levels.generateLevel(Levels.LEVEL2, 256);
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
@@ -132,6 +167,8 @@ public class MainGame {
 		grpGame.requestFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
+		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
 
@@ -189,11 +226,6 @@ public class MainGame {
 		}
 	}
 
-	public static void addSpriteToBackground(Sprite s) {
-		background.getChildren().add(s);
-		spriteList.add(s);
-	}
-
 	public static void removeSprite(Sprite s) {
 		for (Sprite searchingSprite : spriteList) {
 			if (searchingSprite == s) {
@@ -203,6 +235,11 @@ public class MainGame {
 				return;
 			}
 		}
+	}
+	
+	public static void addSpriteToBackground(Sprite s) {
+		background.getChildren().add(s);
+		spriteList.add(s);
 	}
 
 	public static void addSpriteToForeground(Sprite s) {
@@ -216,6 +253,10 @@ public class MainGame {
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
+	}
+
+	public static void addCollidable(CollidableRectangle c) {
+		collidables.getChildren().add(c);
 	}
 
 
@@ -291,7 +332,7 @@ public class MainGame {
 					if((data.shoot == true)) {
 						System.out.println("Wtf");
 						((MultiplayerPlayer) s).weapon.update(FPSreduction,((MovableSprite) s).getPosition(),((MultiplayerPlayer) s).getplayerDimensions(),((MultiplayerPlayer) s).getdir());
-						((MultiplayerPlayer) s).weapon.fire();
+						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,((MovableSprite) s).getPosition());;
 
 					}
 					
@@ -305,9 +346,7 @@ public class MainGame {
 		}
 	}
 	
-	private static void mpShoot(String s) {
-		play.get(s).weapon.fire();
-	}
+	
 
 	private static void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player

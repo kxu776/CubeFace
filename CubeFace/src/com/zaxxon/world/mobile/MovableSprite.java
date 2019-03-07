@@ -9,7 +9,7 @@ public abstract class MovableSprite extends Sprite {
 	private double velocityX;
 	private double velocityY;
 	private double movementSpeed;
-	private double health;
+	protected double health;
 
 	public boolean controllable;
 	protected boolean isAlive;

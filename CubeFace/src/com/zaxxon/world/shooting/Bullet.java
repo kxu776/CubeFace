@@ -1,41 +1,37 @@
-package com.zaxxon.world.mobile.enemies;
+package com.zaxxon.world.shooting;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
-
-//Written by Dan
-
 import com.zaxxon.world.mobile.MovableSprite;
-
+import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Pair;
-import sun.applet.Main;
+
+
+//Written by Dan
 
 public class Bullet extends MovableSprite {
 	
 	ImagePattern imgPat;
 	
 	private Vector2 direction;
-	private double speed = 10;
+	private double speed = 10.0;
+	private double damage = 10;
 	
-	public Bullet (Vector2 dir, Vector2 pos) {
+	public Bullet (Vector2 dir, Vector2 pos, double damage) {
 		
 		MainGame.addSpriteToForeground(this);
 		
 		this.setX(pos.x);
 		this.setY(pos.y);
 		this.direction = dir;
+		this.damage = damage;
 		
 		getSpriteImage();
 		this.setFill(imgPat);
@@ -51,16 +47,20 @@ public class Bullet extends MovableSprite {
 		
 		collision();
 	}
-	
+
 	private void collision() {
+
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
+
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
 				MainGame.removeSprite(this);
 				return;
 			}
-		}for(Enemy enemy : MainGame.enemiesList){
+		}
+
+		for(Enemy enemy : MainGame.enemiesList){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
 				//TODO: Enemy takes damage
 				speed = 0;
@@ -70,12 +70,14 @@ public class Bullet extends MovableSprite {
 		}
 
 	}
-	
+
 	private void getSpriteImage() {
-		
+
 		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
 		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
-		
+
 	}
 }
+
+
 

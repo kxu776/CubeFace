@@ -1,4 +1,4 @@
-package com.zaxxon.world.mobile.enemies;
+package com.zaxxon.world.shooting;
 
 import java.util.ArrayList;
 
@@ -11,30 +11,26 @@ import javafx.scene.input.KeyCode;
 
 //Written by Dan
 
-public class Weapon {
+public class WeaponManager {
 
 	private FacingDir facingDir;
-	private Vector2 dir;
-	private Vector2 playerPos;
+	public Vector2 dir;
+	public Vector2 playerPos;
 	private Vector2 weaponPos;
 	
-	public Boolean fired = false;
 
+	int currentWeapon = 0;
+	private ArrayList<Weapon> weapons;
+	private static ArrayList<Bullet> allBullets;
 	
-	private ArrayList<Bullet> allBullets;
-	public boolean mpShoot;
-	
-	public Weapon () {
+	public WeaponManager () {  
+		
+		weapons = new ArrayList<Weapon>();
+		weapons.add(new Weapon_Default());
+		weapons.add(new Weapon_MG());
+		weapons.add(new Weapon_Shotgun());
 		
 		allBullets = new ArrayList<Bullet>();
-	}
-	
-	public void fire() {
-		
-		Bullet bullet = new Bullet(dir, weaponPos);
-		allBullets.add(bullet);
-		fired = true;
-		
 	}
 	
 	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
@@ -66,19 +62,15 @@ public class Weapon {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 		
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
-    		
-			if (!fired) {
-				
-				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    		fire();
-			}
+
+		if (Input.isKeyPressed(KeyCode.SHIFT)) {
+			
+			ChangeWeapon();
 		}
 		
-		else {
-			
-			fired = false;
-		}
+		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
+	    weapons.get(currentWeapon).fire(dir, weaponPos);
+    	
 		
 		for (int i = 0; i < allBullets.size(); i++) {
 			
@@ -86,7 +78,25 @@ public class Weapon {
 		}
 	}
 	
-	 public Vector2 getFacingDirAsVector(FacingDir facingDir) {
+	public void ChangeWeapon() {
+		
+		if (Input.isKeyPressed(KeyCode.DIGIT1)) {
+			
+			currentWeapon = 0;
+		}
+		
+		else if (Input.isKeyPressed(KeyCode.DIGIT2)) {
+					
+			currentWeapon = 1;
+		}
+
+		else if (Input.isKeyPressed(KeyCode.DIGIT3)) {
+			
+			currentWeapon = 2;
+		}
+	}
+	
+	public Vector2 getFacingDirAsVector(FacingDir facingDir) {
 	    	
 	    	switch (facingDir) {
 	    		
@@ -111,4 +121,20 @@ public class Weapon {
 		 
 	 }
 	
+
+	 
+	 
+	 public String getCurrentWeaponName() {
+			
+		return weapons.get(currentWeapon).getWeaponName();
+	 }
+	 
+	 public static void addBulletToList(Bullet b) {
+		 
+		 allBullets.add(b);
+	 }
+	 public Weapon getCurrentWeapon() {
+		 return weapons.get(currentWeapon);
+	 }
+	  
 }

@@ -36,5 +36,9 @@ public class Input {
 		}
 		return false;
 	}
+	
+	public static void removeKeyPress(KeyCode key) {
+		keysPressed.remove(key);
+	}
 
 }
