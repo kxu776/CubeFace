@@ -64,4 +64,55 @@ public class Levels {
 		}
 	}
 
+	public static Point2D.Double[] generateCornerPoints(int[][] level, int size) {
+		LinkedList<Point2D.Double> knownObtuseCorners = new LinkedList<Point2D.Double>();
+		for (int i = 0; i < level.length; i++) {
+			for (int j = 0; j < level[i].length; j++) {
+				if (level[i][j] != 0) {
+					int centre = level[i][j];
+					int[] sides = new int[4];
+					// top
+					try {
+						sides[0] = level[i - 1][j];
+					} catch (IndexOutOfBoundsException e) {
+						sides[0] = 0;
+					}
+					// right
+					try {
+						sides[3] = level[i][j + 1];
+					} catch (IndexOutOfBoundsException e) {
+						sides[3] = 0;
+					}
+					// bottom
+					try {
+						sides[2] = level[i + 1][j];
+					} catch (IndexOutOfBoundsException e) {
+						sides[2] = 0;
+					}
+					// left
+					try {
+						sides[1] = level[i][j - 1];
+					} catch (IndexOutOfBoundsException e) {
+						sides[1] = 0;
+					}
+					boolean[] theseCorners = getCorners(sides, centre);
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	private static boolean[] getCorners(int[] sides, int centre) {
+		boolean[] knownCorners = new boolean[4];
+		for(int i = 0; i < sides.length; i++) {
+			if (sides[i % sides.length] == 0 && sides[(i + 1) % sides.length] == 0) {
+				knownCorners[i] = true;
+			} else {
+				knownCorners[i] = false;
+			}
+		}
+		return knownCorners;
+	}
+
 }
