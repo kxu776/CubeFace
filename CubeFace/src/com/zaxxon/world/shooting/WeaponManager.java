@@ -1,4 +1,4 @@
-package com.zaxxon.world.mobile.enemies;
+package com.zaxxon.world.shooting;
 
 import java.util.ArrayList;
 
@@ -18,21 +18,18 @@ public class WeaponManager {
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
 	
-	Boolean fired = false;
+	int currentWeapon = 0;
+	private ArrayList<Weapon> weapons;
+	private static ArrayList<Bullet> allBullets;
 	
-	private ArrayList<Bullet> allBullets;
-	
-	public WeaponManager () {
+	public WeaponManager () {  
+		
+		weapons = new ArrayList<Weapon>();
+		weapons.add(new Weapon_Default());
+		weapons.add(new Weapon_MG());
+		weapons.add(new Weapon_Shotgun());
 		
 		allBullets = new ArrayList<Bullet>();
-	}
-	
-	public void fire() {
-		
-		Bullet bullet = new Bullet(dir, weaponPos);
-		allBullets.add(bullet);
-		fired = true;
-		
 	}
 	
 	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
@@ -64,19 +61,14 @@ public class WeaponManager {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 		
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
-    		
-			if (!fired) {
-				
-				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    		fire();
-			}
-    	}
-		
-		else {
+		if (Input.isKeyPressed(KeyCode.SHIFT)) {
 			
-			fired = false;
+			ChangeWeapon();
 		}
+		
+		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
+	    weapons.get(currentWeapon).fire(dir, weaponPos);
+    	
 		
 		for (int i = 0; i < allBullets.size(); i++) {
 			
@@ -84,7 +76,25 @@ public class WeaponManager {
 		}
 	}
 	
-	 public Vector2 getFacingDirAsVector(FacingDir facingDir) {
+	public void ChangeWeapon() {
+		
+		if (Input.isKeyPressed(KeyCode.DIGIT1)) {
+			
+			currentWeapon = 0;
+		}
+		
+		else if (Input.isKeyPressed(KeyCode.DIGIT2)) {
+					
+			currentWeapon = 1;
+		}
+
+		else if (Input.isKeyPressed(KeyCode.DIGIT3)) {
+			
+			currentWeapon = 2;
+		}
+	}
+	
+	public Vector2 getFacingDirAsVector(FacingDir facingDir) {
 	    	
 	    	switch (facingDir) {
 	    		
@@ -103,5 +113,16 @@ public class WeaponManager {
 	    	default:
 	    		return new Vector2();
 	    	}
-	    }
+	 }
+	 
+	 public String getCurrentWeaponName() {
+			
+		return weapons.get(currentWeapon).getWeaponName();
+	 }
+	 
+	 public static void addBulletToList(Bullet b) {
+		 
+		 allBullets.add(b);
+	 }
+	  
 }
