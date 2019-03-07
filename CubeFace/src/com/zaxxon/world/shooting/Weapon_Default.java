@@ -4,15 +4,19 @@ import com.zaxxon.maths.Vector2;
 
 public class Weapon_Default extends Weapon {
 
+	private final double damage = 10;
+	
 	public Weapon_Default() {
 		
-		weaponName = "Pistol";
+		super.weaponName = "Pistol";
+		super.bulletDamage = damage;
+		
 	}
 	
 	@Override
 	public Bullet fire(Vector2 dir, Vector2 weaponPos) {
 		
-		Bullet bullet = new Bullet(dir, weaponPos);
+		Bullet bullet = new Bullet(dir, weaponPos, bulletDamage);
 		return bullet;
 	}
 }

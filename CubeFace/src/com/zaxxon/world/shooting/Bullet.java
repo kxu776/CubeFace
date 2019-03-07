@@ -29,14 +29,16 @@ public class Bullet extends MovableSprite {
 	
 	private Vector2 direction;
 	private double speed = 10;
+	private double damage;
 	
-	public Bullet (Vector2 dir, Vector2 pos) {
+	public Bullet (Vector2 dir, Vector2 pos, double damage) {
 		
 		MainGame.addSpriteToForeground(this);
 		
 		this.setX(pos.x);
 		this.setY(pos.y);
 		this.direction = dir;
+		this.damage = damage;
 		
 		getSpriteImage();
 		this.setFill(imgPat);

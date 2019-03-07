@@ -24,7 +24,7 @@ public class WeaponManager {
 	private ArrayList<Weapon> weapons;
 	private ArrayList<Bullet> allBullets;
 	
-	public WeaponManager () {
+	public WeaponManager () {  
 		
 		weapons = new ArrayList<Weapon>();
 		weapons.add(new Weapon_Default());
@@ -105,9 +105,9 @@ public class WeaponManager {
 	    	}
 	 }
 	 
-	 	public String getCurrentWeaponName() {
+	 public String getCurrentWeaponName() {
 			
-			return weapons.get(currentWeapon).getWeaponName();
-		}
+		return weapons.get(currentWeapon).getWeaponName();
+	}
 	  
 }
