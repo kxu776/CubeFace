@@ -52,7 +52,10 @@ public class NewServerPopup {
             public void handle(ActionEvent event) {
 
                 //get info from text field and pass to networking
-            		new Server(Integer.parseInt(portField.getText())).start();;
+            		new Server(Integer.parseInt(portField.getText())).start();
+
+            		// Expect to fail if same port num
+            		
                 popupwindow.close();
                 //open server confirmation popup
 

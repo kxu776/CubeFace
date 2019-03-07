@@ -21,7 +21,7 @@ package com.zaxxon.world.mobile;
 	import javafx.util.Pair;
 
 public class MultiplayerPlayer extends MovableSprite{
-		Weapon weapon;
+		public Weapon weapon;
 		
 		FacingDir facingDir; 
 		
@@ -67,17 +67,13 @@ public class MultiplayerPlayer extends MovableSprite{
 	    	
 	    	deltaTime = time;
 	    	
-	    	movement();
 			
 			Vector2 toMove = new Vector2 (velocity.x * deltaTime, velocity.y * deltaTime);
 			this.translate(toMove);
 			
 			collision();
 			
-			Vector2 playerPos = new Vector2 (this.getX(), this.getY());
-
-			//System.out.println("\nposX: " + Double.valueOf(this.getX()) + " posY: " + Double.valueOf(this.getY()));
-			
+			Vector2 playerPos = new Vector2 (this.getX(), this.getY());			
 			
 			weapon.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
 			
@@ -85,89 +81,7 @@ public class MultiplayerPlayer extends MovableSprite{
 	    }
 	    
 	   
-	    
-	    private void movement() {
-	    	
-	    	inputDir = new Vector2();
-	    	
-	    	
-	    	//ordering swaps to handle diagonal facing directions in the correct order
-	    	
-	    	if (facingDir == FacingDir.up || facingDir == FacingDir.down) {
-	    		
-	    		moveX();
-	        	moveY();
-	    	}
-	    	
-	    	else {
-	    		
-	    		moveY();
-	    		moveX();
-	    	}
-	    	
-	    	inputDir = Vector2.normalise(inputDir);
-	    	
-	    	
-	    	if (Vector2.getMagnitude(inputDir) > 0) {
-	    		
-	    		currentSpeed = Math.min(maxSpeed, currentSpeed + acceleration * deltaTime);
-	    		moveDir = inputDir;
-	    	}
-	    	
-	    	else {
-	    		
-	    		currentSpeed = Math.max(0, currentSpeed + deceleration * deltaTime);
-	    	}
-	    	
-	    	velocity = new Vector2 (moveDir.x * currentSpeed, moveDir.y * currentSpeed);
-	    }
-	    
-	    private void moveX() {
-	    	
-	    	if (Input.isKeyPressed(KeyCode.LEFT) && Input.isKeyPressed(KeyCode.RIGHT)) {
-				
-	    		inputDir.x = 0;
-			}
-	    	
-	    	else if (Input.isKeyPressed(KeyCode.LEFT)) {
-				
-	    		inputDir.x = -1;
-	    		facingDir = FacingDir.left;
-	    		
-			}
-	    	
-	    	else if (Input.isKeyPressed(KeyCode.RIGHT)) {
-				
-	    		inputDir.x = 1;
-	    		facingDir = FacingDir.right;
-	  
-			}
-	    	
-	    	else inputDir.x = 0;
-	    }
-	    
-	    private void moveY() {
-	    	
-	    	if (Input.isKeyPressed(KeyCode.DOWN) && Input.isKeyPressed(KeyCode.UP)) {
-				
-	    		inputDir.y = 0;
-			}
-	    	
-	    	else if (Input.isKeyPressed(KeyCode.DOWN)) {
-				
-	    		inputDir.y = 1;
-	    		facingDir = FacingDir.down;
-			}
-	    	
-	    	else if (Input.isKeyPressed(KeyCode.UP)) {
-				
-	    		inputDir.y = -1;
-	    		facingDir = FacingDir.up;
-	    		
-			}
-	    	
-	    	else inputDir.y = 0;
-	    }
+	   
 	    
 	    private void collision() {
 	    	
@@ -236,11 +150,34 @@ public class MultiplayerPlayer extends MovableSprite{
 				
 				Image img = SwingFXUtils.toFXImage(sprites[i], null);
 				imgPats[i] = new ImagePattern(img);
-			}
-
-			
+			}	
+	    }
+	    public FacingDir getdir() {
+	    		return facingDir;
 	    }
 	    
+	    public void setDir(int i) {
+	    		if(i == 1) {
+	    			facingDir = FacingDir.up;
+	    		}
+	    		else if(i == 2) {
+	    			facingDir = FacingDir.down;
+
+	    		}
+	    		else if(i == 3) {
+	    			facingDir = FacingDir.left;
+
+	    		}
+	    		else if(i == 4) {
+	    			facingDir = FacingDir.right;
+
+	    		}
+	    	
+	    }
+	    
+	    public Vector2 getplayerDimensions() {
+	    return	new Vector2 (this.getWidth(), this.getHeight());
+	    }
 	    
 }
 

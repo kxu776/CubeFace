@@ -18,10 +18,11 @@ public class Weapon {
 	private Vector2 playerPos;
 	private Vector2 weaponPos;
 	
-	Boolean fired = false;
+	public Boolean fired = false;
 
 	
 	private ArrayList<Bullet> allBullets;
+	public boolean mpShoot;
 	
 	public Weapon () {
 		
@@ -61,7 +62,7 @@ public class Weapon {
 	
 	public void update(double deltaTime, Vector2 playerPos, Vector2 playerDimensions, FacingDir facingDir) {
 		
-		this.playerPos = playerPos;
+		this.playerPos = (playerPos);
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 		
@@ -72,7 +73,7 @@ public class Weapon {
 				this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
 	    		fire();
 			}
-    	}
+		}
 		
 		else {
 			
@@ -105,4 +106,9 @@ public class Weapon {
 	    		return new Vector2();
 	    	}
 	    }
+	 public Vector2 getPlayerPos() {
+		return playerPos;
+		 
+	 }
+	
 }

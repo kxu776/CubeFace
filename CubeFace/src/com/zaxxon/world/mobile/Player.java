@@ -11,6 +11,7 @@ import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.mobile.enemies.Weapon;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -25,7 +26,7 @@ import javafx.util.Pair;
 
 public class Player extends MovableSprite{
 	
-	public Weapon weapon;
+	Weapon weapon;
 	
 	FacingDir facingDir; 
 	
@@ -244,6 +245,9 @@ public class Player extends MovableSprite{
 
 		
     }
+    public FacingDir getdir() {
+		return facingDir;
+    }	
     
     
 }

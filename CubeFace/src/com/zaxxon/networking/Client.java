@@ -28,7 +28,6 @@ public class Client extends Thread {
 	private ByteArrayInputStream bais;
 	private boolean running = false;
 	private String player;
-	private String ID;
 	
 
 	public Client(String host, int port, String player) {
@@ -127,7 +126,7 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			Thread.sleep(30);
+			Thread.sleep(20);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
