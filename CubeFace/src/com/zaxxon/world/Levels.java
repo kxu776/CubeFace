@@ -85,11 +85,16 @@ public class Levels {
 					} catch (IndexOutOfBoundsException e) {
 						theseCorners = new boolean[] { false, false, false, false };
 					}
+					for (int k = 0; k < theseCorners.length; k++) {
+						if (theseCorners[k]) {
+							knownObtuseCorners.add(
+									new Point2D.Double(i * size + (k % 2) * size, j * size + ((k + 1) % 2) * size));
+						}
+					}
 				}
 			}
 		}
-
-		return null;
+		return knownObtuseCorners.toArray(new Point2D.Double[0]);
 	}
 
 	private static boolean[] getCorners(int[] sides, int centre) {
