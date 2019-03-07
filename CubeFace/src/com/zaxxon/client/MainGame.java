@@ -31,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -147,6 +148,7 @@ public class MainGame {
 
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
+		renderedScene.setFill(Color.TRANSPARENT);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level

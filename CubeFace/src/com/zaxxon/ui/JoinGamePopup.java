@@ -132,16 +132,17 @@ public class JoinGamePopup {
         anchorPane.getChildren().addAll(borderPane, newServer);
 
         Rectangle rect = new Rectangle(394,200);
-        rect.setArcHeight(10.0);
-        rect.setArcWidth(10.0);
-        borderPane.setClip(rect);
+        rect.setArcHeight(11.0);
+        rect.setArcWidth(11.0);
+        anchorPane.setClip(rect);
 
 
         //**********************SCENE******************
 
         Scene scene1= new Scene(anchorPane, 394, 200);
-        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
         scene1.setFill(Color.TRANSPARENT);
+        scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
+
         popupwindow.setScene(scene1);
 
         popupwindow.show();
