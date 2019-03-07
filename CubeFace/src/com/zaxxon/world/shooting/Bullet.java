@@ -2,6 +2,8 @@ package com.zaxxon.world.shooting;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import com.sun.org.apache.xpath.internal.SourceTree;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
@@ -23,8 +25,10 @@ public class Bullet extends MovableSprite {
 	private Vector2 direction;
 	private double speed = 10.0;
 	private double damage = 10;
+	private boolean alive = false;
 	
 	public Bullet (Vector2 dir, Vector2 pos, double damage) {
+		alive = true;
 		
 		MainGame.addSpriteToForeground(this);
 		
@@ -40,17 +44,19 @@ public class Bullet extends MovableSprite {
 	}
 	
 	public void update(double deltaTime) {
-		
-		Vector2 toMove = new Vector2();
-		toMove = new Vector2 (direction.x * speed * deltaTime, direction.y * speed * deltaTime);
-		this.translate(toMove);
-		
-		collision();
+		if(alive) {
+			Vector2 toMove = new Vector2();
+			toMove = new Vector2(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
+			this.translate(toMove);
+			collision();
+		}
 	}
 
 	private void collision() {
+		//System.out.println("Yes");
 
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
+		ArrayList<Enemy> enemies = new ArrayList<>(MainGame.enemiesList);
 
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
@@ -59,12 +65,18 @@ public class Bullet extends MovableSprite {
 				return;
 			}
 		}
-
-		for(Enemy enemy : MainGame.enemiesList){
+		int index = 0;
+		for(Enemy enemy : enemies){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
-				//TODO: Enemy takes damage
+				MainGame.enemiesList.get(index).takeDamage(damage);
+				System.out.println(MainGame.enemiesList.get(index).getHealth());
 				speed = 0;
-				MainGame.removeSprite(this);
+				damage = 0;
+				alive = false;
+				MainGame.removeSpriteFromForeground(this);
+				setX(0.0);
+				setY(0.0);
+				index++;
 				return;
 			}
 		}
@@ -76,6 +88,10 @@ public class Bullet extends MovableSprite {
 		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
 		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
 
+	}
+
+	private void destroy(){
+		MainGame.removeSpriteFromForeground(this);
 	}
 }
 
