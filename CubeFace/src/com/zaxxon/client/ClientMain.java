@@ -3,8 +3,13 @@ package com.zaxxon.client;
 import com.zaxxon.ui.MainMenu;
 
 import com.zaxxon.ui.StatsBox;
+import com.zaxxon.world.Levels;
+import com.zaxxon.world.Tile;
+
 import javafx.application.Application;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import sun.applet.Main;
@@ -31,6 +36,19 @@ public class ClientMain extends Application{
 		primaryStage.show();
 		MainGame.reset(primaryStage);
 	//	MainMenu.music.loop();
+		System.out.println(Levels.L1_WAYPOINTS.length + ": ");
+		for(java.awt.geom.Point2D.Double pd : Levels.L1_WAYPOINTS) {
+			System.out.print(pd + ", ");
+			Tile t = new Tile(pd.x, pd.y, Color.BLUE);
+			MainGame.addSpriteToForeground(t);
+		}
+		System.out.println();
+		System.out.println(Levels.L1_WAYPOINTS_OLD.length + ": ");
+		for(java.awt.geom.Point2D.Double pd : Levels.L1_WAYPOINTS_OLD) {
+			System.out.print(pd + ", ");
+			Tile t = new Tile(pd.x, pd.y, Color.RED);
+			MainGame.addSpriteToForeground(t);
+		}
 	}
 
 }

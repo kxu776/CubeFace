@@ -150,7 +150,7 @@ public class MainGame {
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL2, 256);
+		Levels.generateLevel(Levels.LEVEL1, 256);
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}

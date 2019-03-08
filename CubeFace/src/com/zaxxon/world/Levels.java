@@ -25,8 +25,10 @@ public class Levels {
 			{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 }, { 1, 3, 2, 1, 0, 1, 0, 2, 1, 1, 0, 0, 0 },
 			{ 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 }, { 0, 0, 1, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
+	
+	public static final Point2D.Double[] L1_WAYPOINTS = generateCornerPoints(LEVEL1, 256);
 
-	public static final Point2D.Double[] L1_WAYPOINTS = { new Point2D.Double(512.0, 447.7),
+	public static final Point2D.Double[] L1_WAYPOINTS_OLD = { new Point2D.Double(512.0, 447.7),
 			new Point2D.Double(512.0, 798.4), new Point2D.Double(703.0, 959.4), new Point2D.Double(703.0, 1536.3),
 			new Point2D.Double(768.3, 1727.69), new Point2D.Double(768.3, 2048.3), new Point2D.Double(447.7, 2239.6),
 			new Point2D.Double(768.3, 2239.6), new Point2D.Double(1215.69, 2304.3), new Point2D.Double(1536.3, 2304.3),
