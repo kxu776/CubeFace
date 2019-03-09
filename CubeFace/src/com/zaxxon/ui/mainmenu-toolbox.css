@@ -19,6 +19,10 @@
     -fx-border-width: 0 0 0 1; -fx-border-color: white;
 }
 
+#toolbarbutton:hover {
+    -fx-background-color: #80d3b1;
+}
+
 #toolbar {
     -fx-border-width: 0 0 1 0; -fx-border-color: white;
 }
@@ -26,6 +30,7 @@
 #tbTitle {
     -fx-padding: 5 0 0 5;
     -fx-text-fill: white;
+    -fx-font-family: "VCR OSD Mono";
 }
 
 

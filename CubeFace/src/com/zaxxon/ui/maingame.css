@@ -1,11 +1,11 @@
 
 
 .root {
-    -fx-background-image: url(img/gui-prototypes.png);
+    -fx-background-image: url(img/ground.png);
     -fx-background-repeat: repeat;
     -fx-font-family: "VCR OSD Mono";
     -fx-border-style: solid;
-    -fx-border-width: 0 1 1 1;
+    -fx-border-width: 1 1 1 1;
     -fx-border-color:#05abb1;
     -fx-border-radius:4px;
     -fx-text-fill:white;
@@ -15,8 +15,11 @@
 
 #toolbox {
     -fx-background-color: #c1e9b3;
-    -fx-border-width: 1 0 1 0; -fx-border-color: #05abb1 #05abb1 white #05abb1;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
     -fx-font-family: "VCR OSD Mono";
-    -fx-padding:0 0 0 0;
+    -fx-padding:0 0 1 0;
 }
+
+
 

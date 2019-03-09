@@ -174,11 +174,10 @@ public class MainGame {
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				camera.update();
+				dealWithKeyInput();
 				for (Player player : playerList) {
 					player.update(FPSreduction);
 				}
-				dealWithKeyInput();
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
@@ -187,6 +186,7 @@ public class MainGame {
 				}
 				}
 				updateEnemies();
+				camera.update();
 			}
 		};
 		mainGameLoop.start();
