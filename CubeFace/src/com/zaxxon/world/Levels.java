@@ -1,6 +1,7 @@
 package com.zaxxon.world;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.world.mobile.enemies.Enemy;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -95,8 +96,10 @@ public class Levels {
 					}
 					for (int k = 0; k < theseCorners.length; k++) {
 						if (theseCorners[k]) {
-							int cornerX = (centreX + ((k / 2 + 1) % 2)) * SIZE;
-							int cornerY = (centreY + (((k + 1) / 2) % 2)) * SIZE;
+							int isCornerPositiveX = (k / 2 + 1) % 2;
+							double cornerX = (centreX + isCornerPositiveX) * SIZE + (isCornerPositiveX * 2 - 1) * Enemy.getTargetWidth();
+							int isCornerPositiveY = ((k + 1) / 2) % 2;
+							double cornerY = (centreY + isCornerPositiveY) * SIZE + (isCornerPositiveY * 2 - 1) * Enemy.getTargetHeight();
 							knownObtuseCorners.add(new Point2D.Double(cornerX, cornerY));
 						}
 					}

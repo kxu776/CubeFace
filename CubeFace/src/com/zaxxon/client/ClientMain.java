@@ -38,6 +38,10 @@ public class ClientMain extends Application{
 		primaryStage.show();
 		MainGame.reset(primaryStage);
 	//	MainMenu.music.loop();
+		for(java.awt.geom.Point2D.Double pd : Levels.L2_WAYPOINTS) {
+			Tile t = new Tile(pd.getX(), pd.getY(), Color.BLUE);
+			MainGame.addSpriteToBackground(t);
+		}
 	}
 
 }

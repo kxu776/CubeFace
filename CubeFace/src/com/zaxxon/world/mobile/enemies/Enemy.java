@@ -29,8 +29,8 @@ public abstract class Enemy extends MovableSprite {
 
     FacingDir facingDir;
 
-    int width = 64;
-    int height = 64;
+    protected static final int TARGET_WIDTH = 64;
+    protected static final int TARGET_HEIGHT = 64;
 
     protected BufferedImage[] sprites;
     protected ImagePattern[] imgPats;
@@ -69,8 +69,8 @@ public abstract class Enemy extends MovableSprite {
         this.setX(spawnX);
         this.setY(spawnY);
         this.getSpriteImages(SpriteImages.ZOMBIE_SPRITESHEET_URL);
-        this.setWidth(width);
-        this.setHeight(height);
+        this.setWidth(TARGET_WIDTH);
+        this.setHeight(TARGET_HEIGHT);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
@@ -82,12 +82,20 @@ public abstract class Enemy extends MovableSprite {
         setX(spawnX);
         setY(spawnY);
         getSpriteImages(spritesheet);
-        setWidth(width);
-        setHeight(height);
+        setWidth(TARGET_WIDTH);
+        setHeight(TARGET_HEIGHT);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
         MainGame.enemiesList.add(this);
+    }
+    
+    public static double getTargetWidth() {
+    	return TARGET_WIDTH;
+    }
+    
+    public static double getTargetHeight() {
+    	return TARGET_HEIGHT;
     }
 
     public void update(double time, Player player) {
