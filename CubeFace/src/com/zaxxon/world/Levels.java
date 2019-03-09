@@ -15,14 +15,14 @@ public class Levels {
 	public static final int[][] LEVEL0 = { { 2, 1, 3, 1, 1, 1, 3, 2 }, { 4, 0, 0, 0, 0, 0, 0, 4 },
 			{ 2, 3, 3, 2, 3, 3, 0, 4 }, { 4, 0, 0, 4, 0, 0, 0, 4 }, { 4, 0, 1, 1, 3, 2, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 0, 0, 0, 0, 4 }, { 2, 1, 1, 1, 1, 1, 1, 2 } };
-//	public static final Point2D.Double[] L0_WAYPOINTS = generateCornerPoints(LEVEL0);
+	public static final Point2D.Double[] L0_WAYPOINTS = generateCornerPoints(LEVEL0);
 	public static final int[][] LEVEL1 = { { 2, 1, 1, 1, 3, 2, 3, 3, 1, 1, 2 }, { 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4 },
 			{ 2, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4 }, { 4, 0, 0, 0, 0, 2, 1, 3, 0, 0, 4 },
 			{ 4, 0, 0, 2, 3, 2, 0, 0, 0, 0, 4 }, { 4, 0, 0, 5, 0, 4, 0, 0, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 4, 0, 4, 0, 1, 2 }, { 2, 3, 1, 0, 0, 2, 1, 1, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 0, 0, 0, 4 }, { 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4 },
 			{ 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 1 } };
-//	public static final Point2D.Double[] L1_WAYPOINTS = generateCornerPoints(LEVEL1);
+	public static final Point2D.Double[] L1_WAYPOINTS = generateCornerPoints(LEVEL1);
 	public static final int[][] LEVEL2 = { { 2, 3, 3, 3, 1, 2, 1, 1, 3, 1, 2, 3, 2 },
 			{ 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 0, 0, 2, 1, 2, 3, 3, 2 }, { 2, 3, 0, 3, 2, 3, 3, 2, 0, 4, 0, 0, 4 },
@@ -148,48 +148,59 @@ public class Levels {
 			}
 			return c;
 		} else {
-			throw new Exception("Array lengths not matching.");
+			throw new Exception("Array lengths do not match");
 		}
 	}
 
 	private static LinkedList<Point2D.Double> trimOutsideBounds(LinkedList<Point2D.Double> knownObtuseCorners,
 			int[][] level) {
 		level = removeRedundantLines(level);
-		LinkedList<Pair<Integer, Integer>> polygonPoints = LevelArrayToLinkedList(level);
-		System.out.println("sizes: " + polygonPoints.size() + ", " + knownObtuseCorners.size());
+		LinkedList<Point2D.Double> polygonPoints = LevelArrayToLinkedList(level);
 		for (int i = knownObtuseCorners.size() - 1; i >= 0; i--) {
-			if (windingAlgorithm(knownObtuseCorners.get(i), polygonPoints) != 2) {
-				System.out.println(i + ": " + windingAlgorithm(knownObtuseCorners.get(i), polygonPoints));
+			if (windingAlgorithm(knownObtuseCorners.get(i), polygonPoints) < 4) {
 				knownObtuseCorners.remove(i);
 			}
 		}
 		return knownObtuseCorners;
 	}
 
-	private static int windingAlgorithm(Point2D.Double point, LinkedList<Pair<Integer, Integer>> polygon) {
-		double thetaSum = 0;
-		for (int i = 0; i < polygon.size(); i++) {
-			double theta = getTheta(point, polygon.get(i), polygon.get((i + 1) % polygon.size()));
-			thetaSum += theta;
+	private static int windingAlgorithm(Point2D.Double point, LinkedList<Point2D.Double> polygon) {
+		int prevQuad = -1;
+		int currentQuad;
+		int sumClockwise = -1; 
+		for (int i = 0; i < polygon.size() + 1; i++) {
+			Point2D.Double polyPoint = polygon.get(i % polygon.size());
+			double x = polyPoint.getX() - point.getX();
+			double y = polyPoint.getY() - point.getY();
+			// 0 mxmy
+			// 1 pxmy
+			// 3 pxpy
+			// 2 mxpy
+			if (x < 0) {
+				currentQuad = 0;
+			} else {
+				currentQuad = 1;
+			}
+			if (y >= 0) {
+				currentQuad += 2;
+			}
+			if (prevQuad != currentQuad) {
+				if(currentQuad > prevQuad || (currentQuad == 2 && prevQuad == 3) || (currentQuad == 0 && prevQuad == 2)){
+					sumClockwise++;
+				} else {
+					sumClockwise--;
+				}
+				prevQuad = currentQuad;
+			}
 		}
-		System.out.println((thetaSum / Math.PI) + ", " + Math.round(thetaSum / Math.PI));
-
-		return (int) Math.round(thetaSum / Math.PI);
+		return sumClockwise;
 	}
 
-	public static double getTheta(Point2D.Double pointCentre, Pair<Integer, Integer> pointAlpha,
-			Pair<Integer, Integer> pointBeta) {
-		double aSqr = Math.pow(pointAlpha.getKey() * SIZE - pointBeta.getKey() * SIZE, 2)
-				+ Math.pow(pointAlpha.getValue() * SIZE - pointBeta.getValue() * SIZE, 2);
-		double bSqr = Math.pow(pointCentre.getX() - pointBeta.getKey() * SIZE, 2)
-				+ Math.pow(pointCentre.getY() - pointBeta.getValue() * SIZE, 2);
-		double cSqr = Math.pow(pointAlpha.getKey() * SIZE - pointCentre.getX(), 2)
-				+ Math.pow(pointAlpha.getValue() * SIZE - pointCentre.getY(), 2);
-		double theta = Math.acos((aSqr - bSqr - cSqr) / (-2 * Math.sqrt(bSqr) * Math.sqrt(cSqr)));
-		if (pointAlpha.getKey() * pointBeta.getValue() - pointAlpha.getValue() * pointBeta.getKey() < 0) {
-			theta = -theta;
-		}
-		return theta;
+	private static Point2D.Double normalisePoint(Point2D.Double point) {
+		double newX = point.getX() * SIZE + SIZE / 2;
+		double newY = point.getY() * SIZE + SIZE / 2;
+		Point2D.Double normalised = new Point2D.Double(newX, newY);
+		return normalised;
 	}
 
 	public static int[][] removeRedundantLines(int[][] level) {
@@ -307,9 +318,9 @@ public class Levels {
 		return sides;
 	}
 
-	private static LinkedList<Pair<Integer, Integer>> LevelArrayToLinkedList(int[][] levelArray) {
+	private static LinkedList<Point2D.Double> LevelArrayToLinkedList(int[][] levelArray) {
 		// create linkedlist for values
-		LinkedList<Pair<Integer, Integer>> linkedList = new LinkedList<Pair<Integer, Integer>>();
+		LinkedList<Point2D.Double> linkedList = new LinkedList<Point2D.Double>();
 		// get top-leftmost point for start
 		int startX = 0;
 		int startY = 0;
@@ -323,10 +334,16 @@ public class Levels {
 		// initialise variables
 		int nextX = startX;
 		int nextY = startY;
-		int currentDir = 0;
+		int currentDir = 1;
+		int prevDir = 0;
 		do {
-			// insert point
-			linkedList.add(new Pair<Integer, Integer>(nextX, nextY));
+			// check point is a corner
+			// helps reduce number of points
+			if (prevDir != currentDir) {
+				prevDir = currentDir;
+				// insert point
+				linkedList.add(normalisePoint(new Point2D.Double(nextX, nextY)));
+			}
 			// check for initial values to prevent overwrite and allow loop finish
 			if (nextX != startX || nextY != startY) {
 				// remove from array to prevent duplication
