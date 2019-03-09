@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static com.zaxxon.world.Levels.L1_WAYPOINTS;
+import static com.zaxxon.world.Levels.L2_WAYPOINTS;
 import static java.lang.Math.abs;
 
 public abstract class Enemy extends MovableSprite {
@@ -254,8 +254,8 @@ public abstract class Enemy extends MovableSprite {
     public Point2D.Double closestPoint(){
         Map<Point2D.Double, Double> dists = new HashMap<>();
         Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
-        for(int i = 0; i< L1_WAYPOINTS.length; i++){
-            dists.put(L1_WAYPOINTS[i], currentPoint.distanceSq(L1_WAYPOINTS[i]));
+        for(int i = 0; i< L2_WAYPOINTS.length; i++){
+            dists.put(L2_WAYPOINTS[i], currentPoint.distanceSq(L2_WAYPOINTS[i]));
         }
         Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
         return closest.getKey();
