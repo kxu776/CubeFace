@@ -119,10 +119,10 @@ public class MainGame {
 		
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Zombie enemy = new Zombie(600, 600);
-		Hunter enemy2 = new Hunter(1800, 1700);
-		addSpriteToForeground(enemy);
-		addSpriteToForeground(enemy2);
+//		Zombie enemy = new Zombie(600, 600);
+//		Hunter enemy2 = new Hunter(1800, 1700);
+//		addSpriteToForeground(enemy);
+//		addSpriteToForeground(enemy2);
 
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

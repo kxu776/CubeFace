@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import sun.applet.Main;
 
 public class ClientMain extends Application{
@@ -38,6 +39,7 @@ public class ClientMain extends Application{
 		primaryStage.show();
 		MainGame.reset(primaryStage);
 	//	MainMenu.music.loop();
+		System.out.println(Levels.L2_WAYPOINTS.length);
 		for(java.awt.geom.Point2D.Double pd : Levels.L2_WAYPOINTS) {
 			Tile t = new Tile(pd.getX(), pd.getY(), Color.BLUE);
 			MainGame.addSpriteToBackground(t);
