@@ -118,6 +118,20 @@ public class Server {
 		byte[] b;
 		
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+			
+			// If only one player exists in the server
+			// we store their current location
+			
+			byte[] d = editObj(packet.getData(), c.getValue().getID());		
+			
+			if (lastKnownPos.containsKey(c.getValue().getID())) {
+			}
+			
+			else {
+				lastKnownPos.put(c.getValue().getID(), d);
+			}
+			
+			
 			if (port == c.getKey()) {
 				if(address.equals(c.getValue().getAddress())) {
 					associatedID = c.getValue();
@@ -137,29 +151,7 @@ public class Server {
 		// from a different machine
 		// each client has a unique IP
 		// so we have to account for that and make sure we only send info to those who
-		// need it.
-
-		
-			
-//			if(lastKnownPos.isEmpty()) {
-//				byte[] b = editObj(packet.getData(), c.getValue().getID());
-//				lastKnownPos.put(c.getValue().getID(), b);
-//				continue;
-//			}
-//			
-//			// If only one player exists in the server
-//			// we store their current location
-//			
-//			byte[] b = editObj(packet.getData(), c.getValue().getID());		
-//			
-//			if (lastKnownPos.containsKey(c.getValue().getID())) {
-//				continue;
-//			}
-//			
-//			else {
-//				System.out.println(c.getValue().getID());
-//				lastKnownPos.put(c.getValue().getID(), b);
-//			}		
+		// need it.		
 		
 	}
 
@@ -190,10 +182,10 @@ public class Server {
 			send("/c/Connected".getBytes(), address, port);
 		
 			
-//			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
-//				send(c.getValue(), address, port);
-//				System.out.println("I've sent this ID: "+ c.getKey());
-//			}
+			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
+				send(c.getValue(), address, port);
+				System.out.println("I've sent this ID: "+ c.getKey());
+			}
 
 		
 			
