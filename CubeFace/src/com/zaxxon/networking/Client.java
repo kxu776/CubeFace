@@ -96,6 +96,7 @@ public class Client extends Thread {
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
+				
 				// System.out.println(data.getID());
 				MainGame.inputUpdateQueue.add(data);
 				

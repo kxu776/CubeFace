@@ -315,12 +315,14 @@ public class MainGame {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
 			if (!play.containsKey(data.getID().trim())) {
-				
+				System.out.println(play.size());
 				play.put(data.getID(), new MultiplayerPlayer());;	
 				play.get(data.getID()).setX(900);
 				play.get(data.getID()).setY(900);
 				play.get(data.getID()).setId(data.getID().trim());
-				
+				System.out.println("Creating player on this ID "+data.getID());
+				System.out.println(play.size());
+
 				addSpriteToForeground(play.get(data.getID()));
 			}
 			
