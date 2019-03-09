@@ -19,11 +19,12 @@ public class Server {
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 	public static HashMap<Integer, ServerClient> clients = new HashMap<>();
+	private HashMap<String, byte[]> lastKnownPos = new HashMap<>();
+	@SuppressWarnings("unused")
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
-	private boolean waiting = false;
 
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
@@ -72,7 +73,7 @@ public class Server {
 			bais = new ByteArrayInputStream(bs);
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
-			data.setID(ID);
+			data.setID(ID.trim());
 			bais.close();
 			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -81,6 +82,10 @@ public class Server {
 				out.writeObject(data);
 				out.flush();
 				byte[] playerinfo = baos.toByteArray();
+				if (lastKnownPos.containsKey(ID)) {
+					lastKnownPos.remove(ID);
+					lastKnownPos.put(ID, playerinfo);
+				}
 				out.close();
 				baos.close();
 				return playerinfo;
@@ -95,16 +100,44 @@ public class Server {
 	}
 
 	private void broadcastPlayers(DatagramPacket packet) {
+
+		// Can't have the port of the client sending the info be the same as the port
+		// from a different machine
+		// each client has a unique IP
+		// so we have to account for that and make sure we only send info to those who
+		// need it.
+
+		
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			// Can't have the port of the client sending the info be the same as the port
-			// from a different machine
-			// each client has a unique IP
-			// so we have to account for that and make sure we only send info to those who
-			// need it.
-			if (packet.getPort() != c.getKey() && packet.getAddress() != c.getValue().getAddress()) {
-				byte[] b = editObj(packet.getData(), c.getValue().getID());				
-				send(b, (c.getValue()).getAddress(), c.getKey());
+			
+			
+			if(lastKnownPos.isEmpty()) {
+				byte[] b = editObj(packet.getData(), c.getValue().getID());
+				lastKnownPos.put(c.getValue().getID(), b);
+				continue;
 			}
+			
+			
+			// If only one player exists in the server
+			// we store their current location
+			
+			byte[] b = editObj(packet.getData(), c.getValue().getID());
+			if (lastKnownPos.containsKey(c.getValue().getID())) {
+			}
+			
+			else {
+				System.out.println(c.getValue().getID());
+				lastKnownPos.size();
+				lastKnownPos.put(c.getValue().getID(), b);
+			}
+			
+			if (packet.getPort() == c.getKey() && packet.getAddress().equals(c.getValue().getAddress())) {
+				continue;
+			}
+			for (HashMap.Entry<String, byte[]> v : lastKnownPos.entrySet()) {
+				send(v.getValue(),c.getValue().getAddress(),c.getKey());
+			}
+		
 		}
 	}
 
@@ -115,18 +148,39 @@ public class Server {
 		String action = new String(data);
 
 		if (action.startsWith("/C/")) {
+			
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 
-			clients.put(packet.getPort(),
-			(new ServerClient(action.substring(3),
-			packet.getAddress(),
-			packet.getPort(),
-			UUID.randomUUID().toString())));
+			String id = UUID.randomUUID().toString().trim();
 			
+			System.out.println("I have this ID: " + id);
+			
+			clients.put(packet.getPort(),
+					   (new ServerClient(action.substring(3),
+							   			packet.getAddress(),
+							   			packet.getPort(), 
+							   			id)));
+			
+			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
+				send(c.getValue(), address, port);
+				System.out.println("I've sent this ID: "+ c.getKey());
+			}
+
 			send("/c/Connected".getBytes(), address, port);
+			
+			// Send the last known positions of any other player
+			// to the one who connected. 
+			
+			// Client -> Server
+			// Server Checks how many current players
+			// When Server has 2 or more connections we start broadcasting
+			// Server Sends relevant info to player
+			// If new client connects midgame we iterate through hashmap
+			// send the last known co-ordinates to that player of each player
+			
 		}
 
 		if (action.startsWith("/b/")) {
@@ -142,19 +196,14 @@ public class Server {
 			}
 		}
 
-		if (clients.size() < 2) {
-			if (waiting) {
-				return;
-			}
-			System.out.println("Waiting on players...");
-			send("/s/Waiting for one more player...".getBytes(), address, port);
-			waiting = true;
+		
+		
+		if (action.startsWith("/C/")) {
 			return;
+		
 		} else {
-			if (action.startsWith("/C/")||action.startsWith("/b/")) {
-				return;
-			}
-			waiting = false;
+			
+			// Game starts
 			broadcastPlayers(packet);
 		}
 	}
@@ -162,7 +211,8 @@ public class Server {
 	private void broadcastGen(DatagramPacket p) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (p.getPort() != c.getKey() && p.getAddress() != c.getValue().getAddress()) {
-				p.setPort(c.getKey());p.setAddress(c.getValue().getAddress());
+				p.setPort(c.getKey());
+				p.setAddress(c.getValue().getAddress());
 				try {
 					serverSocket.send(p);
 				} catch (IOException e) {

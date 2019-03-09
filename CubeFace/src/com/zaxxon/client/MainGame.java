@@ -263,6 +263,7 @@ public class MainGame {
 	private static void sendNetworkUpdate() {
 	
 	if(spawn == false) {
+		System.out.println("Spawning in...");
 		client.setX(player1.getX());
 		client.setY(player1.getY());
 		client.setHealth(player1.getHealth());
@@ -313,18 +314,18 @@ public class MainGame {
 	private static void getUpdatesFromQueue() {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			if (!play.containsKey(data.getID())) {
+			if (!play.containsKey(data.getID().trim())) {
 				
 				play.put(data.getID(), new MultiplayerPlayer());;	
 				play.get(data.getID()).setX(900);
 				play.get(data.getID()).setY(900);
-				play.get(data.getID()).setId(data.getID());
+				play.get(data.getID()).setId(data.getID().trim());
 				
 				addSpriteToForeground(play.get(data.getID()));
 			}
 			
 			for (Sprite s : spriteList) {
-				if ((data.getID()).equals(s.getId())) {
+				if ((data.getID()).equals(s.getId().trim())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
 					((MultiplayerPlayer) s).setDir(data.pos);

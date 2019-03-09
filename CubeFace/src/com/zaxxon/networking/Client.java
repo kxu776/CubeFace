@@ -43,7 +43,6 @@ public class Client extends Thread {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
-				//System.out.println("dd");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -97,6 +96,7 @@ public class Client extends Thread {
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
+				// System.out.println(data.getID());
 				MainGame.inputUpdateQueue.add(data);
 				
 				// socket.close();
@@ -123,6 +123,7 @@ public class Client extends Thread {
 			byte[] playerinfo = baos.toByteArray();
 
 			send(playerinfo);
+			
 			out.close();
 			baos.close();
 			
