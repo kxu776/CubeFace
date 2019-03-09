@@ -1,5 +1,7 @@
 package com.zaxxon.client;
 
+import java.awt.geom.Point2D.Double;
+
 import com.zaxxon.ui.MainMenu;
 
 import com.zaxxon.ui.StatsBox;
@@ -36,19 +38,6 @@ public class ClientMain extends Application{
 		primaryStage.show();
 		MainGame.reset(primaryStage);
 	//	MainMenu.music.loop();
-		System.out.println(Levels.L1_WAYPOINTS.length + ": ");
-		for(java.awt.geom.Point2D.Double pd : Levels.L1_WAYPOINTS) {
-			System.out.print(pd + ", ");
-			Tile t = new Tile(pd.x, pd.y, Color.BLUE);
-			MainGame.addSpriteToForeground(t);
-		}
-		System.out.println();
-		System.out.println(Levels.L1_WAYPOINTS_OLD.length + ": ");
-		for(java.awt.geom.Point2D.Double pd : Levels.L1_WAYPOINTS_OLD) {
-			System.out.print(pd + ", ");
-			Tile t = new Tile(pd.x, pd.y, Color.RED);
-			MainGame.addSpriteToForeground(t);
-		}
 	}
 
 }
