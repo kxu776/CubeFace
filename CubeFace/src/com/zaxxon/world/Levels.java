@@ -4,6 +4,7 @@ import com.zaxxon.client.MainGame;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Levels {
@@ -26,7 +27,8 @@ public class Levels {
 			{ 4, 0, 0, 0, 4, 0, 0, 4, 0, 1, 1, 0, 4 }, { 4, 0, 0, 0, 4, 0, 0, 5, 0, 0, 0, 0, 4 },
 			{ 4, 0, 3, 3, 1, 0, 0, 0, 0, 0, 0, 2, 1 }, { 4, 0, 0, 0, 0, 0, 2, 1, 1, 3, 3, 1, 0 },
 			{ 2, 0, 0, 3, 2, 0, 4, 0, 0, 0, 0, 0, 0 }, { 4, 0, 0, 0, 1, 3, 1, 3, 3, 2, 0, 0, 0 },
-			{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 }, { 1, 3, 2, 1, 0, 1, 0, 2, 1, 1, 0, 0, 0 },
+			{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
+			{ 1, 3, 2, 1, 0, 1, 0, 2, 1, 1, 0, 0, 0 },
 			{ 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 }, { 0, 0, 1, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
@@ -90,22 +92,27 @@ public class Levels {
 						sides[2] = level[centreY + 1][centreX];
 						// left
 						sides[3] = level[centreY][centreX - 1];
-						theseCorners = getCorners(sides, centre);
-					} catch (IndexOutOfBoundsException e) {
+						boolean[] potentialCorners = getCorners(sides, centre);
+						boolean[] otherCorners = getDiagonals(level, centreX, centreY);
+						theseCorners = booleanArraysNotImplied(potentialCorners, otherCorners);
+					} catch (Exception e) {
 						theseCorners = new boolean[] { false, false, false, false };
 					}
 					for (int k = 0; k < theseCorners.length; k++) {
 						if (theseCorners[k]) {
 							int isCornerPositiveX = (k / 2 + 1) % 2;
-							double cornerX = (centreX + isCornerPositiveX) * SIZE + (isCornerPositiveX * 2 - 1) * Enemy.getTargetWidth();
+							double cornerX = (centreX + isCornerPositiveX) * SIZE
+									+ (isCornerPositiveX * 2 - 1) * Enemy.getTargetWidth();
 							int isCornerPositiveY = ((k + 1) / 2) % 2;
-							double cornerY = (centreY + isCornerPositiveY) * SIZE + (isCornerPositiveY * 2 - 1) * Enemy.getTargetHeight();
+							double cornerY = (centreY + isCornerPositiveY) * SIZE
+									+ (isCornerPositiveY * 2 - 1) * Enemy.getTargetHeight();
 							knownObtuseCorners.add(new Point2D.Double(cornerX, cornerY));
 						}
 					}
 				}
 			}
 		}
+		knownObtuseCorners = trimOutsideBounds(knownObtuseCorners, level);
 		return knownObtuseCorners.toArray(new Point2D.Double[0]);
 	}
 
@@ -122,6 +129,39 @@ public class Levels {
 			}
 		}
 		return knownCorners;
+	}
+
+	private static boolean[] getDiagonals(int[][] level, int centreX, int centreY) {
+		// tr, br, bl, tl
+		boolean[] knownDiagonals = new boolean[4];
+		for (int i = 0; i < 4; i++) {
+			int isCornerPositiveX = ((i / 2 + 1) % 2) * 2 - 1;
+			int isCornerPositiveY = (((i + 1) / 2) % 2) * 2 - 1;
+			if (level[centreY + isCornerPositiveY][centreX + isCornerPositiveX] == 0) {
+				knownDiagonals[i] = false;
+			} else {
+				knownDiagonals[i] = true;
+			}
+		}
+		return knownDiagonals;
+	}
+
+	private static boolean[] booleanArraysNotImplied(boolean[] array1, boolean[] array2) throws Exception {
+		if (array1.length == array2.length) {
+			boolean[] c = new boolean[array1.length];
+			for (int i = 0; i < array1.length; i++) {
+				c[i] = array1[i] && !array2[i];
+			}
+			return c;
+		} else {
+			throw new Exception("Array lengths not matching.");
+		}
+	}
+
+	private static LinkedList<Point2D.Double> trimOutsideBounds(LinkedList<Point2D.Double> knownObtuseCorners,
+			int[][] level) {
+
+		return knownObtuseCorners;
 	}
 
 }
