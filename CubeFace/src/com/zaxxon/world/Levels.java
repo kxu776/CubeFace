@@ -1,21 +1,27 @@
 package com.zaxxon.world;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.world.mobile.enemies.Enemy;
+
+import javafx.util.Pair;
 
 import java.awt.geom.Point2D;
 import java.util.*;
 
 public class Levels {
 
+	public static final int SIZE = 256;
 	public static final int[][] LEVEL0 = { { 2, 1, 3, 1, 1, 1, 3, 2 }, { 4, 0, 0, 0, 0, 0, 0, 4 },
 			{ 2, 3, 3, 2, 3, 3, 0, 4 }, { 4, 0, 0, 4, 0, 0, 0, 4 }, { 4, 0, 1, 1, 3, 2, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 0, 0, 0, 0, 4 }, { 2, 1, 1, 1, 1, 1, 1, 2 } };
+	public static final Point2D.Double[] L0_WAYPOINTS = generateCornerPoints(LEVEL0);
 	public static final int[][] LEVEL1 = { { 2, 1, 1, 1, 3, 2, 3, 3, 1, 1, 2 }, { 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4 },
 			{ 2, 3, 0, 0, 0, 4, 0, 0, 0, 0, 4 }, { 4, 0, 0, 0, 0, 2, 1, 3, 0, 0, 4 },
 			{ 4, 0, 0, 2, 3, 2, 0, 0, 0, 0, 4 }, { 4, 0, 0, 5, 0, 4, 0, 0, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 4, 0, 4, 0, 1, 2 }, { 2, 3, 1, 0, 0, 2, 1, 1, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 5, 0, 0, 0, 0, 4 }, { 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4 },
 			{ 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 1 } };
+	public static final Point2D.Double[] L1_WAYPOINTS = generateCornerPoints(LEVEL1);
 	public static final int[][] LEVEL2 = { { 2, 3, 3, 3, 1, 2, 1, 1, 3, 1, 2, 3, 2 },
 			{ 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5, 0, 4 }, { 4, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0, 0, 4 },
 			{ 4, 0, 0, 0, 0, 0, 0, 2, 1, 2, 3, 3, 2 }, { 2, 3, 0, 3, 2, 3, 3, 2, 0, 4, 0, 0, 4 },
@@ -25,23 +31,28 @@ public class Levels {
 			{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 }, { 1, 3, 2, 1, 0, 1, 0, 2, 1, 1, 0, 0, 0 },
 			{ 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 }, { 0, 0, 1, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
+	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
 
-	public static final Point2D.Double[] L1_WAYPOINTS = { new Point2D.Double(512.0, 447.7),
-			new Point2D.Double(512.0, 798.4), new Point2D.Double(703.0, 959.4), new Point2D.Double(703.0, 1536.3),
-			new Point2D.Double(768.3, 1727.69), new Point2D.Double(768.3, 2048.3), new Point2D.Double(447.7, 2239.6),
-			new Point2D.Double(768.3, 2239.6), new Point2D.Double(1215.69, 2304.3), new Point2D.Double(1536.3, 2304.3),
-			new Point2D.Double(2048.5, 1951.27), new Point2D.Double(2048.5, 1471.69),
-			new Point2D.Double(1727.69, 1471.69), new Point2D.Double(2239.7, 1792.3),
-			new Point2D.Double(2239.7, 1471.69), new Point2D.Double(2048.3, 1024.3),
-			new Point2D.Double(2048.3, 703.69) };
+	/*
+	 * public static final Point2D.Double[] L1_WAYPOINTS_OLD = { new
+	 * Point2D.Double(512.0, 447.7), new Point2D.Double(512.0, 798.4), new
+	 * Point2D.Double(703.0, 959.4), new Point2D.Double(703.0, 1536.3), new
+	 * Point2D.Double(768.3, 1727.69), new Point2D.Double(768.3, 2048.3), new
+	 * Point2D.Double(447.7, 2239.6), new Point2D.Double(768.3, 2239.6), new
+	 * Point2D.Double(1215.69, 2304.3), new Point2D.Double(1536.3, 2304.3), new
+	 * Point2D.Double(2048.5, 1951.27), new Point2D.Double(2048.5, 1471.69), new
+	 * Point2D.Double(1727.69, 1471.69), new Point2D.Double(2239.7, 1792.3), new
+	 * Point2D.Double(2239.7, 1471.69), new Point2D.Double(2048.3, 1024.3), new
+	 * Point2D.Double(2048.3, 703.69) };
+	 */
 
-	public static Wall[] generateBackground(int[][] level, int size) {
+	public static Wall[] generateBackground(int[][] level) {
 		Wall[] allWalls = new Wall[level.length * level[0].length];
 		for (int i = 0; i < level.length; i++) {
 			for (int j = 0; j < level[i].length; j++) {
 				Wall w = null;
 				if (level[i][j] != 0) {
-					w = newWall(level[i][j] - 1, size, j * size, i * size);
+					w = newWall(level[i][j] - 1, j * SIZE, i * SIZE);
 				}
 				allWalls[i * level[0].length + j] = w;
 			}
@@ -49,19 +60,311 @@ public class Levels {
 		return allWalls;
 	}
 
-	private static Wall newWall(int wallSprite, int size, int x, int y) {
-		Wall w = new Wall(size, size, x, y, wallSprite);
+	private static Wall newWall(int wallSprite, int x, int y) {
+		Wall w = new Wall(SIZE, SIZE, x, y, wallSprite);
 		return w;
 	}
 
-	public static void generateLevel(int[][] level, int size) {
-		Wall[] bg = generateBackground(level, size);
+	public static void generateLevel(int[][] level) {
+		Wall[] bg = generateBackground(level);
 		for (Wall w : bg) {
 			if (w != null) {
 				MainGame.addSpriteToBackground(w);
 				MainGame.addCollidable(w.getHitBox());
 			}
 		}
+	}
+
+	public static Point2D.Double[] generateCornerPoints(int[][] level) {
+		LinkedList<Point2D.Double> knownObtuseCorners = new LinkedList<Point2D.Double>();
+		for (int centreY = 0; centreY < level.length; centreY++) {
+			for (int centreX = 0; centreX < level[centreY].length; centreX++) {
+				if (level[centreY][centreX] != 0) {
+					int centre = level[centreY][centreX];
+					int[] sides = new int[4];
+					boolean[] theseCorners;
+					try {
+						sides = getAdjacents(level, centreX, centreY);
+						boolean[] potentialCorners = getCorners(sides, centre);
+						boolean[] otherCorners = getDiagonals(level, centreX, centreY);
+						theseCorners = booleanArraysNotImplied(potentialCorners, otherCorners);
+					} catch (Exception e) {
+						theseCorners = new boolean[] { false, false, false, false };
+					}
+					for (int k = 0; k < theseCorners.length; k++) {
+						if (theseCorners[k]) {
+							int isCornerPositiveX = (k / 2 + 1) % 2;
+							double cornerX = (centreX + isCornerPositiveX) * SIZE
+									+ (isCornerPositiveX * 2 - 1) * Enemy.getTargetWidth();
+							int isCornerPositiveY = ((k + 1) / 2) % 2;
+							double cornerY = (centreY + isCornerPositiveY) * SIZE
+									+ (isCornerPositiveY * 2 - 1) * Enemy.getTargetHeight();
+							knownObtuseCorners.add(new Point2D.Double(cornerX, cornerY));
+						}
+					}
+				}
+			}
+		}
+		knownObtuseCorners = trimOutsideBounds(knownObtuseCorners, level);
+		return knownObtuseCorners.toArray(new Point2D.Double[0]);
+	}
+
+	private static boolean[] getCorners(int[] sides, int centre) {
+		// sides: 0 top, 1 right, 2 bottom, 3 left
+		boolean[] knownCorners = new boolean[4];
+		// iterate over each side
+		for (int i = 0; i < sides.length; i++) {
+			// e.g. top and right when i = 0
+			if (sides[i % sides.length] == 0 && sides[(i + 1) % sides.length] == 0) {
+				knownCorners[i] = true;
+			} else {
+				knownCorners[i] = false;
+			}
+		}
+		return knownCorners;
+	}
+
+	private static boolean[] getDiagonals(int[][] level, int centreX, int centreY) {
+		// tr, br, bl, tl
+		boolean[] knownDiagonals = new boolean[4];
+		for (int i = 0; i < 4; i++) {
+			int isCornerPositiveX = ((i / 2 + 1) % 2) * 2 - 1;
+			int isCornerPositiveY = (((i + 1) / 2) % 2) * 2 - 1;
+			if (level[centreY + isCornerPositiveY][centreX + isCornerPositiveX] == 0) {
+				knownDiagonals[i] = false;
+			} else {
+				knownDiagonals[i] = true;
+			}
+		}
+		return knownDiagonals;
+	}
+
+	private static boolean[] booleanArraysNotImplied(boolean[] array1, boolean[] array2) throws Exception {
+		if (array1.length == array2.length) {
+			boolean[] c = new boolean[array1.length];
+			for (int i = 0; i < array1.length; i++) {
+				c[i] = array1[i] && !array2[i];
+			}
+			return c;
+		} else {
+			throw new Exception("Array lengths do not match");
+		}
+	}
+
+	private static LinkedList<Point2D.Double> trimOutsideBounds(LinkedList<Point2D.Double> knownObtuseCorners,
+			int[][] level) {
+		level = removeRedundantLines(level);
+		LinkedList<Point2D.Double> polygonPoints = LevelArrayToLinkedList(level);
+		for (int i = knownObtuseCorners.size() - 1; i >= 0; i--) {
+			if (windingAlgorithm(knownObtuseCorners.get(i), polygonPoints) < 4) {
+				knownObtuseCorners.remove(i);
+			}
+		}
+		return knownObtuseCorners;
+	}
+
+	private static int windingAlgorithm(Point2D.Double point, LinkedList<Point2D.Double> polygon) {
+		int prevQuad = -1;
+		int currentQuad;
+		int sumClockwise = -1; 
+		for (int i = 0; i < polygon.size() + 1; i++) {
+			Point2D.Double polyPoint = polygon.get(i % polygon.size());
+			double x = polyPoint.getX() - point.getX();
+			double y = polyPoint.getY() - point.getY();
+			// 0 mxmy
+			// 1 pxmy
+			// 3 pxpy
+			// 2 mxpy
+			if (x < 0) {
+				currentQuad = 0;
+			} else {
+				currentQuad = 1;
+			}
+			if (y >= 0) {
+				currentQuad += 2;
+			}
+			if (prevQuad != currentQuad) {
+				if(currentQuad > prevQuad || (currentQuad == 2 && prevQuad == 3) || (currentQuad == 0 && prevQuad == 2)){
+					sumClockwise++;
+				} else {
+					sumClockwise--;
+				}
+				prevQuad = currentQuad;
+			}
+		}
+		return sumClockwise;
+	}
+
+	private static Point2D.Double normalisePoint(Point2D.Double point) {
+		double newX = point.getX() * SIZE + SIZE / 2;
+		double newY = point.getY() * SIZE + SIZE / 2;
+		Point2D.Double normalised = new Point2D.Double(newX, newY);
+		return normalised;
+	}
+
+	public static int[][] removeRedundantLines(int[][] level) {
+		LinkedList<Pair<Integer, Integer>> pointsRemoved = new LinkedList<Pair<Integer, Integer>>();
+		int[][] reducedLevel = new int[level.length][];
+		for (int i = 0; i < level.length; i++) {
+			reducedLevel[i] = level[i].clone();
+		}
+		for (int centreY = 0; centreY < level.length; centreY++) {
+			for (int centreX = 0; centreX < level[centreY].length; centreX++) {
+				int adjacentWalls = 0;
+				try {
+					int[] adjacents = getAdjacents(level, centreX, centreY);
+					for (int a : adjacents) {
+						if (a > 0) {
+							adjacentWalls++;
+						}
+					}
+				} catch (Exception e) {
+					adjacentWalls = 4;
+				}
+				if (adjacentWalls < 2) {
+					pointsRemoved.add(new Pair<Integer, Integer>(centreX, centreY));
+					reducedLevel[centreY][centreX] = 0;
+				}
+			}
+		}
+		while (!pointsRemoved.isEmpty()) {
+			Pair<Integer, Integer> removed = pointsRemoved.poll();
+			try {
+				int[] adjacents = getAdjacents(reducedLevel, removed.getKey(), removed.getValue());
+				LinkedList<Pair<Integer, Integer>> adjacentPositions = getAdjacentPositions(reducedLevel,
+						removed.getKey(), removed.getValue());
+				for (int i = 0; i < adjacents.length; i++) {
+					if (adjacents[i] > 0) {
+						int centreX = adjacentPositions.get(i).getKey();
+						int centreY = adjacentPositions.get(i).getValue();
+						int adjacentWalls = 0;
+						try {
+							int[] adjacentsNew = getAdjacents(reducedLevel, centreX, centreY);
+							for (int a : adjacentsNew) {
+								if (a > 0) {
+									adjacentWalls++;
+								}
+							}
+						} catch (Exception e) {
+							adjacentWalls = 4;
+						}
+						if (adjacentWalls < 2) {
+							pointsRemoved.add(new Pair<Integer, Integer>(centreX, centreY));
+							reducedLevel[centreY][centreX] = 0;
+						}
+					}
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(":(");
+			}
+		}
+		return reducedLevel;
+	}
+
+	private static int[] getAdjacents(int[][] level, int centreX, int centreY) {
+		int[] sides = new int[4];
+		// top
+		sides[0] = level[centreY - 1][centreX];
+		// right
+		sides[1] = level[centreY][centreX + 1];
+		// bottom
+		sides[2] = level[centreY + 1][centreX];
+		// left
+		sides[3] = level[centreY][centreX - 1];
+		return sides;
+	}
+
+	private static int[] getAdjacentsExceptionFree(int[][] level, int centreX, int centreY) {
+		int[] sides = new int[4];
+		// top
+		try {
+			sides[0] = level[centreY - 1][centreX];
+		} catch (Exception e) {
+			sides[0] = 0;
+		}
+		// right
+		try {
+			sides[1] = level[centreY][centreX + 1];
+		} catch (Exception e) {
+			sides[1] = 0;
+		}
+		// bottom
+		try {
+			sides[2] = level[centreY + 1][centreX];
+		} catch (Exception e) {
+			sides[2] = 0;
+		}
+		// left
+		try {
+			sides[3] = level[centreY][centreX - 1];
+		} catch (Exception e) {
+			sides[3] = 0;
+		}
+		return sides;
+	}
+
+	private static LinkedList<Pair<Integer, Integer>> getAdjacentPositions(int[][] level, int centreX, int centreY) {
+		LinkedList<Pair<Integer, Integer>> sides = new LinkedList<Pair<Integer, Integer>>();
+		// top
+		sides.add(new Pair<Integer, Integer>(centreX, centreY - 1));
+		// right
+		sides.add(new Pair<Integer, Integer>(centreX + 1, centreY));
+		// bottom
+		sides.add(new Pair<Integer, Integer>(centreX, centreY + 1));
+		// left
+		sides.add(new Pair<Integer, Integer>(centreX - 1, centreY));
+		return sides;
+	}
+
+	private static LinkedList<Point2D.Double> LevelArrayToLinkedList(int[][] levelArray) {
+		// create linkedlist for values
+		LinkedList<Point2D.Double> linkedList = new LinkedList<Point2D.Double>();
+		// get top-leftmost point for start
+		int startX = 0;
+		int startY = 0;
+		while (levelArray[startY][startX] == 0) {
+			startX++;
+			if (startX > levelArray[startY].length) {
+				startY++;
+				startX = 0;
+			}
+		}
+		// initialise variables
+		int nextX = startX;
+		int nextY = startY;
+		int currentDir = 1;
+		int prevDir = 0;
+		do {
+			// check point is a corner
+			// helps reduce number of points
+			if (prevDir != currentDir) {
+				prevDir = currentDir;
+				// insert point
+				linkedList.add(normalisePoint(new Point2D.Double(nextX, nextY)));
+			}
+			// check for initial values to prevent overwrite and allow loop finish
+			if (nextX != startX || nextY != startY) {
+				// remove from array to prevent duplication
+				levelArray[nextY][nextX] = 0;
+			}
+			// get next 4 potential points
+			int[] upcomingAdjacents = getAdjacentsExceptionFree(levelArray, nextX, nextY);
+			// biased look towards previous direction
+			for (int attemptDir = 0; attemptDir < 4; attemptDir++) {
+				// point being observed is a wall
+				if (upcomingAdjacents[(attemptDir + currentDir) % 4] != 0) {
+					currentDir = (attemptDir + currentDir) % 4;
+					break;
+				}
+			}
+			// get the positions corresponding to the direction
+			Pair<Integer, Integer> nextTarget = getAdjacentPositions(levelArray, nextX, nextY).get(currentDir);
+			// update the position
+			nextX = nextTarget.getKey();
+			nextY = nextTarget.getValue();
+		} while (nextX != startX || nextY != startY);
+		return linkedList;
 	}
 
 }

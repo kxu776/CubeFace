@@ -65,7 +65,7 @@ public class MainGame {
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	
 	public static void reset(Stage primaryStage) {
-		// set up game group
+		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
 		world = new Group();
@@ -82,7 +82,6 @@ public class MainGame {
 		grpGame.getChildren().add(overlay);
 		grpGame.prefWidth(998);
 		grpGame.prefHeight(498);
-
 
 		//make a rectangle
 		Rectangle gameRect = new Rectangle(998,498);
@@ -104,9 +103,6 @@ public class MainGame {
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
-
-
-
 		//make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
 		anchorPane.setTopAnchor(toolbox, 0.0);
@@ -116,8 +112,6 @@ public class MainGame {
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
 		anchorPane.setId("anchorpane");
-
-
 
 		// set up new arrays and objects
 		Wall.resetWalls();
@@ -140,8 +134,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / 60;
-
+		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 
 		//make a rectangle
 		Rectangle rect = new Rectangle(1000,500);
@@ -149,14 +142,12 @@ public class MainGame {
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
 
-
-
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL2, 256);
+		Levels.generateLevel(Levels.LEVEL2);
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
