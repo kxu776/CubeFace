@@ -31,6 +31,7 @@ import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -235,9 +236,9 @@ public class MainGame {
 	}
 
 	private static void removeFromGroup(Group g, Object o) {
-		if (g.getChildren().contains(o)) {
+		Platform.runLater(() -> {
 			g.getChildren().remove(o);
-		}
+		});
 	}
 
 	public static void addSpriteToBackground(Sprite s) {
