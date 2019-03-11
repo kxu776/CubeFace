@@ -65,6 +65,7 @@ public class Bullet extends MovableSprite {
 				//TODO: Enemy takes damage
 				speed = 0;
 				MainGame.removeSprite(this);
+				WeaponManager.removeBulletFromList(this);
 				return;
 			}
 		}
