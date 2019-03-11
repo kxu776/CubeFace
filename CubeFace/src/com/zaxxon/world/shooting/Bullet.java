@@ -20,18 +20,22 @@ public class Bullet extends MovableSprite {
 	
 	ImagePattern imgPat;
 	
+	private Vector2 startPos;
 	private Vector2 direction;
 	private double speed = 10.0;
 	private double damage = 10;
+	private double despawnDistance;
 	
-	public Bullet (Vector2 dir, Vector2 pos, double damage) {
+	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd) {
 		
 		MainGame.addSpriteToForeground(this);
 		
 		this.setX(pos.x);
 		this.setY(pos.y);
+		this.startPos = pos;
 		this.direction = dir;
 		this.damage = damage;
+		this.despawnDistance = dsd;
 		
 		getSpriteImage();
 		this.setFill(imgPat);
@@ -41,13 +45,25 @@ public class Bullet extends MovableSprite {
 	
 	public void update(double deltaTime) {
 		
+		checkDespawn();
+		
 		Vector2 toMove = new Vector2();
 		toMove = new Vector2 (direction.x * speed * deltaTime, direction.y * speed * deltaTime);
 		this.translate(toMove);
 		
 		collision();
 	}
-
+	
+	private void checkDespawn() {
+		
+		double distanceTravelled = Math.sqrt(Math.pow(this.getX()-startPos.x, 2) + Math.pow(this.getY()-startPos.y, 2));
+		
+		if (distanceTravelled >= despawnDistance) {
+			
+			delete();
+		}
+	}
+	
 	private void collision() {
 
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
@@ -55,7 +71,7 @@ public class Bullet extends MovableSprite {
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
-				MainGame.removeSprite(this);
+				delete();
 				return;
 			}
 		}
@@ -63,8 +79,7 @@ public class Bullet extends MovableSprite {
 		for(Enemy enemy : MainGame.enemiesList){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
 				//TODO: Enemy takes damage
-				speed = 0;
-				MainGame.removeSprite(this);
+				delete();
 				return;
 			}
 		}
@@ -76,6 +91,12 @@ public class Bullet extends MovableSprite {
 		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
 		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
 
+	}
+
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
+		WeaponManager.removeBulletFromList(this);
 	}
 }
 

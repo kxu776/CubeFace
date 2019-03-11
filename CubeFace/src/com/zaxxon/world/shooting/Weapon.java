@@ -9,13 +9,14 @@ public class Weapon {
 	double bulletDamage;
 	double bulletSpeed;
 	double bulletAngle;
+	double despawnDistance;
 	String weaponName;
 	
 	public Weapon () {
 		
 	}
 	
-	public void fire(Vector2 dir, Vector2 weaponPos) {
+	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
 		
 	}
 	

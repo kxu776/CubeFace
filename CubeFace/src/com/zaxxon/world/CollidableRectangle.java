@@ -1,5 +1,7 @@
 package com.zaxxon.world;
 
+import com.zaxxon.client.MainGame;
+
 import javafx.scene.shape.Rectangle;
 
 public class CollidableRectangle extends Rectangle {
@@ -10,6 +12,10 @@ public class CollidableRectangle extends Rectangle {
 		setX(x);
 		setY(y);
 		setVisible(false);
+	}
+	
+	public void delete() {
+		MainGame.removeFromGame(this);
 	}
 
 }

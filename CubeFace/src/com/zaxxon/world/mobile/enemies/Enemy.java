@@ -22,15 +22,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static com.zaxxon.world.Levels.L1_WAYPOINTS;
+import static com.zaxxon.world.Levels.L2_WAYPOINTS;
 import static java.lang.Math.abs;
 
 public abstract class Enemy extends MovableSprite {
 
     FacingDir facingDir;
 
-    int width = 64;
-    int height = 64;
+    protected static final int TARGET_WIDTH = 64;
+    protected static final int TARGET_HEIGHT = 64;
 
     protected BufferedImage[] sprites;
     protected ImagePattern[] imgPats;
@@ -69,8 +69,8 @@ public abstract class Enemy extends MovableSprite {
         this.setX(spawnX);
         this.setY(spawnY);
         this.getSpriteImages(SpriteImages.ZOMBIE_SPRITESHEET_URL);
-        this.setWidth(width);
-        this.setHeight(height);
+        this.setWidth(TARGET_WIDTH);
+        this.setHeight(TARGET_HEIGHT);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
@@ -82,12 +82,20 @@ public abstract class Enemy extends MovableSprite {
         setX(spawnX);
         setY(spawnY);
         getSpriteImages(spritesheet);
-        setWidth(width);
-        setHeight(height);
+        setWidth(TARGET_WIDTH);
+        setHeight(TARGET_HEIGHT);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
         MainGame.enemiesList.add(this);
+    }
+    
+    public static double getTargetWidth() {
+    	return TARGET_WIDTH;
+    }
+    
+    public static double getTargetHeight() {
+    	return TARGET_HEIGHT;
     }
 
     public void update(double time, Player player) {
@@ -246,8 +254,8 @@ public abstract class Enemy extends MovableSprite {
     public Point2D.Double closestPoint(){
         Map<Point2D.Double, Double> dists = new HashMap<>();
         Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
-        for(int i = 0; i< L1_WAYPOINTS.length; i++){
-            dists.put(L1_WAYPOINTS[i], currentPoint.distanceSq(L1_WAYPOINTS[i]));
+        for(int i = 0; i< L2_WAYPOINTS.length; i++){
+            dists.put(L2_WAYPOINTS[i], currentPoint.distanceSq(L2_WAYPOINTS[i]));
         }
         Map.Entry<Point2D.Double, Double> closest = Collections.min(dists.entrySet(), Comparator.comparing(Map.Entry::getValue));
         return closest.getKey();

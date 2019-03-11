@@ -7,7 +7,8 @@ package com.zaxxon.world.mobile;
 
 	import javax.imageio.ImageIO;
 
-	import com.zaxxon.gameart.SpriteImages;
+import com.zaxxon.client.MainGame;
+import com.zaxxon.gameart.SpriteImages;
 	import com.zaxxon.input.Input;
 	import com.zaxxon.maths.Vector2;
 	import com.zaxxon.world.Wall;
@@ -178,6 +179,12 @@ public class MultiplayerPlayer extends MovableSprite{
 	    public Vector2 getplayerDimensions() {
 	    return	new Vector2 (this.getWidth(), this.getHeight());
 	    }
+
+		@Override
+		public void delete() {
+
+			MainGame.removeFromGame(this);
+		}
 	    
 }
 

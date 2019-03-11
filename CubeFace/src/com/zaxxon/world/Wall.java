@@ -2,6 +2,7 @@ package com.zaxxon.world;
 
 import java.util.ArrayList;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 
 import javafx.geometry.Bounds;
@@ -111,6 +112,13 @@ public class Wall extends Sprite {
 	@Override
 	public Boolean isAlive() {
 		return true;
+	}
+
+	@Override
+	public void delete() {
+		allWalls.remove(this);
+		hitBox.delete();
+		MainGame.removeFromGame(this);
 	}
 
 }

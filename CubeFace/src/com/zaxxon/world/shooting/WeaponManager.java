@@ -69,7 +69,7 @@ public class WeaponManager {
 		}
 		
 		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    weapons.get(currentWeapon).fire(dir, weaponPos);
+	    weapons.get(currentWeapon).fire(dir, weaponPos, false);
     	
 		
 		for (int i = 0; i < allBullets.size(); i++) {
@@ -132,9 +132,13 @@ public class WeaponManager {
 	 }
 	 
 	 public static void addBulletToList(Bullet b) {
-		 
 		 allBullets.add(b);
 	 }
+	 
+	 public static void removeBulletFromList(Bullet b) {
+		 allBullets.remove(b);
+	 }
+	 
 	 public Weapon getCurrentWeapon() {
 		 return weapons.get(currentWeapon);
 	 }
