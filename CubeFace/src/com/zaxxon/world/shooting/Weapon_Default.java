@@ -25,7 +25,17 @@ public class Weapon_Default extends Weapon {
 	@Override
 	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
 		
-		if (multiplayer || Input.isKeyPressed(KeyCode.SPACE)) {
+		if (multiplayer) {
+			
+			if (!fired) {
+				
+				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance);
+				WeaponManager.addBulletToList(bullet);
+				fired = true;
+			}
+		}
+		
+		else if (Input.isKeyPressed(KeyCode.SPACE)) {
 			
 			if (!fired) {
 				
