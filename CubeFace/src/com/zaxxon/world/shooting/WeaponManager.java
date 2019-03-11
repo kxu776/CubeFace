@@ -69,7 +69,7 @@ public class WeaponManager {
 		}
 		
 		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    weapons.get(currentWeapon).fire(dir, weaponPos);
+	    weapons.get(currentWeapon).fire(dir, weaponPos, false);
     	
 		
 		for (int i = 0; i < allBullets.size(); i++) {

@@ -21,9 +21,9 @@ public class Weapon_MG extends Weapon {
 	}
 	
 	@Override
-	public void fire(Vector2 dir, Vector2 weaponPos) {
+	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
 		
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
+		if (multiplayer || Input.isKeyPressed(KeyCode.SPACE)) {
 			
 			Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance);
 			WeaponManager.addBulletToList(bullet);
