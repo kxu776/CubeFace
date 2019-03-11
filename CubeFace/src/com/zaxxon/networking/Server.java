@@ -106,7 +106,6 @@ public class Server {
 						continue;
 					}
 			}
-			
 			send(b,c.getValue().getAddress(),c.getKey());
 		}
 
@@ -122,16 +121,6 @@ public class Server {
 			// If only one player exists in the server
 			// we store their current location
 			
-			byte[] d = editObj(packet.getData(), c.getValue().getID());		
-			
-			if (lastKnownPos.containsKey(c.getValue().getID())) {
-			}
-			
-			else {
-				lastKnownPos.put(c.getValue().getID(), d);
-			}
-			
-			
 			if (port == c.getKey()) {
 				if(address.equals(c.getValue().getAddress())) {
 					associatedID = c.getValue();
@@ -139,6 +128,9 @@ public class Server {
 					// Setup its ID and get ready to send to other players
 					
 					b = editObj(packet.getData(),associatedID.getID());
+					if (!lastKnownPos.containsKey(c.getValue().getID())) {
+						 lastKnownPos.put(c.getValue().getID(), b);
+					}
 					sendToRelevant(b,port,address);		
 					break;
 				}
@@ -207,8 +199,9 @@ public class Server {
 
 		if (action.startsWith("/d/")) {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-				if (port == c.getKey() && address != c.getValue().getAddress()) {
+				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					clients.remove(c.getKey(), c.getValue());
+					lastKnownPos.remove(c.getValue().getID());
 					return;
 				}
 			}

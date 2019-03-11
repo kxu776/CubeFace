@@ -315,27 +315,25 @@ public class MainGame {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
 			if (!play.containsKey(data.getID().trim())) {
-				System.out.println(play.size());
-				play.put(data.getID(), new MultiplayerPlayer());;	
-				play.get(data.getID()).setX(900);
-				play.get(data.getID()).setY(900);
-				play.get(data.getID()).setId(data.getID().trim());
-				System.out.println("Creating player on this ID "+data.getID());
-				System.out.println(play.size());
-
-				addSpriteToForeground(play.get(data.getID()));
+				String id = data.getID();
+				play.put(id, new MultiplayerPlayer());;	
+				play.get(id).setX(900);
+				play.get(id).setY(900);
+				play.get(id).setId(data.getID().trim());
+				System.out.println("Creating player on this ID "+id);
+				addSpriteToForeground(play.get(id));
 			}
 			
-			for (Sprite s : spriteList) {
+			for (Sprite s : getSpritesSynch()) {
 				if ((data.getID()).equals(s.getId().trim())) {
 					s.setX(data.getX());
 					s.setY(data.getY());
 					((MultiplayerPlayer) s).setDir(data.pos);
 					
 					if((data.shoot == true)) {
-						System.out.println("Wtf");
 						((MultiplayerPlayer) s).weapon.update(FPSreduction,((MovableSprite) s).getPosition(),((MultiplayerPlayer) s).getplayerDimensions(),((MultiplayerPlayer) s).getdir());
 						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,((MovableSprite) s).getPosition());;
+						System.out.println("I have fired");
 
 					}
 					
@@ -354,7 +352,7 @@ public class MainGame {
 	private static void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
-		for (Sprite sprite : spriteList) {
+		for (Sprite sprite : getSpritesSynch()) {
 			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
 					spriteList.remove(sprite);
@@ -373,5 +371,11 @@ public class MainGame {
 			}
 		}
 	}
-
+	
+	private synchronized static LinkedList<Sprite> getSpritesSynch() {
+		return spriteList;
+	}
+	
+	
+	
 }
