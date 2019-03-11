@@ -56,7 +56,7 @@ public class WeaponManager {
 		
 	}
 	
-	public void update(double deltaTime, Vector2 playerPos, Vector2 playerDimensions, FacingDir facingDir) {
+	public synchronized void update(double deltaTime, Vector2 playerPos, Vector2 playerDimensions, FacingDir facingDir) {
 		
 		this.playerPos = (playerPos);
 		this.dir = getFacingDirAsVector(facingDir);
@@ -116,6 +116,8 @@ public class WeaponManager {
 	    		return new Vector2();
 	    	}
 	    }
+	
+	
 	 public Vector2 getPlayerPos() {
 		return playerPos;
 		 

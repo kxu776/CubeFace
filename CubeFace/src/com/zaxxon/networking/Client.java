@@ -128,7 +128,7 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			Thread.sleep(20);
+			Thread.sleep(25);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

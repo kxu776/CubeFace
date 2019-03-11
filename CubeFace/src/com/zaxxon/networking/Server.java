@@ -107,6 +107,11 @@ public class Server {
 					}
 			}
 			send(b,c.getValue().getAddress(),c.getKey());
+		try {
+			Thread.sleep(15);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		}
 
 	}
