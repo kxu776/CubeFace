@@ -130,7 +130,6 @@ public class WeaponManager {
 	 }
 	 
 	 public static void addBulletToList(Bullet b) {
-		 
 		 allBullets.add(b);
 	 }
 	 

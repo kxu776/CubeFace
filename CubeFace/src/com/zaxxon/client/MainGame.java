@@ -214,17 +214,6 @@ public class MainGame {
 		}
 	}
 
-	public static void removeSprite(Sprite s) {
-		for (Sprite searchingSprite : spriteList) {
-			if (searchingSprite == s) {
-				((Group) s.getParent()).getChildren().remove(s);
-				spriteList.remove(searchingSprite);
-				s = null;
-				return;
-			}
-		}
-	}
-
 	public static void removeFromGame(Object o) {
 		if (o instanceof Rectangle) {
 			Sprite s = (Sprite) o;
@@ -243,27 +232,6 @@ public class MainGame {
 			CollidableRectangle cr = (CollidableRectangle) o;
 			removeFromGroup((Group) cr.getParent(), o);
 		}
-
-//		removeFromGroup(grpGame, o);
-//		removeFromGroup(world, o);
-//		removeFromGroup(background, o);
-//		removeFromGroup(foreground, o);
-//		removeFromGroup(overlay, o);
-//		removeFromGroup(collidables, o);
-//		
-//		
-//		
-//		if(o instanceof Sprite) {
-//			Sprite s = (Sprite) o;
-//			for (Sprite searchingSprite : spriteList) {
-//				if (searchingSprite == s) {
-//					((Group) s.getParent()).getChildren().remove(s);
-//					spriteList.remove(searchingSprite);
-//					s = null;
-//					return;
-//				}
-//			}
-//		}
 	}
 
 	private static void removeFromGroup(Group g, Object o) {
