@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
@@ -247,7 +248,12 @@ public class Player extends MovableSprite{
     }
     public FacingDir getdir() {
 		return facingDir;
-    }	
+    }
+
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
+	}	
     
     
 }

@@ -133,6 +133,11 @@ public class WeaponManager {
 		 
 		 allBullets.add(b);
 	 }
+	 
+	 public static void removeBulletFromList(Bullet b) {
+		 allBullets.remove(b);
+	 }
+	 
 	 public Weapon getCurrentWeapon() {
 		 return weapons.get(currentWeapon);
 	 }

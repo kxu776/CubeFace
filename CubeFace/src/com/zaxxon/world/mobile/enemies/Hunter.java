@@ -1,5 +1,6 @@
 package com.zaxxon.world.mobile.enemies;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -30,6 +31,12 @@ public class Hunter extends Enemy {
 	protected void attack() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void delete() {
+
+		MainGame.removeFromGame(this);
 	}
 
 }

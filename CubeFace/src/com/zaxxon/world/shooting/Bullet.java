@@ -55,7 +55,7 @@ public class Bullet extends MovableSprite {
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
-				MainGame.removeSprite(this);
+				delete();
 				return;
 			}
 		}
@@ -64,7 +64,7 @@ public class Bullet extends MovableSprite {
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
 				//TODO: Enemy takes damage
 				speed = 0;
-				MainGame.removeSprite(this);
+				delete();
 				return;
 			}
 		}
@@ -76,6 +76,12 @@ public class Bullet extends MovableSprite {
 		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
 		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
 
+	}
+
+	@Override
+	public void delete() {
+		WeaponManager.removeBulletFromList(this);
+		MainGame.removeFromGame(this);
 	}
 }
 

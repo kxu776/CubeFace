@@ -1,5 +1,7 @@
 package com.zaxxon.world;
 
+import com.zaxxon.client.MainGame;
+
 import javafx.scene.paint.Color;
 public class Tile extends Sprite {
 	
@@ -14,6 +16,11 @@ public class Tile extends Sprite {
 	@Override
 	public Boolean isAlive() {
 		return true;
+	}
+
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
 	}
 
 }
