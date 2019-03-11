@@ -315,7 +315,7 @@ public class MainGame {
 						((MultiplayerPlayer) s).weapon.update(FPSreduction, ((MovableSprite) s).getPosition(),
 								((MultiplayerPlayer) s).getplayerDimensions(), ((MultiplayerPlayer) s).getdir());
 						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,
-								((MovableSprite) s).getPosition());
+								((MovableSprite) s).getPosition(), true);
 					}
 					if (s instanceof MovableSprite) {
 						((MovableSprite) s).setHealth(data.getHealth());
