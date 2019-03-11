@@ -193,26 +193,6 @@ public class MainGame {
 	}
 
 	private static void dealWithKeyInput() {
-		if (Input.isKeyPressed(KeyCode.W)) {
-			camera.setPositionY(camera.getPositionY() + 1);
-		}
-		if (Input.isKeyPressed(KeyCode.S)) {
-			camera.setPositionY(camera.getPositionY() - 1);
-		}
-		if (Input.isKeyPressed(KeyCode.A)) {
-			camera.setPositionX(camera.getPositionX() + 1);
-		}
-		if (Input.isKeyPressed(KeyCode.D)) {
-			camera.setPositionX(camera.getPositionX() - 1);
-		}
-		if (Input.isKeyPressed(KeyCode.Q)) {
-			camera.setScaleX(camera.getScaleX() * 1.02);
-			camera.setScaleY(camera.getScaleX());
-		}
-		if (Input.isKeyPressed(KeyCode.E)) {
-			camera.setScaleX(camera.getScaleX() / 1.02);
-			camera.setScaleY(camera.getScaleX());
-		}
 	}
 
 	public static void removeFromGame(Object o) {
