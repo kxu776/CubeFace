@@ -135,7 +135,7 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
+		FPSreduction = 60.0 / 60;
 
 		// make a rectangle
 		Rectangle rect = new Rectangle(1000, 500);
@@ -305,7 +305,7 @@ public class MainGame {
 				addSpriteToForeground(play.get(id));
 			}
 			
-			for (Sprite s : getSpritesSynch()) {
+			for (Sprite s :spriteList) {
 
 				if ((data.getID()).equals(s.getId().trim())) {
 					s.setX(data.getX());
