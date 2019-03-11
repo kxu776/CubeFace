@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 public class Weapon_Default extends Weapon {
 
 	private final double damage = 10;
+	private final double despawnDistance = 600;
 	
 	private Boolean fired = false;
 	
@@ -17,6 +18,7 @@ public class Weapon_Default extends Weapon {
 		
 		super.weaponName = "Pistol";
 		super.bulletDamage = damage;
+		super.despawnDistance = despawnDistance;
 		
 	}
 	
@@ -27,7 +29,7 @@ public class Weapon_Default extends Weapon {
 			
 			if (!fired) {
 				
-				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage);
+				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
 			}

@@ -9,6 +9,7 @@ public class Weapon {
 	double bulletDamage;
 	double bulletSpeed;
 	double bulletAngle;
+	double despawnDistance;
 	String weaponName;
 	
 	public Weapon () {
