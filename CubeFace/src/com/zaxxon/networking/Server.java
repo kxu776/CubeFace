@@ -32,6 +32,7 @@ public class Server {
 
 	public void start() {
 		try {
+			System.out.println("Server started on port " + serverPort);
 			serverSocket = new DatagramSocket(serverPort);
 			listening = true;
 			listenThread = new Thread(new Runnable() {

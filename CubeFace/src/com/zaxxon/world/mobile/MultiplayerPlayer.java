@@ -64,7 +64,7 @@ public class MultiplayerPlayer extends MovableSprite{
 	        weapon = new WeaponManager();
 	    }
 	    
-	    public synchronized void update(double time) {
+	    public void update(double time) {
 	    	
 	    	deltaTime = time;
 	    	

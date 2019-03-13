@@ -4,7 +4,9 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zaxxon.input.Input;
@@ -50,7 +52,7 @@ public class MainGame {
 	private static Group overlay;
 	private static Group collidables;
 	private static Camera camera;
-	private static LinkedList<Sprite> spriteList;
+	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
@@ -59,6 +61,8 @@ public class MainGame {
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
+	static boolean f = false;
+
 	private static Player player1;
 	private static HashMap<String, MultiplayerPlayer> play = new HashMap<>();
 	private static AnchorPane anchorPane;
@@ -116,7 +120,7 @@ public class MainGame {
 
 		// set up new arrays and objects
 		Wall.resetWalls();
-		spriteList = new LinkedList<Sprite>();
+		spriteList = new ConcurrentLinkedQueue<Sprite>();
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
 		player1 = new Player();
@@ -244,7 +248,6 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
-
 		if (spawn == false) {
 			System.out.println("Spawning in...");
 			client.setX(player1.getX());
@@ -266,14 +269,16 @@ public class MainGame {
 
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
-				&& ((player1.getY() - client.getY()) == 0.0)) {
-			client.setX(player1.getX());
-			client.setY(player1.getY());
-			client.setHealth(player1.getHealth());
-			client.shoot = true;
-			networkingClient.sendPlayerObj(client);
-			client.shoot = false;
-			return;
+			&& ((player1.getY() - client.getY()) == 0.0)) {
+			if(f == false) {
+				client.setX(player1.getX());
+				client.setY(player1.getY());
+				client.setHealth(player1.getHealth());
+				client.shoot = true;
+				networkingClient.sendPlayerObj(client);
+				client.shoot = false;
+				f = true;
+			}
 		}
 		// Standing still
 		if (((player1.getX() - client.getX()) == 0.0) && ((player1.getY() - client.getY()) == 0.0)) {
@@ -281,7 +286,10 @@ public class MainGame {
 		}
 
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			client.shoot = true;
+			if(!f) {
+				f = true;
+				client.shoot = true;
+			}
 		}
 		// Moving
 		client.setX(player1.getX());
@@ -289,39 +297,43 @@ public class MainGame {
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
 		client.shoot = false;
+		f = false;
 	}
 
 	private static void getUpdatesFromQueue() {
+
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			if (!play.containsKey(data.getID().trim())) {
-
-				String id = data.getID();
-				play.put(id, new MultiplayerPlayer());;	
+			String id = data.getID().trim();
+			if (!play.containsKey(id)) {
+				play.put(id, new MultiplayerPlayer());
 				play.get(id).setX(900);
 				play.get(id).setY(900);
-				play.get(id).setId(data.getID().trim());
-				System.out.println("Creating player on this ID "+id);
+				play.get(id).setId(id);
+				System.out.println("Creating player on this ID " + id);
 				addSpriteToForeground(play.get(id));
 			}
+		
 			
-			for (Sprite s :spriteList) {
-
-				if ((data.getID()).equals(s.getId().trim())) {
-					s.setX(data.getX());
-					s.setY(data.getY());
-					((MultiplayerPlayer) s).setDir(data.pos);
+			Iterator<Sprite> iterator= spriteList.iterator();
+			while ( iterator.hasNext()) {
+			    Sprite sprite = iterator.next();
+			    if (sprite.getId().equals(id)) {
+			    		sprite.setX(data.getX());
+					sprite.setY(data.getY());
+					((MultiplayerPlayer) sprite).setDir(data.pos);	
+			    }
+				
+				if (sprite instanceof MovableSprite) {
+					((MovableSprite) sprite).setHealth(data.getHealth());
+				}
+				
+				if ((data.shoot == true)) {
+					FacingDir m = play.get(id).getdir();
+					Vector2 vect = play.get(id).weapon.getFacingDirAsVector(m);
+					Vector2 pos = play.get(id).weapon.playerPos;
 					
-					if((data.shoot == true)) {
-						((MultiplayerPlayer) s).weapon.update(FPSreduction,((MovableSprite) s).getPosition(),((MultiplayerPlayer) s).getplayerDimensions(),((MultiplayerPlayer) s).getdir());
-						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,((MovableSprite) s).getPosition(),true);;
-						System.out.println("I have fired");
-
-
-					}
-					if (s instanceof MovableSprite) {
-						((MovableSprite) s).setHealth(data.getHealth());
-					}
+					play.get(id).weapon.getCurrentWeapon().fire(vect,pos, true);
 				}
 			}
 		}
@@ -330,7 +342,7 @@ public class MainGame {
 	private static void updateEnemies() {
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
-		for (Sprite sprite : getSpritesSynch()) {
+		for (Sprite sprite : spriteList) {
 			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
 					spriteList.remove(sprite);
@@ -349,11 +361,5 @@ public class MainGame {
 			}
 		}
 	}
-	
-	private synchronized static LinkedList<Sprite> getSpritesSynch() {
-		return spriteList;
-	}
-	
-	
-	
+
 }
