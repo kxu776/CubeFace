@@ -3,6 +3,7 @@ package com.zaxxon.world.shooting;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 
+import com.zaxxon.sound.MusicPlayer;
 import javafx.scene.input.KeyCode;
 
 //Written by Dan
@@ -11,7 +12,8 @@ public class Weapon_Shotgun extends Weapon {
 	
 	private final double damage = 8;
 	private final double despawnDistance = 200;
-	
+
+	public static MusicPlayer sound = new MusicPlayer("/mainmenu/Gun_Shoot_1.wav");
 	private Boolean fired = false;
 	
 	public Weapon_Shotgun() {
@@ -19,6 +21,7 @@ public class Weapon_Shotgun extends Weapon {
 		super.weaponName = "Shotgun";
 		super.bulletDamage = damage;
 		super.despawnDistance = despawnDistance;
+
 	}
 	
 	@Override
@@ -44,7 +47,9 @@ public class Weapon_Shotgun extends Weapon {
 				}
 				
 				else {
-					
+
+					sound.play();
+
 					Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance);
 					WeaponManager.addBulletToList(b0);
 					
