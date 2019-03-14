@@ -60,6 +60,83 @@ public class Levels {
 		return allWalls;
 	}
 
+	public static Wall[] generateBackgroundWalls(int[][] level) {
+		Wall[] allWalls = new Wall[level.length * level[0].length];
+		for (int i = 0; i < level.length; i++) {
+			for (int j = 0; j < level[i].length; j++) {
+				Wall w = null;
+				if (level[i][j] != 0) {
+					w = newWall(level[i][j] - 1, j * SIZE, i * SIZE);
+				}
+				allWalls[i * level[0].length + j] = w;
+			}
+		}
+		return allWalls;
+	}
+
+	public static Tile[] generateBackgroundTiles(int[][] level) {
+		LinkedList<Tile> allTiles = new LinkedList<Tile>();
+		level = removeRedundantLines(level);
+		int startX = 0;
+		int startY = 0;
+		while (true) {
+			if (startX > level[0].length) {
+				startY++;
+				startX = 0;
+			}
+			if (level[startY][startX] != 0) {
+				break;
+			}
+			startX++;
+		}
+		LinkedList<Pair<Integer, Integer>> toFill = new LinkedList<Pair<Integer, Integer>>();
+		toFill.add(new Pair<Integer, Integer>(startX, startY));
+		while (!toFill.isEmpty()) {
+			System.out.println(toFill.size());
+			Pair<Integer, Integer> currentToFill = toFill.poll();
+			if (level[currentToFill.getValue()][currentToFill.getKey()] == -1) {
+				continue;
+			}
+			Tile t = new Tile(currentToFill.getKey() * SIZE + SIZE/2, currentToFill.getValue() * SIZE + SIZE/2, SIZE, SIZE);
+			allTiles.add(t);
+			int[] adjacents = getAdjacentsExceptionFree(level, currentToFill.getKey(), currentToFill.getValue(),
+					-1);
+			LinkedList<Pair<Integer, Integer>> adjacentPositions =  getAdjacentPositions(level, currentToFill.getKey(), currentToFill.getValue());
+			if (level[currentToFill.getValue()][currentToFill.getKey()] == 0) {
+				if(adjacents[0] > -1) {
+					toFill.add(adjacentPositions.get(0));
+				}
+				if(adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+					toFill.add(adjacentPositions.get(1));
+				}
+				if(adjacents[2] == 0 || (adjacents[2] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+					toFill.add(adjacentPositions.get(2));
+				}
+				if(adjacents[3] > -1) {
+					toFill.add(adjacentPositions.get(3));
+				}
+			}
+			if (level[currentToFill.getValue()][currentToFill.getKey()] > 0) {
+//				if(adjacents[0] == 0) {
+//					toFill.add(adjacentPositions.get(0));
+//				}
+				if(adjacents[1] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+					toFill.add(adjacentPositions.get(1));
+				}
+				if(adjacents[2] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+					toFill.add(adjacentPositions.get(2));
+				}
+//				if(adjacents[3] == 0) {
+//					toFill.add(adjacentPositions.get(3));
+//				}
+			}
+			level[currentToFill.getValue()][currentToFill.getKey()] = -1;
+		}
+		Tile[] allTilesArray = new Tile[0];
+		allTilesArray = allTiles.toArray(allTilesArray);
+		return allTilesArray;
+	}
+
 	private static Wall newWall(int wallSprite, int x, int y) {
 		Wall w = new Wall(SIZE, SIZE, x, y, wallSprite);
 		return w;
@@ -67,6 +144,12 @@ public class Levels {
 
 	public static void generateLevel(int[][] level) {
 		Wall[] bg = generateBackground(level);
+		Tile[] ts = generateBackgroundTiles(level);
+		for (Tile t : ts) {
+			if (t != null) {
+				MainGame.addSpriteToBackground(t);
+			}
+		}
 		for (Wall w : bg) {
 			if (w != null) {
 				MainGame.addSpriteToBackground(w);
@@ -166,7 +249,7 @@ public class Levels {
 	private static int windingAlgorithm(Point2D.Double point, LinkedList<Point2D.Double> polygon) {
 		int prevQuad = -1;
 		int currentQuad;
-		int sumClockwise = -1; 
+		int sumClockwise = -1;
 		for (int i = 0; i < polygon.size() + 1; i++) {
 			Point2D.Double polyPoint = polygon.get(i % polygon.size());
 			double x = polyPoint.getX() - point.getX();
@@ -184,7 +267,8 @@ public class Levels {
 				currentQuad += 2;
 			}
 			if (prevQuad != currentQuad) {
-				if(currentQuad > prevQuad || (currentQuad == 2 && prevQuad == 3) || (currentQuad == 0 && prevQuad == 2)){
+				if (currentQuad > prevQuad || (currentQuad == 2 && prevQuad == 3)
+						|| (currentQuad == 0 && prevQuad == 2)) {
 					sumClockwise++;
 				} else {
 					sumClockwise--;
@@ -203,6 +287,7 @@ public class Levels {
 	}
 
 	public static int[][] removeRedundantLines(int[][] level) {
+		// removes lines that aren't connected at both ends
 		LinkedList<Pair<Integer, Integer>> pointsRemoved = new LinkedList<Pair<Integer, Integer>>();
 		int[][] reducedLevel = new int[level.length][];
 		for (int i = 0; i < level.length; i++) {
@@ -275,31 +360,38 @@ public class Levels {
 		return sides;
 	}
 
-	private static int[] getAdjacentsExceptionFree(int[][] level, int centreX, int centreY) {
+	/**
+	 * @param level          the level where adjacents are being found
+	 * @param centreX        the central x position
+	 * @param centreY        the central y position
+	 * @param exceptionValue the value to set for when an exception occurs
+	 * @return an int[] length 4 for the adjacents in order top, right, bottom, left
+	 */
+	private static int[] getAdjacentsExceptionFree(int[][] level, int centreX, int centreY, int exceptionValue) {
 		int[] sides = new int[4];
 		// top
 		try {
 			sides[0] = level[centreY - 1][centreX];
 		} catch (Exception e) {
-			sides[0] = 0;
+			sides[0] = exceptionValue;
 		}
 		// right
 		try {
 			sides[1] = level[centreY][centreX + 1];
 		} catch (Exception e) {
-			sides[1] = 0;
+			sides[1] = exceptionValue;
 		}
 		// bottom
 		try {
 			sides[2] = level[centreY + 1][centreX];
 		} catch (Exception e) {
-			sides[2] = 0;
+			sides[2] = exceptionValue;
 		}
 		// left
 		try {
 			sides[3] = level[centreY][centreX - 1];
 		} catch (Exception e) {
-			sides[3] = 0;
+			sides[3] = exceptionValue;
 		}
 		return sides;
 	}
@@ -349,7 +441,7 @@ public class Levels {
 				levelArray[nextY][nextX] = 0;
 			}
 			// get next 4 potential points
-			int[] upcomingAdjacents = getAdjacentsExceptionFree(levelArray, nextX, nextY);
+			int[] upcomingAdjacents = getAdjacentsExceptionFree(levelArray, nextX, nextY, 0);
 			// biased look towards previous direction
 			for (int attemptDir = 0; attemptDir < 4; attemptDir++) {
 				// point being observed is a wall
