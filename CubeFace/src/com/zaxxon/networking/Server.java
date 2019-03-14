@@ -12,14 +12,16 @@ import java.util.UUID;
 
 public class Server {
 
-	private final int serverPort;
 	private DatagramSocket serverSocket;
-	private boolean listening = false;
 	private Thread listenThread;
+	private boolean listening = false;
+	private final int serverPort;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
-	public static HashMap<Integer, ServerClient> clients = new HashMap<>();
+
+	private HashMap<Integer, ServerClient> clients = new HashMap<>();
 	private HashMap<String, byte[]> lastKnownPos = new HashMap<>();
+
 	@SuppressWarnings("unused")
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
@@ -69,7 +71,6 @@ public class Server {
 	}
 
 	private byte[] editObj(byte[] bs, String ID) {
-
 		try {
 			bais = new ByteArrayInputStream(bs);
 			in = new ObjectInputStream(bais);
@@ -100,57 +101,56 @@ public class Server {
 		return bs;
 	}
 
-	private void sendToRelevant(byte[] b,int port, InetAddress address) {
+	private void sendToRelevant(byte[] b, int port, InetAddress address) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (port == c.getKey()) {
-					if(address.equals(c.getValue().getAddress())) {
-						continue;
-					}
+				if (address.equals(c.getValue().getAddress())) {
+					continue;
+				}
 			}
-			send(b,c.getValue().getAddress(),c.getKey());
-		try {
-			Thread.sleep(15);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			send(b, c.getValue().getAddress(), c.getKey());
+			try {
+				Thread.sleep(15);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
+
 	private void broadcastPlayers(DatagramPacket packet) {
 		int port = packet.getPort();
 		InetAddress address = packet.getAddress();
 		ServerClient associatedID;
 		byte[] b;
-		
+
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			
+
 			// If only one player exists in the server
 			// we store their current location
-			
+
 			if (port == c.getKey()) {
-				if(address.equals(c.getValue().getAddress())) {
+				if (address.equals(c.getValue().getAddress())) {
 					associatedID = c.getValue();
-					
+
 					// Setup its ID and get ready to send to other players
-					
-					b = editObj(packet.getData(),associatedID.getID());
+
+					b = editObj(packet.getData(), associatedID.getID());
 					if (!lastKnownPos.containsKey(c.getValue().getID())) {
-						 lastKnownPos.put(c.getValue().getID(), b);
+						lastKnownPos.put(c.getValue().getID(), b);
 					}
-					sendToRelevant(b,port,address);		
+					sendToRelevant(b, port, address);
 					break;
 				}
 			}
 		}
-		
-		
 
 		// Can't have the port of the client sending the info be the same as the port
 		// from a different machine
 		// each client has a unique IP
 		// so we have to account for that and make sure we only send info to those who
-		// need it.		
-		
+		// need it.
+
 	}
 
 	private void process(DatagramPacket packet) {
@@ -177,8 +177,8 @@ public class Server {
 							   			id)));
 			
 			
-			send("/c/Connected".getBytes(), address, port);
-		
+			send(("/c/Connected/"+id+"/").getBytes(), address, port);
+			
 			
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
@@ -199,11 +199,7 @@ public class Server {
 			
 		}
 
-		if (action.startsWith("/b/")) {
-			broadcastGen(packet);
-		}
-
-		if (action.startsWith("/d/")) {
+		else if (action.startsWith("/d/")) {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					clients.remove(c.getKey(), c.getValue());
@@ -217,10 +213,15 @@ public class Server {
 		
 		if (action.startsWith("/C/")) {
 			return;
+		} 
 		
-		} else {
-			
-			// Game starts
+		if (clients.size()<2) {
+			updatePos(packet.getData(),clients.get(port).getID());
+			return;
+		}
+		
+		else {
+			// Game starts			
 			broadcastPlayers(packet);
 		}
 	}
@@ -241,6 +242,15 @@ public class Server {
 
 	public InetAddress getServerIP() {
 		return serverSocket.getInetAddress();
+	}
+
+	private void updatePos(byte[] b, String ID) {
+
+		if (!lastKnownPos.containsKey(ID)) {
+			lastKnownPos.put(ID, b);
+		} else {
+			editObj(b, ID);
+		}
 	}
 
 	public void close() {

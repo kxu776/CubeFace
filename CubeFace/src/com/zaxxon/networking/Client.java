@@ -20,6 +20,7 @@ public class Client extends Thread {
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
 	private int MAX_PACKET_SIZE = 1024;
+	private String ID = null;
 
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 	private ObjectOutputStream out = null;
@@ -46,7 +47,7 @@ public class Client extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			getPlayerObj(packet);
+			process(packet);
 		}
 		
 	}
@@ -71,10 +72,13 @@ public class Client extends Thread {
 		running = true;
 	}
 
-	private void getPlayerObj(DatagramPacket packet) {
+	private void process(DatagramPacket packet) {
 		String message = new String(packet.getData());
 		if (message.trim().startsWith("/c/")) {
-			System.out.println("Server >: " + message.substring(3));
+			message = message.substring(3);
+			String[] messID = message.split("/");
+			setID(messID[1]);			
+			System.out.println("Server >: " + messID[0]);
 			return;
 		}
 
@@ -115,6 +119,7 @@ public class Client extends Thread {
 	}
 
 	public void sendPlayerObj(ClientSender c) {
+		if (ID != null) {
 		c.name = player;
 		baos = new ByteArrayOutputStream();
 		try {
@@ -122,18 +127,19 @@ public class Client extends Thread {
 			out.writeObject(c);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-
+			
 			send(playerinfo);
 			
 			out.close();
 			baos.close();
 			
 			Thread.sleep(25);
-			
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
 		}
 	}
 
@@ -148,6 +154,10 @@ public class Client extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void setID(String s) {
+		ID = s;
 	}
 
 	public void send(byte[] data) {
