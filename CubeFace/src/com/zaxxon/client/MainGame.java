@@ -55,13 +55,15 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
-	private static double FPSreduction;
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
 	private static Player player1;
 	private static HashMap<String, MultiplayerPlayer> play = new HashMap<>();
 	private static AnchorPane anchorPane;
+
+	private static long fpsLong;
+	private static double normalisedFPS;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -135,7 +137,6 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / gd.getDisplayMode().getRefreshRate();
 
 		// make a rectangle
 		Rectangle rect = new Rectangle(1000, 500);
@@ -164,24 +165,35 @@ public class MainGame {
 
 		Input.addHandlers(primaryStage);
 
+		fpsLong = System.currentTimeMillis();
+		normalisedFPS = 1;
+
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeyInput();
 				for (Player player : playerList) {
-					player.update(FPSreduction);
+					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
 					for (HashMap.Entry<String, MultiplayerPlayer> c : play.entrySet()) {
-						c.getValue().update(FPSreduction);
+						c.getValue().update(normalisedFPS);
 					}
 				}
 				updateEnemies();
 				camera.update();
+				calculateFPS();
 			}
 		};
 		mainGameLoop.start();
+	}
+
+	private static void calculateFPS() {
+		double smoothingFactor = 0.01;
+		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
+				+ ((1.0 / normalisedFPS) * (1.0 - smoothingFactor)));
+		fpsLong = System.currentTimeMillis();
 	}
 
 	public static Scene getRenderedScene() {
@@ -312,7 +324,7 @@ public class MainGame {
 					((MultiplayerPlayer) s).setDir(data.pos);
 					if ((data.shoot == true)) {
 						System.out.println("Wtf");
-						((MultiplayerPlayer) s).weapon.update(FPSreduction, ((MovableSprite) s).getPosition(),
+						((MultiplayerPlayer) s).weapon.update(normalisedFPS, ((MovableSprite) s).getPosition(),
 								((MultiplayerPlayer) s).getplayerDimensions(), ((MultiplayerPlayer) s).getdir());
 						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,
 								((MovableSprite) s).getPosition(), true);
@@ -342,7 +354,7 @@ public class MainGame {
 							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 						}
 					}
-					((Enemy) sprite).update(FPSreduction, closestPlayer.getValue());
+					((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 				}
 			}
 		}
