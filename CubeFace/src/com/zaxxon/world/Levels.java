@@ -33,6 +33,29 @@ public class Levels {
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
 
+	/**
+	 * generates and populates the background for the world with the floor Tile
+	 * objects and Wall objects, and also populates the collidables with
+	 * CollidableRectangle objects from the Wall objects
+	 * 
+	 * @param level the level to be generated
+	 */
+	public static void generateLevel(int[][] level) {
+		Wall[] bg = generateBackgroundWalls(level);
+		Tile[] ts = generateBackgroundTiles(level);
+		for (Tile t : ts) {
+			if (t != null) {
+				MainGame.addSpriteToBackground(t);
+			}
+		}
+		for (Wall w : bg) {
+			if (w != null) {
+				MainGame.addSpriteToBackground(w);
+				MainGame.addCollidable(w.getHitBox());
+			}
+		}
+	}
+
 	private static Wall[] generateBackgroundWalls(int[][] level) {
 		Wall[] allWalls = new Wall[level.length * level[0].length];
 		for (int i = 0; i < level.length; i++) {
@@ -121,30 +144,7 @@ public class Levels {
 		return w;
 	}
 
-	/**
-	 * generates and populates the background for the world with the floor Tile
-	 * objects and Wall objects, and also populates the collidables with
-	 * CollidableRectangle objects from the Wall objects
-	 * 
-	 * @param level the level to be generated
-	 */
-	public static void generateLevel(int[][] level) {
-		Wall[] bg = generateBackgroundWalls(level);
-		Tile[] ts = generateBackgroundTiles(level);
-		for (Tile t : ts) {
-			if (t != null) {
-				MainGame.addSpriteToBackground(t);
-			}
-		}
-		for (Wall w : bg) {
-			if (w != null) {
-				MainGame.addSpriteToBackground(w);
-				MainGame.addCollidable(w.getHitBox());
-			}
-		}
-	}
-
-	public static Point2D.Double[] generateCornerPoints(int[][] level) {
+	private static Point2D.Double[] generateCornerPoints(int[][] level) {
 		LinkedList<Point2D.Double> knownObtuseCorners = new LinkedList<Point2D.Double>();
 		for (int centreY = 0; centreY < level.length; centreY++) {
 			for (int centreX = 0; centreX < level[centreY].length; centreX++) {
