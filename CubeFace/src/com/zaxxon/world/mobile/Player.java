@@ -213,6 +213,11 @@ public class Player extends MovableSprite{
 	public void delete() {
 		MainGame.removeFromGame(this);
 	}	
+	
+	public String getCurrentWeaponName () {
+		
+		return weaponManager.getCurrentWeaponName();
+	}
     
     
 }
