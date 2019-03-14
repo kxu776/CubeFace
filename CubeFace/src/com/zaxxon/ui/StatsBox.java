@@ -20,6 +20,8 @@ import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceA
 public class StatsBox {
 
     public static Label weapon;
+    public static HealthBar healthBar;
+    public static HealthBar opHealthBar;
 
     public static BorderPane statsBox() {
 
@@ -30,20 +32,20 @@ public class StatsBox {
         health.setId("health");
 
         //health bar
-        AnchorPane healthBar = new HealthBar().makeHealthbar();
-        healthBar.setMinHeight(10);
+        AnchorPane healthBarPane = new HealthBar().makeHealthbar();
+        healthBarPane.setMinHeight(10);
 
         //opponent health label
         Label opHealth = new Label("OPPONENT HEALTH:");
         opHealth.setId("health");
 
         //opponent health bar
-        AnchorPane opHealthBar = new HealthBar().makeHealthbar();
-        opHealthBar.setMinHeight(10);
+        AnchorPane opHealthBarPane = new HealthBar().makeHealthbar();
+        opHealthBarPane.setMinHeight(10);
 
         //vbox for health
         VBox center = new VBox(5);
-        center.getChildren().addAll(health, healthBar, opHealth, opHealthBar);
+        center.getChildren().addAll(health, healthBarPane, opHealth, opHealthBarPane);
 
 
 
@@ -83,7 +85,7 @@ public class StatsBox {
         weaponLbl.setPadding(new Insets(17, 0, 5, 0));
 
         //weapon
-        weapon = new Label("*WEAPON");
+        weapon = new Label("PISTOL");
         weapon.setId("weapon");
         weapon.setPadding(new Insets(17, 0, 5, 0));
 
@@ -114,7 +116,19 @@ public class StatsBox {
 
     public static void updateWeapon(String newWeapon) {
 
-        weapon.setText(newWeapon);
+        weapon.setText(newWeapon.toUpperCase() );
+
+    }
+
+    public static void updateHealthBar(Integer newHealth) {
+
+        healthBar.updateHealthBar(newHealth);
+
+    }
+
+    public static void updateOpHealthBar(Integer newHealth) {
+
+        opHealthBar.updateHealthBar(newHealth);
 
     }
 
