@@ -24,7 +24,7 @@ public class WeaponManager {
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
 	
-	public WeaponManager () {  
+	public WeaponManager () {
 		
 		weapons = new ArrayList<Weapon>();
 		weapons.add(new Weapon_Default());
@@ -67,6 +67,7 @@ public class WeaponManager {
 		if (Input.isKeyPressed(KeyCode.SHIFT)) {
 			
 			ChangeWeapon();
+			StatsBox.updateWeapon(getCurrentWeaponName());
 		}
 		
 		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
