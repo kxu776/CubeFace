@@ -2,6 +2,8 @@ package com.zaxxon.world.shooting;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import com.sun.org.apache.xpath.internal.SourceTree;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
@@ -22,9 +24,11 @@ public class Bullet extends MovableSprite {
 	private Vector2 direction;
 	private double speed = 10.0;
 	private double damage = 10;
+
 	private double despawnDistance;
 	
 	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd) {
+
 		
 		MainGame.addSpriteToForeground(this);
 		
@@ -40,7 +44,7 @@ public class Bullet extends MovableSprite {
 	}
 	
 	public void update(double deltaTime) {
-		
+
 		checkDespawn();
 		
 		Vector2 toMove = new Vector2();
@@ -48,6 +52,7 @@ public class Bullet extends MovableSprite {
 		this.translate(toMove);
 		
 		collision();
+
 	}
 	
 	private void checkDespawn() {
@@ -61,8 +66,10 @@ public class Bullet extends MovableSprite {
 	}
 	
 	private void collision() {
+		//System.out.println("Yes");
 
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
+		ArrayList<Enemy> enemies = new ArrayList<>(MainGame.enemiesList);
 
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
@@ -71,10 +78,8 @@ public class Bullet extends MovableSprite {
 				return;
 			}
 		}
-
-		for(Enemy enemy : MainGame.enemiesList){
+		for(Enemy enemy : enemies){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
-				//TODO: Enemy takes damage
 				delete();
 				return;
 			}
