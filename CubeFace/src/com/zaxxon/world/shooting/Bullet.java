@@ -22,20 +22,24 @@ public class Bullet extends MovableSprite {
 	
 	ImagePattern imgPat;
 	
+	private Vector2 startPos;
 	private Vector2 direction;
 	private double speed = 10.0;
 	private double damage = 10;
-	private boolean alive = false;
+
+	private double despawnDistance;
 	
-	public Bullet (Vector2 dir, Vector2 pos, double damage) {
-		alive = true;
+	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd) {
+
 		
 		MainGame.addSpriteToForeground(this);
 		
 		this.setX(pos.x);
 		this.setY(pos.y);
+		this.startPos = pos;
 		this.direction = dir;
 		this.damage = damage;
+		this.despawnDistance = dsd;
 		
 		getSpriteImage();
 		this.setFill(imgPat);
@@ -44,14 +48,27 @@ public class Bullet extends MovableSprite {
 	}
 	
 	public void update(double deltaTime) {
-		if(alive) {
-			Vector2 toMove = new Vector2();
-			toMove = new Vector2(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
-			this.translate(toMove);
-			collision();
+
+		checkDespawn();
+		
+		Vector2 toMove = new Vector2();
+		toMove = new Vector2 (direction.x * speed * deltaTime, direction.y * speed * deltaTime);
+		this.translate(toMove);
+		
+		collision();
+
+	}
+	
+	private void checkDespawn() {
+		
+		double distanceTravelled = Math.sqrt(Math.pow(this.getX()-startPos.x, 2) + Math.pow(this.getY()-startPos.y, 2));
+		
+		if (distanceTravelled >= despawnDistance) {
+			
+			delete();
 		}
 	}
-
+	
 	private void collision() {
 		//System.out.println("Yes");
 
@@ -61,22 +78,13 @@ public class Bullet extends MovableSprite {
 		for(int i = 0;i < walls.size(); i++) {
 			if(walls.get(i).getValue().intersects(this.getBoundsInParent())) {
 				speed = 0;
-				MainGame.removeSprite(this);
+				delete();
 				return;
 			}
 		}
-		int index = 0;
 		for(Enemy enemy : enemies){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
-				MainGame.enemiesList.get(index).takeDamage(damage);
-				System.out.println(MainGame.enemiesList.get(index).getHealth());
-				speed = 0;
-				damage = 0;
-				alive = false;
-				MainGame.removeSpriteFromForeground(this);
-				setX(0.0);
-				setY(0.0);
-				index++;
+				delete();
 				return;
 			}
 		}
@@ -90,8 +98,10 @@ public class Bullet extends MovableSprite {
 
 	}
 
-	private void destroy(){
-		MainGame.removeSpriteFromForeground(this);
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
+		WeaponManager.removeBulletFromList(this);
 	}
 }
 

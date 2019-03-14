@@ -28,7 +28,6 @@ public class Client extends Thread {
 	private ByteArrayInputStream bais;
 	private boolean running = false;
 	private String player;
-	private String ID;
 	
 
 	public Client(String host, int port, String player) {
@@ -44,7 +43,6 @@ public class Client extends Thread {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
-				//System.out.println("dd");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -85,6 +83,11 @@ public class Client extends Thread {
 			System.out.println(message);
 			return;
 		}
+		
+		else if(message.startsWith("/b/")) {
+			message = message.substring(3, message.length());
+			String bullet[] = message.split("/");
+			}
 
 		else		
 			try {
@@ -93,6 +96,8 @@ public class Client extends Thread {
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
+				
+				// System.out.println(data.getID());
 				MainGame.inputUpdateQueue.add(data);
 				
 				// socket.close();
@@ -119,6 +124,7 @@ public class Client extends Thread {
 			byte[] playerinfo = baos.toByteArray();
 
 			send(playerinfo);
+			
 			out.close();
 			baos.close();
 			
@@ -132,7 +138,7 @@ public class Client extends Thread {
 	}
 
 	public void disconnect() {
-		send("/d/.".getBytes());
+		send("/d/".getBytes());
 		System.out.println("No, closing socket");
 		running = false;
 		try {
@@ -150,6 +156,6 @@ public class Client extends Thread {
 			socket.send(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 }

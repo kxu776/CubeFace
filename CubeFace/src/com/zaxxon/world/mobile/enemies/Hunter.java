@@ -1,5 +1,6 @@
 package com.zaxxon.world.mobile.enemies;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -19,8 +20,8 @@ public class Hunter extends Enemy {
         this.setY(spawnY);
         setImageSpriteSheet(SpriteImages.HUNTER_ZOMBIE_SPRITESHEET_IMAGE, 2, 4);
         setImageFromSpriteSheet(0);
-        this.setWidth(width);
-        this.setHeight(height);
+        this.setWidth(TARGET_WIDTH);
+        this.setHeight(TARGET_HEIGHT);
         facingDir = Enemy.FacingDir.up;
         isAlive = true;
         pathfinding = false;
@@ -30,6 +31,12 @@ public class Hunter extends Enemy {
 	protected void attack() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void delete() {
+
+		MainGame.removeFromGame(this);
 	}
 
 }

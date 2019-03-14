@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.shooting.WeaponManager;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -128,19 +130,19 @@ public class Player extends MovableSprite{
     
     private void moveX() {
     	
-    	if (Input.isKeyPressed(KeyCode.LEFT) && Input.isKeyPressed(KeyCode.RIGHT)) {
+    	if (Input.isKeyPressed(KeyCode.A) && Input.isKeyPressed(KeyCode.D)) {
 			
     		inputDir.x = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.LEFT)) {
+    	else if (Input.isKeyPressed(KeyCode.A)) {
 			
     		inputDir.x = -1;
     		facingDir = FacingDir.left;
     		
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.RIGHT)) {
+    	else if (Input.isKeyPressed(KeyCode.D)) {
 			
     		inputDir.x = 1;
     		facingDir = FacingDir.right;
@@ -152,18 +154,18 @@ public class Player extends MovableSprite{
     
     private void moveY() {
     	
-    	if (Input.isKeyPressed(KeyCode.DOWN) && Input.isKeyPressed(KeyCode.UP)) {
+    	if (Input.isKeyPressed(KeyCode.S) && Input.isKeyPressed(KeyCode.W)) {
 			
     		inputDir.y = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.DOWN)) {
+    	else if (Input.isKeyPressed(KeyCode.S)) {
 			
     		inputDir.y = 1;
     		facingDir = FacingDir.down;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.UP)) {
+    	else if (Input.isKeyPressed(KeyCode.W)) {
 			
     		inputDir.y = -1;
     		facingDir = FacingDir.up;
@@ -244,6 +246,14 @@ public class Player extends MovableSprite{
 
 		
     }
+    public FacingDir getdir() {
+		return facingDir;
+    }
+
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
+	}	
     
     
 }

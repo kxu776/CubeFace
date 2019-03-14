@@ -6,12 +6,14 @@ import java.net.InetAddress;
 public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
 	public String name;
+	public int pos;
 	public double x;
 	public double y;
 	public double health;
 	public InetAddress ipAddress;
-	public boolean spawn = false;
+	public boolean shoot = false;
 	private String ID;
+	
 	
 	public ClientSender(double d, double e, double health) {
 		this.x = d;
