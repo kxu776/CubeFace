@@ -69,30 +69,35 @@ public class Levels {
 			if (level[currentToFill.getValue()][currentToFill.getKey()] == -1) {
 				continue;
 			}
-			Tile t = new Tile(currentToFill.getKey() * SIZE + SIZE/2, currentToFill.getValue() * SIZE + SIZE/2, SIZE, SIZE);
+			Tile t = new Tile(currentToFill.getKey() * SIZE + SIZE / 2, currentToFill.getValue() * SIZE + SIZE / 2,
+					SIZE, SIZE);
 			allTiles.add(t);
-			int[] adjacents = getAdjacentsExceptionFree(level, currentToFill.getKey(), currentToFill.getValue(),
-					-1);
-			LinkedList<Pair<Integer, Integer>> adjacentPositions =  getAdjacentPositions(level, currentToFill.getKey(), currentToFill.getValue());
+			int[] adjacents = getAdjacentsExceptionFree(level, currentToFill.getKey(), currentToFill.getValue(), -1);
+			LinkedList<Pair<Integer, Integer>> adjacentPositions = getAdjacentPositions(level, currentToFill.getKey(),
+					currentToFill.getValue());
 			if (level[currentToFill.getValue()][currentToFill.getKey()] == 0) {
-				if(adjacents[0] > -1) {
+				if (adjacents[0] > -1) {
 					toFill.add(adjacentPositions.get(0));
 				}
-				if(adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(1));
 				}
-				if(adjacents[2] == 0 || (adjacents[2] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[2] == 0 || (adjacents[2] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(2));
 				}
-				if(adjacents[3] > -1) {
+				if (adjacents[3] > -1) {
 					toFill.add(adjacentPositions.get(3));
 				}
 			}
 			if (level[currentToFill.getValue()][currentToFill.getKey()] > 0) {
-				if(adjacents[1] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(1));
 				}
-				if(adjacents[2] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[2] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(2));
 				}
 			}
@@ -103,11 +108,26 @@ public class Levels {
 		return allTilesArray;
 	}
 
-	private static Wall newWall(int wallSprite, int x, int y) {
-		Wall w = new Wall(SIZE, SIZE, x, y, wallSprite);
+	/**
+	 * generates a new Wall object
+	 * 
+	 * @param wallType the type of Wall being generated (corner, horizontal etc.)
+	 * @param x        the x position of the left of the Wall
+	 * @param y        the y position of the top of the Wall
+	 * @return the new Wall object
+	 */
+	private static Wall newWall(int wallType, int x, int y) {
+		Wall w = new Wall(SIZE, SIZE, x, y, wallType);
 		return w;
 	}
 
+	/**
+	 * generates and populates the background for the world with the floor Tile
+	 * objects and Wall objects, and also populates the collidables with
+	 * CollidableRectangle objects from the Wall objects
+	 * 
+	 * @param level the level to be generated
+	 */
 	public static void generateLevel(int[][] level) {
 		Wall[] bg = generateBackgroundWalls(level);
 		Tile[] ts = generateBackgroundTiles(level);
