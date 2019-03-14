@@ -92,7 +92,6 @@ public class Levels {
 		LinkedList<Pair<Integer, Integer>> toFill = new LinkedList<Pair<Integer, Integer>>();
 		toFill.add(new Pair<Integer, Integer>(startX, startY));
 		while (!toFill.isEmpty()) {
-			System.out.println(toFill.size());
 			Pair<Integer, Integer> currentToFill = toFill.poll();
 			if (level[currentToFill.getValue()][currentToFill.getKey()] == -1) {
 				continue;
