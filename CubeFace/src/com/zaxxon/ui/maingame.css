@@ -1,7 +1,7 @@
 
 
 .root {
-    -fx-background-image: url(img/ground.png);
+/*    -fx-background-image: url(img/ground.png);*/
     -fx-background-repeat: repeat;
     -fx-font-family: "VCR OSD Mono";
     -fx-border-style: solid;

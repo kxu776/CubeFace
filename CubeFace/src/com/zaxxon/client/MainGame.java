@@ -194,7 +194,7 @@ public class MainGame {
 	}
 
 	private static void calculateFPS() {
-		double smoothingFactor = 0.01;
+		double smoothingFactor = 0.05;
 		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
 				+ ((1.0 / normalisedFPS) * (1.0 - smoothingFactor)));
 		fpsLong = System.currentTimeMillis();
