@@ -76,9 +76,7 @@ public class JoinGamePopup {
         Button startGame = new Button("Go");
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
-        		MainGame.networkingClient = new Client("localhost",Integer.parseInt((portField.getText())),nameField.getText());
-        		//////////////@omar this is the name of ip textfield:   ipField.getText();
-            //im not sure what code u need but thats the thing can u delete these comments lol thank u 
+        		MainGame.networkingClient = new Client(ipField.getText(),Integer.parseInt((portField.getText())),nameField.getText());
     			MainGame.networkingClient.start();
     			MainGame.multiplayer = true;
             popupwindow.close();
