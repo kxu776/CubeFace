@@ -33,20 +33,7 @@ public class Levels {
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
 
-	/*
-	 * public static final Point2D.Double[] L1_WAYPOINTS_OLD = { new
-	 * Point2D.Double(512.0, 447.7), new Point2D.Double(512.0, 798.4), new
-	 * Point2D.Double(703.0, 959.4), new Point2D.Double(703.0, 1536.3), new
-	 * Point2D.Double(768.3, 1727.69), new Point2D.Double(768.3, 2048.3), new
-	 * Point2D.Double(447.7, 2239.6), new Point2D.Double(768.3, 2239.6), new
-	 * Point2D.Double(1215.69, 2304.3), new Point2D.Double(1536.3, 2304.3), new
-	 * Point2D.Double(2048.5, 1951.27), new Point2D.Double(2048.5, 1471.69), new
-	 * Point2D.Double(1727.69, 1471.69), new Point2D.Double(2239.7, 1792.3), new
-	 * Point2D.Double(2239.7, 1471.69), new Point2D.Double(2048.3, 1024.3), new
-	 * Point2D.Double(2048.3, 703.69) };
-	 */
-
-	public static Wall[] generateBackground(int[][] level) {
+	private static Wall[] generateBackgroundWalls(int[][] level) {
 		Wall[] allWalls = new Wall[level.length * level[0].length];
 		for (int i = 0; i < level.length; i++) {
 			for (int j = 0; j < level[i].length; j++) {
@@ -60,21 +47,7 @@ public class Levels {
 		return allWalls;
 	}
 
-	public static Wall[] generateBackgroundWalls(int[][] level) {
-		Wall[] allWalls = new Wall[level.length * level[0].length];
-		for (int i = 0; i < level.length; i++) {
-			for (int j = 0; j < level[i].length; j++) {
-				Wall w = null;
-				if (level[i][j] != 0) {
-					w = newWall(level[i][j] - 1, j * SIZE, i * SIZE);
-				}
-				allWalls[i * level[0].length + j] = w;
-			}
-		}
-		return allWalls;
-	}
-
-	public static Tile[] generateBackgroundTiles(int[][] level) {
+	private static Tile[] generateBackgroundTiles(int[][] level) {
 		LinkedList<Tile> allTiles = new LinkedList<Tile>();
 		level = removeRedundantLines(level);
 		int startX = 0;
@@ -116,18 +89,12 @@ public class Levels {
 				}
 			}
 			if (level[currentToFill.getValue()][currentToFill.getKey()] > 0) {
-//				if(adjacents[0] == 0) {
-//					toFill.add(adjacentPositions.get(0));
-//				}
 				if(adjacents[1] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(1));
 				}
 				if(adjacents[2] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(2));
 				}
-//				if(adjacents[3] == 0) {
-//					toFill.add(adjacentPositions.get(3));
-//				}
 			}
 			level[currentToFill.getValue()][currentToFill.getKey()] = -1;
 		}
@@ -142,7 +109,7 @@ public class Levels {
 	}
 
 	public static void generateLevel(int[][] level) {
-		Wall[] bg = generateBackground(level);
+		Wall[] bg = generateBackgroundWalls(level);
 		Tile[] ts = generateBackgroundTiles(level);
 		for (Tile t : ts) {
 			if (t != null) {
