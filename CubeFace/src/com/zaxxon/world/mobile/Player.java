@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
+import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.shooting.WeaponManager;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -32,9 +34,6 @@ public class Player extends MovableSprite{
 	int width = 64;
 	int height = 64;
 	
-	private BufferedImage[] sprites;
-	private ImagePattern[] imgPats;
-	
 	double deltaTime;
 	
 	Vector2 inputDir = new Vector2();
@@ -54,7 +53,8 @@ public class Player extends MovableSprite{
     
     private void init() {
     	
-    	getSpriteImages();
+    	setImageSpriteSheet(SpriteImages.CUBEFACE_SPRITESHEET_IMAGE, 2, 4);
+    	setImageFromSpriteSheet(0);
     	
     	setWidth(width);
         setHeight(height);
@@ -128,19 +128,19 @@ public class Player extends MovableSprite{
     
     private void moveX() {
     	
-    	if (Input.isKeyPressed(KeyCode.LEFT) && Input.isKeyPressed(KeyCode.RIGHT)) {
+    	if (Input.isKeyPressed(KeyCode.A) && Input.isKeyPressed(KeyCode.D)) {
 			
     		inputDir.x = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.LEFT)) {
+    	else if (Input.isKeyPressed(KeyCode.A)) {
 			
     		inputDir.x = -1;
     		facingDir = FacingDir.left;
     		
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.RIGHT)) {
+    	else if (Input.isKeyPressed(KeyCode.D)) {
 			
     		inputDir.x = 1;
     		facingDir = FacingDir.right;
@@ -152,18 +152,18 @@ public class Player extends MovableSprite{
     
     private void moveY() {
     	
-    	if (Input.isKeyPressed(KeyCode.DOWN) && Input.isKeyPressed(KeyCode.UP)) {
+    	if (Input.isKeyPressed(KeyCode.S) && Input.isKeyPressed(KeyCode.W)) {
 			
     		inputDir.y = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.DOWN)) {
+    	else if (Input.isKeyPressed(KeyCode.S)) {
 			
     		inputDir.y = 1;
     		facingDir = FacingDir.down;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.UP)) {
+    	else if (Input.isKeyPressed(KeyCode.W)) {
 			
     		inputDir.y = -1;
     		facingDir = FacingDir.up;
@@ -185,19 +185,19 @@ public class Player extends MovableSprite{
     	switch (facingDir) {
     	
     	case up: 
-    		this.setFill(imgPats[0]);
+    		setImageFromSpriteSheet(0);
     		return;
     		
     	case down:
-    		this.setFill(imgPats[4]);
+    		setImageFromSpriteSheet(4);
     		return;
     		
     	case left:
-    		this.setFill(imgPats[6]);
+    		setImageFromSpriteSheet(6);
     		return;
     		
     	case right:
-    		this.setFill(imgPats[2]);
+    		setImageFromSpriteSheet(2);
     		return;
     		
     	default:
@@ -205,45 +205,14 @@ public class Player extends MovableSprite{
     	}
     }
 
-    
-    private void getSpriteImages() {
-    	
-    	BufferedImage playerSS = null;
-		
-    	try {
-			File f = new File(SpriteImages.CUBEFACE_SPRITESHEET_URL);
-			playerSS = ImageIO.read(f);
-		} 
-    	
-    	catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-    	final int width = 128;
-		final int height = 128;
-		final int rows = 2;
-		final int cols = 4;
-		sprites = new BufferedImage[rows * cols];
-
-		for (int i = 0; i < rows; i++) {
-			
-			for (int j = 0; j < cols; j++) {
-				
-				sprites[(i * cols) + j] = playerSS.getSubimage(j * width, i * height, width, height);
-			}
-		}
-		
-		imgPats = new ImagePattern[sprites.length];
-		
-		for (int i = 0; i < sprites.length; i++) {
-			
-			Image img = SwingFXUtils.toFXImage(sprites[i], null);
-			imgPats[i] = new ImagePattern(img);
-		}
-
-		
+    public FacingDir getdir() {
+		return facingDir;
     }
+
+	@Override
+	public void delete() {
+		MainGame.removeFromGame(this);
+	}	
     
     
 }

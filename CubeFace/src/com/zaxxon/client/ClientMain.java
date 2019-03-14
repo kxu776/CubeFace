@@ -2,12 +2,10 @@ package com.zaxxon.client;
 
 import com.zaxxon.ui.MainMenu;
 
-import com.zaxxon.ui.StatsBox;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import sun.applet.Main;
 
 public class ClientMain extends Application{
 

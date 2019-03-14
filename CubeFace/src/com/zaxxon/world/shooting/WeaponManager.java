@@ -14,10 +14,11 @@ import javafx.scene.input.KeyCode;
 public class WeaponManager {
 
 	private FacingDir facingDir;
-	private Vector2 dir;
-	private Vector2 playerPos;
+	public Vector2 dir;
+	public Vector2 playerPos;
 	private Vector2 weaponPos;
 	
+
 	int currentWeapon = 0;
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
@@ -57,17 +58,18 @@ public class WeaponManager {
 	
 	public void update(double deltaTime, Vector2 playerPos, Vector2 playerDimensions, FacingDir facingDir) {
 		
-		this.playerPos = playerPos;
+		this.playerPos = (playerPos);
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 		
+
 		if (Input.isKeyPressed(KeyCode.SHIFT)) {
 			
 			ChangeWeapon();
 		}
 		
 		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);
-	    weapons.get(currentWeapon).fire(dir, weaponPos);
+	    weapons.get(currentWeapon).fire(dir, weaponPos, false);
     	
 		
 		for (int i = 0; i < allBullets.size(); i++) {
@@ -113,7 +115,14 @@ public class WeaponManager {
 	    	default:
 	    		return new Vector2();
 	    	}
+	    }
+	 public Vector2 getPlayerPos() {
+		return playerPos;
+		 
 	 }
+	
+
+	 
 	 
 	 public String getCurrentWeaponName() {
 			
@@ -121,8 +130,15 @@ public class WeaponManager {
 	 }
 	 
 	 public static void addBulletToList(Bullet b) {
-		 
 		 allBullets.add(b);
+	 }
+	 
+	 public static void removeBulletFromList(Bullet b) {
+		 allBullets.remove(b);
+	 }
+	 
+	 public Weapon getCurrentWeapon() {
+		 return weapons.get(currentWeapon);
 	 }
 	  
 }

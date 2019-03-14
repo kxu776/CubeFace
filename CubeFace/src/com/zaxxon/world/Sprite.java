@@ -32,9 +32,7 @@ public abstract class Sprite extends Rectangle {
 		init(width, height, x, y);
 	}
 
-
 	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image) {
-
 		init(width, height, x, y);
 		this.image = _image;
 	}
@@ -47,6 +45,8 @@ public abstract class Sprite extends Rectangle {
 		this.setWidth(width);
 		this.setHeight(height);
 	}
+	
+	public abstract void delete();
 
 	public void setImageSpriteSheet(BufferedImage image, int rows, int columns) {
 		int width = image.getWidth() / columns;
@@ -58,6 +58,10 @@ public abstract class Sprite extends Rectangle {
 						.toFXImage(image.getSubimage(j * width, i * height, width, height), null);
 			}
 		}
+	}
+	
+	public void setImage(BufferedImage i) {
+		setImage(SwingFXUtils.toFXImage(i, null));
 	}
 
 	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
