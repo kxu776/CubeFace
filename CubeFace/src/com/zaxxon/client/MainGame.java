@@ -164,7 +164,7 @@ public class MainGame {
 		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
-		
+
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
 
@@ -188,12 +188,12 @@ public class MainGame {
 		};
 		mainGameLoop.start();
 	}
-	
+
 	private static void calculateFPS() {
-		double smoothing = 0.1;
-		normalisedFPS = 1.0/((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothing + ((1.0/normalisedFPS) * (1.0-smoothing)));
+		double smoothingFactor = 0.01;
+		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
+				+ ((1.0 / normalisedFPS) * (1.0 - smoothingFactor)));
 		fpsLong = System.currentTimeMillis();
-		System.out.println(normalisedFPS);
 	}
 
 	public static Scene getRenderedScene() {
