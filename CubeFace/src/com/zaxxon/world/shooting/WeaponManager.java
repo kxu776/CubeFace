@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 
@@ -22,8 +23,9 @@ public class WeaponManager {
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
 
-	public WeaponManager() {
-
+	
+	public WeaponManager () {
+		
 		weapons = new ArrayList<Weapon>();
 		weapons.add(new Weapon_Default());
 		weapons.add(new Weapon_MG());
@@ -63,6 +65,7 @@ public class WeaponManager {
 		if (Input.isKeyPressed(KeyCode.SHIFT)) {
 
 			ChangeWeapon();
+			StatsBox.updateWeapon(getCurrentWeaponName());
 		}
 
 		this.weaponPos = getWeaponPos(playerPos, playerDimensions, dir);

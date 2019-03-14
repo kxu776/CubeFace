@@ -180,8 +180,8 @@ public class MainMenu {
 
         //make a rectangle and set clipping
         Rectangle rect = new Rectangle(1000,500);
-        rect.setArcHeight(10.0);
-        rect.setArcWidth(10.0);
+        rect.setArcHeight(9.0);
+        rect.setArcWidth(9.0);
         borderPane.setClip(rect);
 
         Scene mainmenu = new Scene(borderPane, WIDTH, HEIGHT);

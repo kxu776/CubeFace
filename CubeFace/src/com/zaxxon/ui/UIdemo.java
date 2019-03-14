@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
@@ -19,6 +21,7 @@ import javafx.scene.web.WebView;
 import javafx.scene.control.Label;
 import sun.awt.resources.awt;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -205,6 +208,22 @@ public class UIdemo extends Application {
         //***********************************************************************************
 
 
+        //healthbar
+        //make a new.... HBox ?
+        AnchorPane healthbar = new AnchorPane();
+
+        //make a new rectangle for background
+        Rectangle red = new Rectangle(100, 10);
+        red.setFill(Color.RED);
+
+        //make a new rectangle for foreground
+        Rectangle green = new Rectangle(70, 10);
+        green.setFill(Color.LIME);
+
+        //add rectangles to HBox
+        healthbar.getChildren().addAll(red, green);
+
+
         //****************************GRIDPANES AND SCENE************************************
 
         //add all buttons to gridpane
@@ -222,11 +241,8 @@ public class UIdemo extends Application {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setBottomAnchor(borderPane, 0.0);
         anchorPane.setRightAnchor(borderPane, 0.0);
-        anchorPane.getChildren().add(borderPane);
-
-
-
-
+        anchorPane.setLeftAnchor(healthbar,10.0);
+        anchorPane.getChildren().addAll(borderPane, healthbar);
 
 
         Scene mainmenu = new Scene(anchorPane, 600, 575);

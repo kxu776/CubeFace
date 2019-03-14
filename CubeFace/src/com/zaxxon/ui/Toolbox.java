@@ -47,7 +47,12 @@ public class Toolbox {
         maximise.setId("toolbarbutton");
 
         Button close = new Button();
-        close.setOnAction(e -> popupwindow.close());
+        if (type ==3) {
+            close.setOnAction(e -> QuitPopup.display(popupwindow));
+        } else {
+            close.setOnAction(e -> popupwindow.close());
+        }
+
         //load the icon
         Image closeIcon = new Image(ServerConfirmationPopup.class.getResource("img/close.png").toString());
         ImageView closeView = new ImageView(closeIcon); //make an imageview for the minimise icon

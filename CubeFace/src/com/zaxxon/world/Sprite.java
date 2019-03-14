@@ -59,6 +59,10 @@ public abstract class Sprite extends Rectangle {
 			}
 		}
 	}
+	
+	public void setImage(BufferedImage i) {
+		setImage(SwingFXUtils.toFXImage(i, null));
+	}
 
 	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
 		BufferedImage image = (BufferedImage) imageFile;

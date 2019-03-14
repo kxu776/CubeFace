@@ -215,11 +215,6 @@ public class Server {
 			return;
 		} 
 		
-		if (clients.size()<2) {
-			updatePos(packet.getData(),clients.get(port).getID());
-			return;
-		}
-		
 		else {
 			// Game starts			
 			broadcastPlayers(packet);

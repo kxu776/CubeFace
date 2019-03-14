@@ -5,6 +5,7 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,6 +40,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -57,7 +59,6 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
-	private static double FPSreduction;
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
@@ -66,6 +67,9 @@ public class MainGame {
 	private static Player player1;
 	private static HashMap<String, MultiplayerPlayer> play = new HashMap<>();
 	private static AnchorPane anchorPane;
+
+	private static long fpsLong;
+	private static double normalisedFPS;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
@@ -82,23 +86,23 @@ public class MainGame {
 		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
-		overlay.setId("overlay");
+		overlay.setId("overlay");		
+		world.getChildren().add(background);
+		world.getChildren().add(foreground);
+		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		grpGame.prefWidth(998);
-		grpGame.prefHeight(498);
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(998, 498);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
 		// clip the group
 		grpGame.setClip(gameRect);
 
-		world.getChildren().add(background);
-		world.getChildren().add(foreground);
-		world.getChildren().add(collidables);
 
 		// make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
@@ -107,6 +111,7 @@ public class MainGame {
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
+
 
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
@@ -139,7 +144,6 @@ public class MainGame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		FPSreduction = 60.0 / 60;
 
 		// make a rectangle
 		Rectangle rect = new Rectangle(1000, 500);
@@ -147,8 +151,10 @@ public class MainGame {
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
 
+
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
+		renderedScene.setFill(Color.TRANSPARENT);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
 
 		// loads the level
@@ -168,24 +174,35 @@ public class MainGame {
 
 		Input.addHandlers(primaryStage);
 
+		fpsLong = System.currentTimeMillis();
+		normalisedFPS = 1;
+
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeyInput();
 				for (Player player : playerList) {
-					player.update(FPSreduction);
+					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
 					for (HashMap.Entry<String, MultiplayerPlayer> c : play.entrySet()) {
-						c.getValue().update(FPSreduction);
+						c.getValue().update(normalisedFPS);
 					}
 				}
 				updateEnemies();
 				camera.update();
+				calculateFPS();
 			}
 		};
 		mainGameLoop.start();
+	}
+
+	private static void calculateFPS() {
+		double smoothingFactor = 0.05;
+		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
+				+ ((1.0 / normalisedFPS) * (1.0 - smoothingFactor)));
+		fpsLong = System.currentTimeMillis();
 	}
 
 	public static Scene getRenderedScene() {
@@ -237,6 +254,7 @@ public class MainGame {
 			playerList.add((Player) s);
 		}
 	}
+
 
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
@@ -335,19 +353,20 @@ public class MainGame {
 					Vector2 pos = play.get(id).weapon.playerPos;
 					
 					play.get(id).weapon.getCurrentWeapon().fire(vect,pos, true);
+
 				}
 			}
 		}
 	}
 
 	private static void updateEnemies() {
+		LinkedList<Sprite> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
 		for (Sprite sprite : spriteList) {
 			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
-					spriteList.remove(sprite);
-					enemiesList.remove(sprite);
+					killList.add(sprite);	//Cannot kill sprite during iteration
 				} else {
 					Pair<Double, Player> closestPlayer = null;
 					for (Player player : playerList) {
@@ -357,10 +376,18 @@ public class MainGame {
 							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 						}
 					}
-					((Enemy) sprite).update(FPSreduction, closestPlayer.getValue());
+					((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 				}
 			}
 		}
+		for(Sprite sprite: killList){
+			spriteList.remove(sprite);
+			enemiesList.remove(sprite);
+			sprite.delete();
+
+		}
 	}
 
+
 }
+

@@ -1,16 +1,16 @@
 package com.zaxxon.world;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.gameart.SpriteImages;
 
-import javafx.scene.paint.Color;
 public class Tile extends Sprite {
-	
-	public Tile(double x, double y, Color colour) {
-		setX(x - 5);
-		setY(y - 5);
-		setWidth(10);
-		setHeight(10);
-		setFill(colour);
+
+	public Tile(double x, double y, double width, double height) {
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		this.setImage(SpriteImages.BACKGROUND_TILE_IMAGE);
 	}
 
 	@Override

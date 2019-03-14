@@ -2,6 +2,7 @@ package com.zaxxon.ui;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,10 +19,11 @@ import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceA
 
 public class StatsBox {
 
-    public static BorderPane statsBox() {
+    public static Label weapon;
+    public static HealthBar healthBar;
+    public static HealthBar opHealthBar;
 
-        //load font
-        Font.loadFont(StatsBox.class.getResourceAsStream("img/VCR_OSD_MONO.ttf"), 9);
+    public static BorderPane statsBox() {
 
         //******CENTER
 
@@ -30,21 +32,24 @@ public class StatsBox {
         health.setId("health");
 
         //health bar
-        //temporary have a label here until i know how to implememnt a "bar" hahah
-        Label bar = new Label("\"health bar\"");
-
+        AnchorPane healthBarPane = new HealthBar().makeHealthbar();
+        healthBarPane.setMinHeight(10);
 
         //opponent health label
         Label opHealth = new Label("OPPONENT HEALTH:");
         opHealth.setId("health");
 
         //opponent health bar
-        //temporary have a label here until i know how to implememnt a "bar" hahah
-        Label opBar = new Label("\"oponent health bar\"");
+        AnchorPane opHealthBarPane = new HealthBar().makeHealthbar();
+        opHealthBarPane.setMinHeight(10);
 
         //vbox for health
         VBox center = new VBox(5);
-        center.getChildren().addAll(health, bar, opHealth, opBar);
+        center.getChildren().addAll(health, healthBarPane, opHealth, opHealthBarPane);
+
+
+
+
 
 
         //*******RIGHT
@@ -68,6 +73,10 @@ public class StatsBox {
         right.getChildren().addAll(scoreLbl, score);
 
 
+
+
+
+
         //*******BOTTOM
 
         //current weapon label
@@ -76,7 +85,7 @@ public class StatsBox {
         weaponLbl.setPadding(new Insets(17, 0, 5, 0));
 
         //weapon
-        Label weapon = new Label("*WEAPON");
+        weapon = new Label("PISTOL");
         weapon.setId("weapon");
         weapon.setPadding(new Insets(17, 0, 5, 0));
 
@@ -102,6 +111,24 @@ public class StatsBox {
 
         return borderPane;
 
+
+    }
+
+    public static void updateWeapon(String newWeapon) {
+
+        weapon.setText(newWeapon.toUpperCase() );
+
+    }
+
+    public static void updateHealthBar(Integer newHealth) {
+
+        healthBar.updateHealthBar(newHealth);
+
+    }
+
+    public static void updateOpHealthBar(Integer newHealth) {
+
+        opHealthBar.updateHealthBar(newHealth);
 
     }
 
