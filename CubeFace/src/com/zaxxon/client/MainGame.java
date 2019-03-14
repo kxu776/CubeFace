@@ -310,6 +310,7 @@ public class MainGame {
 				play.get(id).setX(900);
 				play.get(id).setY(900);
 				play.get(id).setId(id);
+				play.get(id).weapon.getCurrentWeapon().test =true;
 				System.out.println("Creating player on this ID " + id);
 				addSpriteToForeground(play.get(id));
 			}

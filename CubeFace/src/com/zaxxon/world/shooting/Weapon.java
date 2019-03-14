@@ -11,6 +11,7 @@ public class Weapon {
 	double bulletAngle;
 	double despawnDistance;
 	String weaponName;
+	public Boolean test = false;
 	
 	public Weapon () {
 		
