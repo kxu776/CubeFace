@@ -4,6 +4,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -105,6 +106,7 @@ public class MainGame {
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
+
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
 		anchorPane.setTopAnchor(toolbox, 0.0);
@@ -142,6 +144,7 @@ public class MainGame {
 		rect.setArcHeight(10.0);
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
+
 
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
@@ -244,6 +247,7 @@ public class MainGame {
 			playerList.add((Player) s);
 		}
 	}
+	
 
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
@@ -359,4 +363,6 @@ public class MainGame {
 		}
 	}
 
+
 }
+
