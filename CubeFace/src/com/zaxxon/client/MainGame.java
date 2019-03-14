@@ -247,12 +247,7 @@ public class MainGame {
 			playerList.add((Player) s);
 		}
 	}
-
-	public static void removeSpriteFromForeground(Sprite s){
-		foreground.getChildren().remove(s);
-		spriteList.remove(s);
-		s = null;
-	}
+	
 
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
