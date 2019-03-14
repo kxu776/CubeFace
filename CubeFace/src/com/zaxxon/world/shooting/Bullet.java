@@ -18,8 +18,6 @@ import javafx.util.Pair;
 
 public class Bullet extends MovableSprite {
 	
-	ImagePattern imgPat;
-	
 	private Vector2 startPos;
 	private Vector2 direction;
 	private double speed = 10.0;
@@ -36,9 +34,7 @@ public class Bullet extends MovableSprite {
 		this.direction = dir;
 		this.damage = damage;
 		this.despawnDistance = dsd;
-		
-		getSpriteImage();
-		this.setFill(imgPat);
+		setImage(SpriteImages.BULLET_SPRITESHEET_IMAGE);
 		this.setWidth(8);
 		this.setHeight(8);
 	}
@@ -83,13 +79,6 @@ public class Bullet extends MovableSprite {
 				return;
 			}
 		}
-
-	}
-
-	private void getSpriteImage() {
-
-		BufferedImage bimg = SpriteImages.BULLET_SPRITESHEET_IMAGE;
-		imgPat = new ImagePattern(SwingFXUtils.toFXImage(bimg, null));
 
 	}
 

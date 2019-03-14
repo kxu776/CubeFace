@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zaxxon.input.Input;
-import com.zaxxon.maths.Vector2;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
@@ -80,23 +79,23 @@ public class MainGame {
 		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
-		overlay.setId("overlay");
+		overlay.setId("overlay");		
+		world.getChildren().add(background);
+		world.getChildren().add(foreground);
+		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		grpGame.prefWidth(998);
-		grpGame.prefHeight(498);
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(998, 498);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
 		// clip the group
 		grpGame.setClip(gameRect);
 
-		world.getChildren().add(background);
-		world.getChildren().add(foreground);
-		world.getChildren().add(collidables);
 
 		// make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
