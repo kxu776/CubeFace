@@ -42,6 +42,8 @@ public abstract class Enemy extends MovableSprite {
 	protected double prevX, prevY;
 	protected boolean pathfinding;
 
+	public final int killReward = 1000;
+
 	double deltaTime;
 
 	Vector2 inputDir = new Vector2();
@@ -52,8 +54,8 @@ public abstract class Enemy extends MovableSprite {
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
 	private double damage = 0.1;
-
 	final double pfOffset = 0.9;  //1.0
+	public Player lastHitRecieved;
 
 	public Enemy() {
 		controllable = false;
@@ -131,7 +133,6 @@ public abstract class Enemy extends MovableSprite {
 		// System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" +
 		// String.valueOf(this.getY()));
 		// System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
-		System.out.println("Health: " + String.valueOf(health));
 	}
 
 	protected void movement(double pX, double pY) {
