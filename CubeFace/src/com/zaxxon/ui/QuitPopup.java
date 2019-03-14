@@ -45,6 +45,7 @@ public class QuitPopup {
             @Override
             public void handle(ActionEvent event) {
                 popupwindow.close();
+
                 primaryStage.close();
             }
         });

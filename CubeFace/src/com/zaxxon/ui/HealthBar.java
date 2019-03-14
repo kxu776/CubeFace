@@ -13,19 +13,22 @@ import javafx.stage.Stage;
 
 public class HealthBar {
 
-    public AnchorPane healthbar() {
+    //make an anchorpane to hold the healthbar
+    public AnchorPane healthbar;
+    public Rectangle red; //rectangles to make healthbar
+    Rectangle green; //health is initially
 
-        //make a new healthbar
+    public AnchorPane makeHealthbar() {
 
-        //make an anchorpane to hold the healthbar
-        AnchorPane healthbar = new AnchorPane();
+        //initialise
+        healthbar = new AnchorPane();
+        red = new Rectangle(100, 10); //rectangles to make healthbar
+        Rectangle green = new Rectangle(100, 10); //health is initially
 
-        //make a new rectangle for background
-        Rectangle red = new Rectangle(100, 10);
+        //set background rectangle to be red
         red.setFill(Color.RED);
 
-        //make a new rectangle for foreground
-        Rectangle green = new Rectangle(70, 10);
+        //make set health rectangle to be green
         green.setFill(Color.LIME);
 
         //add rectangles to HBox
@@ -33,6 +36,17 @@ public class HealthBar {
 
         return healthbar;
 
+    }
+
+    public void updateHealthBar(Integer newHealth) {
+
+        if (newHealth > 100) {
+            green.setWidth(100);
+        } else if (newHealth < 0) {
+            green.setWidth(0);
+        } else {
+            green.setWidth(newHealth);
+        }
 
     }
 
