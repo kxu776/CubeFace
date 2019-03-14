@@ -80,6 +80,7 @@ public class Bullet extends MovableSprite {
 		}
 		for(Enemy enemy : enemies){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
+				enemy.takeDamage(damage);
 				delete();
 				return;
 			}

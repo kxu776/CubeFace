@@ -33,20 +33,30 @@ public class Levels {
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
 
-	/*
-	 * public static final Point2D.Double[] L1_WAYPOINTS_OLD = { new
-	 * Point2D.Double(512.0, 447.7), new Point2D.Double(512.0, 798.4), new
-	 * Point2D.Double(703.0, 959.4), new Point2D.Double(703.0, 1536.3), new
-	 * Point2D.Double(768.3, 1727.69), new Point2D.Double(768.3, 2048.3), new
-	 * Point2D.Double(447.7, 2239.6), new Point2D.Double(768.3, 2239.6), new
-	 * Point2D.Double(1215.69, 2304.3), new Point2D.Double(1536.3, 2304.3), new
-	 * Point2D.Double(2048.5, 1951.27), new Point2D.Double(2048.5, 1471.69), new
-	 * Point2D.Double(1727.69, 1471.69), new Point2D.Double(2239.7, 1792.3), new
-	 * Point2D.Double(2239.7, 1471.69), new Point2D.Double(2048.3, 1024.3), new
-	 * Point2D.Double(2048.3, 703.69) };
+	/**
+	 * generates and populates the background for the world with the floor Tile
+	 * objects and Wall objects, and also populates the collidables with
+	 * CollidableRectangle objects from the Wall objects
+	 * 
+	 * @param level the level to be generated
 	 */
+	public static void generateLevel(int[][] level) {
+		Wall[] bg = generateBackgroundWalls(level);
+		Tile[] ts = generateBackgroundTiles(level);
+		for (Tile t : ts) {
+			if (t != null) {
+				MainGame.addSpriteToBackground(t);
+			}
+		}
+		for (Wall w : bg) {
+			if (w != null) {
+				MainGame.addSpriteToBackground(w);
+				MainGame.addCollidable(w.getHitBox());
+			}
+		}
+	}
 
-	public static Wall[] generateBackground(int[][] level) {
+	private static Wall[] generateBackgroundWalls(int[][] level) {
 		Wall[] allWalls = new Wall[level.length * level[0].length];
 		for (int i = 0; i < level.length; i++) {
 			for (int j = 0; j < level[i].length; j++) {
@@ -60,21 +70,7 @@ public class Levels {
 		return allWalls;
 	}
 
-	public static Wall[] generateBackgroundWalls(int[][] level) {
-		Wall[] allWalls = new Wall[level.length * level[0].length];
-		for (int i = 0; i < level.length; i++) {
-			for (int j = 0; j < level[i].length; j++) {
-				Wall w = null;
-				if (level[i][j] != 0) {
-					w = newWall(level[i][j] - 1, j * SIZE, i * SIZE);
-				}
-				allWalls[i * level[0].length + j] = w;
-			}
-		}
-		return allWalls;
-	}
-
-	public static Tile[] generateBackgroundTiles(int[][] level) {
+	private static Tile[] generateBackgroundTiles(int[][] level) {
 		LinkedList<Tile> allTiles = new LinkedList<Tile>();
 		level = removeRedundantLines(level);
 		int startX = 0;
@@ -96,38 +92,37 @@ public class Levels {
 			if (level[currentToFill.getValue()][currentToFill.getKey()] == -1) {
 				continue;
 			}
-			Tile t = new Tile(currentToFill.getKey() * SIZE + SIZE/2, currentToFill.getValue() * SIZE + SIZE/2, SIZE, SIZE);
+			Tile t = new Tile(currentToFill.getKey() * SIZE + SIZE / 2, currentToFill.getValue() * SIZE + SIZE / 2,
+					SIZE, SIZE);
 			allTiles.add(t);
-			int[] adjacents = getAdjacentsExceptionFree(level, currentToFill.getKey(), currentToFill.getValue(),
-					-1);
-			LinkedList<Pair<Integer, Integer>> adjacentPositions =  getAdjacentPositions(level, currentToFill.getKey(), currentToFill.getValue());
+			int[] adjacents = getAdjacentsExceptionFree(level, currentToFill.getKey(), currentToFill.getValue(), -1);
+			LinkedList<Pair<Integer, Integer>> adjacentPositions = getAdjacentPositions(level, currentToFill.getKey(),
+					currentToFill.getValue());
 			if (level[currentToFill.getValue()][currentToFill.getKey()] == 0) {
-				if(adjacents[0] > -1) {
+				if (adjacents[0] > -1) {
 					toFill.add(adjacentPositions.get(0));
 				}
-				if(adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(1));
 				}
-				if(adjacents[2] == 0 || (adjacents[2] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[2] == 0 || (adjacents[2] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(2));
 				}
-				if(adjacents[3] > -1) {
+				if (adjacents[3] > -1) {
 					toFill.add(adjacentPositions.get(3));
 				}
 			}
 			if (level[currentToFill.getValue()][currentToFill.getKey()] > 0) {
-//				if(adjacents[0] == 0) {
-//					toFill.add(adjacentPositions.get(0));
-//				}
-				if(adjacents[1] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[1] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(1));
 				}
-				if(adjacents[2] == 0|| (adjacents[1] > -1 && currentToFill.getKey().equals(startX) && currentToFill.getValue().equals(startY))) {
+				if (adjacents[2] == 0 || (adjacents[1] > -1 && currentToFill.getKey().equals(startX)
+						&& currentToFill.getValue().equals(startY))) {
 					toFill.add(adjacentPositions.get(2));
 				}
-//				if(adjacents[3] == 0) {
-//					toFill.add(adjacentPositions.get(3));
-//				}
 			}
 			level[currentToFill.getValue()][currentToFill.getKey()] = -1;
 		}
@@ -136,28 +131,20 @@ public class Levels {
 		return allTilesArray;
 	}
 
-	private static Wall newWall(int wallSprite, int x, int y) {
-		Wall w = new Wall(SIZE, SIZE, x, y, wallSprite);
+	/**
+	 * generates a new Wall object
+	 * 
+	 * @param wallType the type of Wall being generated (corner, horizontal etc.)
+	 * @param x        the x position of the left of the Wall
+	 * @param y        the y position of the top of the Wall
+	 * @return the new Wall object
+	 */
+	private static Wall newWall(int wallType, int x, int y) {
+		Wall w = new Wall(SIZE, SIZE, x, y, wallType);
 		return w;
 	}
 
-	public static void generateLevel(int[][] level) {
-		Wall[] bg = generateBackground(level);
-		Tile[] ts = generateBackgroundTiles(level);
-		for (Tile t : ts) {
-			if (t != null) {
-				MainGame.addSpriteToBackground(t);
-			}
-		}
-		for (Wall w : bg) {
-			if (w != null) {
-				MainGame.addSpriteToBackground(w);
-				MainGame.addCollidable(w.getHitBox());
-			}
-		}
-	}
-
-	public static Point2D.Double[] generateCornerPoints(int[][] level) {
+	private static Point2D.Double[] generateCornerPoints(int[][] level) {
 		LinkedList<Point2D.Double> knownObtuseCorners = new LinkedList<Point2D.Double>();
 		for (int centreY = 0; centreY < level.length; centreY++) {
 			for (int centreX = 0; centreX < level[centreY].length; centreX++) {

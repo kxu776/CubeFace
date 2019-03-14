@@ -249,7 +249,7 @@ public class MainGame {
 			playerList.add((Player) s);
 		}
 	}
-	
+
 
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
@@ -343,13 +343,13 @@ public class MainGame {
 	}
 
 	private static void updateEnemies() {
+		LinkedList<Sprite> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
 		for (Sprite sprite : spriteList) {
 			if (sprite instanceof Enemy) { // Typechecks for enemies
 				if (!sprite.isAlive()) {
-					spriteList.remove(sprite);
-					enemiesList.remove(sprite);
+					killList.add(sprite);	//Cannot kill sprite during iteration
 				} else {
 					Pair<Double, Player> closestPlayer = null;
 					for (Player player : playerList) {
@@ -362,6 +362,12 @@ public class MainGame {
 					((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 				}
 			}
+		}
+		for(Sprite sprite: killList){
+			spriteList.remove(sprite);
+			enemiesList.remove(sprite);
+			sprite.delete();
+
 		}
 	}
 
