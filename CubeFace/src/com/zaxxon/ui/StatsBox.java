@@ -112,7 +112,7 @@ public class StatsBox {
 
     }
 
-    public void updateWeapon(String newWeapon) {
+    public static void updateWeapon(String newWeapon) {
 
         weapon.setText(newWeapon);
 
