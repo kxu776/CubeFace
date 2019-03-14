@@ -25,6 +25,7 @@ public class Hunter extends Enemy {
 		facingDir = Enemy.FacingDir.up;
 		isAlive = true;
 		pathfinding = false;
+		health = 50.0;
 	}
 
 	@Override
