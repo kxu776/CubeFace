@@ -5,8 +5,8 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,7 +27,6 @@ import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
-import com.zaxxon.world.mobile.MultiplayerPlayer;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
@@ -65,7 +64,7 @@ public class MainGame {
 	static boolean f = false;
 
 	private static Player player1;
-	private static HashMap<String, MultiplayerPlayer> play = new HashMap<>();
+	public static ConcurrentHashMap<String, Player> play = new ConcurrentHashMap<>();
 	private static AnchorPane anchorPane;
 
 	private static long fpsLong;
@@ -186,9 +185,6 @@ public class MainGame {
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
-					for (HashMap.Entry<String, MultiplayerPlayer> c : play.entrySet()) {
-						c.getValue().update(normalisedFPS);
-					}
 				}
 				updateEnemies();
 				camera.update();
@@ -271,6 +267,7 @@ public class MainGame {
 			client.setX(player1.getX());
 			client.setY(player1.getY());
 			client.setHealth(player1.getHealth());
+			client.currWep = player1.getCurrentWeaponNum();
 			networkingClient.sendPlayerObj(client);
 			spawn = true;
 		}
@@ -285,6 +282,9 @@ public class MainGame {
 			client.pos = 4;
 		}
 
+		client.currWep = player1.getCurrentWeaponNum();
+
+		
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
 			&& ((player1.getY() - client.getY()) == 0.0)) {
@@ -324,11 +324,14 @@ public class MainGame {
 			ClientSender data = inputUpdateQueue.poll();
 			String id = data.getID().trim();
 			if (!play.containsKey(id)) {
-				play.put(id, new MultiplayerPlayer());
+				play.put(id, new Player());
 				play.get(id).setX(900);
 				play.get(id).setY(900);
 				play.get(id).setId(id);
-				play.get(id).weapon.getCurrentWeapon().test =true;
+				play.get(id).mp = true;
+				play.get(id).weaponManager.getCurrentWeapon().test =true;
+				play.get(id).weaponManager.mp = true;
+
 				System.out.println("Creating player on this ID " + id);
 				addSpriteToForeground(play.get(id));
 			}
@@ -340,19 +343,23 @@ public class MainGame {
 			    if (sprite.getId().equals(id)) {
 			    		sprite.setX(data.getX());
 					sprite.setY(data.getY());
-					((MultiplayerPlayer) sprite).setDir(data.pos);	
+					((Player) sprite).setDir(data.pos);	
 			    }
 				
 				if (sprite instanceof MovableSprite) {
 					((MovableSprite) sprite).setHealth(data.getHealth());
 				}
 				
+				if(!(play.get(id).weaponManager.getCurrentWeaponNum() == data.currWep)){
+					play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
+				}
+				
 				if ((data.shoot == true)) {
 					FacingDir m = play.get(id).getdir();
-					Vector2 vect = play.get(id).weapon.getFacingDirAsVector(m);
-					Vector2 pos = play.get(id).weapon.playerPos;
+					Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
+					Vector2 pos = play.get(id).weaponManager.playerPos;
 					
-					play.get(id).weapon.getCurrentWeapon().fire(vect,pos, true);
+					play.get(id).weaponManager.getCurrentWeapon().fire(vect,pos, true);
 
 				}
 			}
@@ -384,9 +391,22 @@ public class MainGame {
 			spriteList.remove(sprite);
 			enemiesList.remove(sprite);
 			sprite.delete();
-
 		}
 	}
+	
+	public static ConcurrentLinkedQueue<Sprite> getSpriteList(){
+		return spriteList;
+	}
+	
+	public static Sprite getSprite(String id) {
+		for (Sprite sprite : spriteList) {
+			if(sprite.getId().equals(id)) {
+				return sprite;
+			}
+		}
+		return null;
+	}
+	
 
 
 }

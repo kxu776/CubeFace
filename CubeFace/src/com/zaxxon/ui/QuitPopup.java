@@ -44,11 +44,13 @@ public class QuitPopup {
         single.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	if(MainGame.multiplayer) {
+            		MainGame.networkingClient.disconnect();
+            	}
                 popupwindow.close();
-
                 primaryStage.close();
-            }
-        });
+            
+        }});
 
 
         //************ MULTIPLAYER BUTTON

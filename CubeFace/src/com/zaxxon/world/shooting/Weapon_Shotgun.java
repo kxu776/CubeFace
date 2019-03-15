@@ -70,7 +70,7 @@ public class Weapon_Shotgun extends Weapon {
 			}	
 		}
 		
-		else if (Input.isKeyPressed(KeyCode.SPACE)) {
+		else if (Input.isKeyPressed(KeyCode.SPACE)&& !super.test) {
 			
 			if (!fired) {
 				

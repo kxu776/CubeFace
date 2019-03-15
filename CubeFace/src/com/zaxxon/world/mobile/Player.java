@@ -27,7 +27,7 @@ import javafx.util.Pair;
 
 public class Player extends MovableSprite{
 	
-	WeaponManager weaponManager;
+	public WeaponManager weaponManager;
 	
 	FacingDir facingDir; 
 	
@@ -35,6 +35,7 @@ public class Player extends MovableSprite{
 	int height = 64;
 	
 	double deltaTime;
+	public boolean mp = false;
 	
 	Vector2 inputDir = new Vector2();
 	Vector2 moveDir = new Vector2();
@@ -128,19 +129,19 @@ public class Player extends MovableSprite{
     
     private void moveX() {
     	
-    	if (Input.isKeyPressed(KeyCode.A) && Input.isKeyPressed(KeyCode.D)) {
+    	if (Input.isKeyPressed(KeyCode.A) && Input.isKeyPressed(KeyCode.D) && mp == false) {
 			
     		inputDir.x = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.A)) {
+    	else if (Input.isKeyPressed(KeyCode.A) && mp == false) {
 			
     		inputDir.x = -1;
     		facingDir = FacingDir.left;
     		
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.D)) {
+    	else if (Input.isKeyPressed(KeyCode.D) && mp == false) {
 			
     		inputDir.x = 1;
     		facingDir = FacingDir.right;
@@ -152,18 +153,18 @@ public class Player extends MovableSprite{
     
     private void moveY() {
     	
-    	if (Input.isKeyPressed(KeyCode.S) && Input.isKeyPressed(KeyCode.W)) {
+    	if (Input.isKeyPressed(KeyCode.S) && Input.isKeyPressed(KeyCode.W) && mp == false) {
 			
     		inputDir.y = 0;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.S)) {
+    	else if (Input.isKeyPressed(KeyCode.S) && mp == false) {
 			
     		inputDir.y = 1;
     		facingDir = FacingDir.down;
 		}
     	
-    	else if (Input.isKeyPressed(KeyCode.W)) {
+    	else if (Input.isKeyPressed(KeyCode.W) && mp == false) {
 			
     		inputDir.y = -1;
     		facingDir = FacingDir.up;
@@ -214,9 +215,32 @@ public class Player extends MovableSprite{
 		MainGame.removeFromGame(this);
 	}	
 	
+	
+	public int getCurrentWeaponNum() {
+		return weaponManager.getCurrentWeaponNum();
+	}
 	public String getCurrentWeaponName () {
-		
 		return weaponManager.getCurrentWeaponName();
+	}
+	
+
+	public void setDir(int i) {
+		if (i == 1) {
+			facingDir = FacingDir.up;
+		} else if (i == 2) {
+			facingDir = FacingDir.down;
+
+		} else if (i == 3) {
+			facingDir = FacingDir.left;
+
+		} else if (i == 4) {
+			facingDir = FacingDir.right;
+
+		}
+	}
+
+	public Vector2 getplayerDimensions() {
+		return new Vector2(this.getWidth(), this.getHeight());
 	}
     
     

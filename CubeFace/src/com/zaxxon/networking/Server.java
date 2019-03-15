@@ -9,18 +9,20 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
 	private boolean listening = false;
-	private final int serverPort;
+	private final int SERVER_PORT;
+	private String SERVER_IP;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
-	private HashMap<Integer, ServerClient> clients = new HashMap<>();
-	private HashMap<String, byte[]> lastKnownPos = new HashMap<>();
+	private ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, byte[]> lastKnownPos = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unused")
 	private ByteArrayOutputStream baos;
@@ -29,13 +31,15 @@ public class Server {
 	private ByteArrayInputStream bais;
 
 	public Server(int serverPort) {
-		this.serverPort = serverPort;
+		this.SERVER_PORT = serverPort;
 	}
 
 	public void start() {
 		try {
-			System.out.println("Server started on port " + serverPort);
-			serverSocket = new DatagramSocket(serverPort);
+			System.out.println("Server started on port " + SERVER_PORT);
+			serverSocket = new DatagramSocket(SERVER_PORT);
+			SERVER_IP = InetAddress.getLocalHost().toString();
+
 			listening = true;
 			listenThread = new Thread(new Runnable() {
 				public void run() {
@@ -45,6 +49,9 @@ public class Server {
 			listenThread.start();
 
 		} catch (SocketException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			System.out.println("Server can't be started, IP isnt known");
 			e.printStackTrace();
 		}
 	}
@@ -200,13 +207,19 @@ public class Server {
 		}
 
 		else if (action.startsWith("/d/")) {
+			
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
-					clients.remove(c.getKey(), c.getValue());
+					String idToRemove = c.getValue().getID();
+					String disconnectIT = "/d/"+idToRemove+"/"; 
 					lastKnownPos.remove(c.getValue().getID());
-					return;
+					clients.remove(c.getKey(), c.getValue());
+					System.out.println(disconnectIT);
+					byte[] disconnected = disconnectIT.getBytes();
+					sendToRelevant(disconnected,port,address);
 				}
 			}
+			
 		}
 
 		
@@ -235,12 +248,12 @@ public class Server {
 		}
 	}
 
-	public InetAddress getServerIP() {
-		return serverSocket.getInetAddress();
+	public String getServerIP() {
+		
+		return SERVER_IP;	
 	}
 
 	private void updatePos(byte[] b, String ID) {
-
 		if (!lastKnownPos.containsKey(ID)) {
 			lastKnownPos.put(ID, b);
 		} else {

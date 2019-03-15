@@ -131,7 +131,7 @@ public abstract class Enemy extends MovableSprite {
 		// System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" +
 		// String.valueOf(this.getY()));
 		// System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
-		System.out.println("Health: " + String.valueOf(health));
+		// System.out.println("Health: " + String.valueOf(health));
 	}
 
 	protected void movement(double pX, double pY) {

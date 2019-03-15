@@ -30,7 +30,7 @@ public class Weapon_MG extends Weapon {
 			WeaponManager.addBulletToList(bullet);
 		}
 		
-		else if (Input.isKeyPressed(KeyCode.SPACE)) {
+		else if (Input.isKeyPressed(KeyCode.SPACE) && !super.test) {
 
 			Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance);
 			WeaponManager.addBulletToList(bullet);

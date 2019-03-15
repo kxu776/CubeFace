@@ -109,16 +109,15 @@ public class MultiplayerPlayer extends MovableSprite {
 			facingDir = FacingDir.right;
 
 		}
-
 	}
 
 	public Vector2 getplayerDimensions() {
 		return new Vector2(this.getWidth(), this.getHeight());
 	}
 
+	
 	@Override
 	public void delete() {
-
 		MainGame.removeFromGame(this);
 	}
 

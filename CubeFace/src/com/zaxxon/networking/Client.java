@@ -88,9 +88,21 @@ public class Client extends Thread {
 			return;
 		}
 		
-		else if(message.startsWith("/b/")) {
-			message = message.substring(3, message.length());
-			String bullet[] = message.split("/");
+		else if(message.startsWith("/d/")) {
+			String[] throwAwayPlayer = message.split("/");
+			System.out.println(throwAwayPlayer[2]);
+
+			if(MainGame.getSprite(throwAwayPlayer[2])== null) {
+				System.out.println("Im not working properly");
+				return;
+			}
+			MainGame.getSprite(throwAwayPlayer[2]).delete();
+
+			MainGame.getSpriteList().remove(MainGame.getSprite(throwAwayPlayer[2].trim()));
+			MainGame.removeFromGame(MainGame.getSprite(throwAwayPlayer[2]));
+			MainGame.play.remove(throwAwayPlayer[2].trim());
+			MainGame.getSprite(throwAwayPlayer[2]).delete();
+			return;
 			}
 
 		else		
@@ -145,15 +157,8 @@ public class Client extends Thread {
 
 	public void disconnect() {
 		send("/d/".getBytes());
-		System.out.println("No, closing socket");
 		running = false;
-		try {
-			bais.close();
-			in.close();
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		socket.close();		
 	}
 	
 	protected void setID(String s) {

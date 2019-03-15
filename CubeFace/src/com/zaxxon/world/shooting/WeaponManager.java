@@ -17,6 +17,7 @@ public class WeaponManager {
 	private FacingDir facingDir;
 	public Vector2 dir;
 	public Vector2 playerPos;
+	public boolean mp = false;
 	private Vector2 weaponPos;
 
 	int currentWeapon = 0;
@@ -62,8 +63,7 @@ public class WeaponManager {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 
-		if (Input.isKeyPressed(KeyCode.SHIFT)) {
-
+		if (Input.isKeyPressed(KeyCode.SHIFT) && !mp) {
 			ChangeWeapon();
 			StatsBox.updateWeapon(getCurrentWeaponName());
 		}
@@ -118,7 +118,10 @@ public class WeaponManager {
 
 	public Vector2 getPlayerPos() {
 		return playerPos;
-
+	}
+	
+	public int getCurrentWeaponNum() {
+		return currentWeapon;
 	}
 
 	public String getCurrentWeaponName() {
@@ -135,6 +138,11 @@ public class WeaponManager {
 
 	public Weapon getCurrentWeapon() {
 		return weapons.get(currentWeapon);
+	}
+	
+	public void setCurrentWeapon(int wep) {
+		currentWeapon = wep;
+		StatsBox.updateWeapon(getCurrentWeaponName());
 	}
 
 }
