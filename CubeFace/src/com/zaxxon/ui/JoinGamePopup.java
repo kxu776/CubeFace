@@ -53,15 +53,21 @@ public class JoinGamePopup {
         nameField.setPromptText("player1");
         GridPane.setConstraints(nameField, 1, 0);
 
+        //******* SERVER IP***************
+        Label serverIP = new Label("Server IP:");
+        GridPane.setConstraints(serverIP, 0, 1);
+
+        TextField ipField = new TextField("localhost");
+        GridPane.setConstraints(ipField,1,1);
 
         //*****SERVER PORT*****
 
         Label port = new Label("Server Port:");
-        GridPane.setConstraints(port, 0, 1);
+        GridPane.setConstraints(port, 0, 2);
 
         TextField portField = new TextField();
         portField.setPromptText("1111");
-        GridPane.setConstraints(portField,1, 1);
+        GridPane.setConstraints(portField,1, 2);
 
 
 
@@ -70,7 +76,9 @@ public class JoinGamePopup {
         Button startGame = new Button("Go");
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
-        		MainGame.networkingClient = new Client("192.168.1.94",Integer.parseInt((portField.getText())),nameField.getText());
+
+        		MainGame.networkingClient = new Client(ipField.getText(),Integer.parseInt((portField.getText())),nameField.getText());
+
     			MainGame.networkingClient.start();
     			MainGame.multiplayer = true;
             popupwindow.close();
@@ -97,7 +105,7 @@ public class JoinGamePopup {
 
         //gridpane for the details
         GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(nameField, portField, name, port);
+        gridPane.getChildren().addAll(nameField, ipField, serverIP, portField, name, port);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -131,7 +139,7 @@ public class JoinGamePopup {
         anchorPane.setRightAnchor(newServer, 1.0);
         anchorPane.getChildren().addAll(borderPane, newServer);
 
-        Rectangle rect = new Rectangle(394,200);
+        Rectangle rect = new Rectangle(394,230);
         rect.setArcHeight(11.0);
         rect.setArcWidth(11.0);
         anchorPane.setClip(rect);
@@ -139,7 +147,7 @@ public class JoinGamePopup {
 
         //**********************SCENE******************
 
-        Scene scene1= new Scene(anchorPane, 394, 200);
+        Scene scene1= new Scene(anchorPane, 394, 230);
         scene1.setFill(Color.TRANSPARENT);
         scene1.getStylesheets().add(ArityPopup.class.getResource("popup.css").toString());
 

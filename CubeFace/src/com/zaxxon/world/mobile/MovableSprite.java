@@ -11,6 +11,8 @@ public abstract class MovableSprite extends Sprite {
 	private double movementSpeed;
 	protected double health;
 
+	public Player lastHitReceived;
+
 	public boolean controllable;
 	protected boolean isAlive;
 
@@ -57,6 +59,16 @@ public abstract class MovableSprite extends Sprite {
 	}
 
 	public void takeDamage(double damage) {
+		if(health-damage>0.0){
+			health -= damage;
+		}else{
+			health = 0.0;
+			isAlive = false;
+		}
+	}
+
+	public void takeDamage(double damage, Player player) {
+		lastHitReceived = player;
 		if(health-damage>0.0){
 			health -= damage;
 		}else{

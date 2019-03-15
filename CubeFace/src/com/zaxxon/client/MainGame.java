@@ -367,27 +367,26 @@ public class MainGame {
 	}
 
 	private static void updateEnemies() {
-		LinkedList<Sprite> killList = new LinkedList<>();
+		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
-		for (Sprite sprite : spriteList) {
-			if (sprite instanceof Enemy) { // Typechecks for enemies
-				if (!sprite.isAlive()) {
-					killList.add(sprite);	//Cannot kill sprite during iteration
-				} else {
-					Pair<Double, Player> closestPlayer = null;
-					for (Player player : playerList) {
-						if (closestPlayer == null) {
-							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
-						} else if (sprite.getDistanceToSprite(player) < closestPlayer.getKey()) {
-							closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
-						}
+		for (Enemy sprite : enemiesList) {
+			if (!sprite.isAlive()) {
+				killList.add(sprite);	//Cannot kill sprite during iteration
+			} else {
+				Pair<Double, Player> closestPlayer = null;
+				for (Player player : playerList) {
+					if (closestPlayer == null) {
+						closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
+					} else if (sprite.getDistanceToSprite(player) < closestPlayer.getKey()) {
+						closestPlayer = new Pair<Double, Player>(sprite.getDistanceToSprite(player), player);
 					}
-					((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 				}
+				((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 			}
 		}
-		for(Sprite sprite: killList){
+		for(Enemy sprite: killList){
+			sprite.lastHitReceived.score += sprite.killReward;
 			spriteList.remove(sprite);
 			enemiesList.remove(sprite);
 			sprite.delete();

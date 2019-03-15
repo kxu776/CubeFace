@@ -101,7 +101,6 @@ public class Client extends Thread {
 			MainGame.getSpriteList().remove(MainGame.getSprite(throwAwayPlayer[2].trim()));
 			MainGame.removeFromGame(MainGame.getSprite(throwAwayPlayer[2]));
 			MainGame.play.remove(throwAwayPlayer[2].trim());
-			MainGame.getSprite(throwAwayPlayer[2]).delete();
 			return;
 			}
 

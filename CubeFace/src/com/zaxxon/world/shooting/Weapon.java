@@ -1,6 +1,7 @@
 package com.zaxxon.world.shooting;
 
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.mobile.Player;
 
 //Written by Dan
 
@@ -12,9 +13,11 @@ public class Weapon {
 	double despawnDistance;
 	String weaponName;
 	public Boolean test = false;
+
+	Player player;
 	
-	public Weapon () {
-		
+	public Weapon (Player player) {
+		this.player = player;
 	}
 	
 	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
