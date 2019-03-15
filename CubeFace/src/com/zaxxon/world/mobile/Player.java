@@ -84,8 +84,6 @@ public class Player extends MovableSprite{
 		weaponManager.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
 
 		draw();
-
-		System.out.println("P1 Score: " + String.valueOf(score));
 	}
     
    
