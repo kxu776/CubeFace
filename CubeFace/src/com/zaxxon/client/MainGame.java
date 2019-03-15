@@ -362,11 +362,10 @@ public class MainGame {
 			}
 		}
 		for(Enemy sprite: killList){
+			sprite.lastHitReceived.score += sprite.killReward;
 			spriteList.remove(sprite);
 			enemiesList.remove(sprite);
 			sprite.delete();
-			sprite.lastHitRecieved.score += sprite.killReward;
-
 		}
 	}
 

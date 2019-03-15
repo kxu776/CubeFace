@@ -55,7 +55,6 @@ public abstract class Enemy extends MovableSprite {
 	double currentSpeed = 0;
 	private double damage = 0.1;
 	final double pfOffset = 0.9;  //1.0
-	public Player lastHitRecieved;
 
 	public Enemy() {
 		controllable = false;
