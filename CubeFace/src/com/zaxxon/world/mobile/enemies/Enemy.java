@@ -42,7 +42,7 @@ public abstract class Enemy extends MovableSprite {
 	protected double prevX, prevY;
 	protected boolean pathfinding;
 
-	public final int killReward = 1000;
+	public int killReward;
 
 	double deltaTime;
 
