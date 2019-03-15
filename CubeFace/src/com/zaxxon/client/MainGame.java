@@ -85,7 +85,7 @@ public class MainGame {
 		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
-		overlay.setId("overlay");		
+		overlay.setId("overlay");
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 		world.getChildren().add(collidables);
@@ -102,7 +102,6 @@ public class MainGame {
 		// clip the group
 		grpGame.setClip(gameRect);
 
-
 		// make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
 
@@ -110,7 +109,6 @@ public class MainGame {
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
-
 
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
@@ -149,7 +147,6 @@ public class MainGame {
 		rect.setArcHeight(10.0);
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
-
 
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
@@ -251,7 +248,6 @@ public class MainGame {
 		}
 	}
 
-
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
@@ -262,12 +258,13 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
+		client.currWep = player1.getCurrentWeaponNum();
+
 		if (spawn == false) {
 			System.out.println("Spawning in...");
 			client.setX(player1.getX());
 			client.setY(player1.getY());
 			client.setHealth(player1.getHealth());
-			client.currWep = player1.getCurrentWeaponNum();
 			networkingClient.sendPlayerObj(client);
 			spawn = true;
 		}
@@ -282,13 +279,10 @@ public class MainGame {
 			client.pos = 4;
 		}
 
-		client.currWep = player1.getCurrentWeaponNum();
-
-		
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
-			&& ((player1.getY() - client.getY()) == 0.0)) {
-			if(f == false) {
+				&& ((player1.getY() - client.getY()) == 0.0)) {
+			if (f == false) {
 				client.setX(player1.getX());
 				client.setY(player1.getY());
 				client.setHealth(player1.getHealth());
@@ -304,7 +298,7 @@ public class MainGame {
 		}
 
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			if(!f) {
+			if (!f) {
 				f = true;
 				client.shoot = true;
 			}
@@ -324,43 +318,47 @@ public class MainGame {
 			ClientSender data = inputUpdateQueue.poll();
 			String id = data.getID().trim();
 			if (!play.containsKey(id)) {
+
 				play.put(id, new Player());
 				play.get(id).setX(900);
 				play.get(id).setY(900);
 				play.get(id).setId(id);
 				play.get(id).mp = true;
-				play.get(id).weaponManager.getCurrentWeapon().test =true;
+				play.get(id).weaponManager.getCurrentWeapon().test = true;
 				play.get(id).weaponManager.mp = true;
 
 				System.out.println("Creating player on this ID " + id);
 				addSpriteToForeground(play.get(id));
 			}
-		
-			
-			Iterator<Sprite> iterator= spriteList.iterator();
-			while ( iterator.hasNext()) {
-			    Sprite sprite = iterator.next();
-			    if (sprite.getId().equals(id)) {
-			    		sprite.setX(data.getX());
-					sprite.setY(data.getY());
-					((Player) sprite).setDir(data.pos);	
-			    }
-				
-				if (sprite instanceof MovableSprite) {
-					((MovableSprite) sprite).setHealth(data.getHealth());
-				}
-				
-				if(!(play.get(id).weaponManager.getCurrentWeaponNum() == data.currWep)){
-					play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
-				}
-				
-				if ((data.shoot == true)) {
-					FacingDir m = play.get(id).getdir();
-					Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
-					Vector2 pos = play.get(id).weaponManager.playerPos;
-					
-					play.get(id).weaponManager.getCurrentWeapon().fire(vect,pos, true);
 
+			Iterator<Sprite> iterator = spriteList.iterator();
+			while (iterator.hasNext()) {
+				Sprite sprite = iterator.next();
+				if (sprite.getId().equals(id)) {
+					sprite.setX(data.getX());
+					sprite.setY(data.getY());
+					((Player) sprite).setDir(data.pos);
+
+					if (sprite instanceof MovableSprite) {
+						((MovableSprite) sprite).setHealth(data.getHealth());
+					}
+
+					if ((play.get(id).weaponManager.getCurrentWeaponNum() != data.currWep)) {
+						Vector2 pos = play.get(id).getplayerDimensions();
+						FacingDir m = play.get(id).getdir();
+
+						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
+						play.get(id).weaponManager.update(normalisedFPS, pos, play.get(id).getplayerDimensions(), m);
+
+					}
+
+					if ((data.shoot == true)) {
+						FacingDir m = play.get(id).getdir();
+						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
+						Vector2 pos = play.get(id).getplayerDimensions();
+						play.get(id).weaponManager.getCurrentWeapon().fire(vect, pos, true);
+
+					}
 				}
 			}
 		}
@@ -372,7 +370,7 @@ public class MainGame {
 		boolean updatedPlayerPos = false;
 		for (Enemy sprite : enemiesList) {
 			if (!sprite.isAlive()) {
-				killList.add(sprite);	//Cannot kill sprite during iteration
+				killList.add(sprite); // Cannot kill sprite during iteration
 			} else {
 				Pair<Double, Player> closestPlayer = null;
 				for (Player player : playerList) {
@@ -385,28 +383,25 @@ public class MainGame {
 				((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 			}
 		}
-		for(Enemy sprite: killList){
+		for (Enemy sprite : killList) {
 			sprite.lastHitReceived.score += sprite.killReward;
 			spriteList.remove(sprite);
 			enemiesList.remove(sprite);
 			sprite.delete();
 		}
 	}
-	
-	public static ConcurrentLinkedQueue<Sprite> getSpriteList(){
+
+	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
-	
+
 	public static Sprite getSprite(String id) {
 		for (Sprite sprite : spriteList) {
-			if(sprite.getId().equals(id)) {
+			if (sprite.getId().equals(id)) {
 				return sprite;
 			}
 		}
 		return null;
 	}
-	
-
 
 }
-

@@ -40,7 +40,7 @@ public class WeaponManager {
 		allBullets = new ArrayList<Bullet>();
 	}
 
-	private Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
+	public Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
 
 		switch (facingDir) {
 
@@ -68,7 +68,7 @@ public class WeaponManager {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 
-		if (Input.isKeyPressed(KeyCode.SHIFT) && !mp) {
+		if (Input.isKeyPressed(KeyCode.SHIFT) && mp == false) {
 			ChangeWeapon();
 			StatsBox.updateWeapon(getCurrentWeaponName());
 		}

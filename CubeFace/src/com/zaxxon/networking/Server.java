@@ -167,69 +167,61 @@ public class Server {
 		String action = new String(data);
 
 		if (action.startsWith("/C/")) {
-			
+
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 
 			String id = UUID.randomUUID().toString().trim();
-			
+
 			System.out.println("I have this ID: " + id);
-			
+
 			clients.put(packet.getPort(),
-					   (new ServerClient(action.substring(3),
-							   			packet.getAddress(),
-							   			packet.getPort(), 
-							   			id)));
-			
-			
-			send(("/c/Connected/"+id+"/").getBytes(), address, port);
-			
-			
+					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), id)));
+
+			send(("/c/Connected/" + id + "/").getBytes(), address, port);
+
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
-				System.out.println("I've sent this ID: "+ c.getKey());
+				System.out.println("I've sent this ID: " + c.getKey());
 			}
 
-		
-			
 			// Send the last known positions of any other player
-			// to the one who connected. 
-			
+			// to the one who connected.
+
 			// Client -> Server
 			// Server Checks how many current players
 			// When Server has 2 or more connections we start broadcasting
 			// Server Sends relevant info to player
 			// If new client connects midgame we iterate through hashmap
 			// send the last known co-ordinates to that player of each player
-			
+
+			return;
+		}
+
+		if (clients.size() < 2) {
+			String currentPlayer = clients.get(port).getID();
+			updatePos(packet.getData(), currentPlayer);
+			return;
 		}
 
 		else if (action.startsWith("/d/")) {
-			
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					String idToRemove = c.getValue().getID();
-					String disconnectIT = "/d/"+idToRemove+"/"; 
+					String disconnectIT = "/d/" + idToRemove + "/";
 					lastKnownPos.remove(c.getValue().getID());
 					clients.remove(c.getKey(), c.getValue());
 					System.out.println(disconnectIT);
 					byte[] disconnected = disconnectIT.getBytes();
-					sendToRelevant(disconnected,port,address);
+					sendToRelevant(disconnected, port, address);
 				}
 			}
-			
 		}
 
-		
-		
-		if (action.startsWith("/C/")) {
-			return;
-		} 
-		
 		else {
-			// Game starts			
+			// Game starts
 			broadcastPlayers(packet);
 		}
 	}
@@ -249,8 +241,8 @@ public class Server {
 	}
 
 	public String getServerIP() {
-		
-		return SERVER_IP;	
+
+		return SERVER_IP;
 	}
 
 	private void updatePos(byte[] b, String ID) {

@@ -12,43 +12,43 @@ public class Weapon_Default extends Weapon {
 
 	private final double damage = 10;
 	private final double despawnDistance = 600;
-	
+
 	private Boolean fired = false;
-	
+
 	public Weapon_Default(Player player) {
 		super(player);
 		super.weaponName = "Pistol";
 		super.bulletDamage = damage;
 		super.despawnDistance = despawnDistance;
 		super.player = player;
-		
+
 	}
-	
+
 	@Override
 	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
-		
+
 		if (multiplayer) {
-			
+
 			if (!fired) {
-				
+
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
 			}
 		}
-		
-		else if (Input.isKeyPressed(KeyCode.SPACE) && !super.test) {
-			
+
+		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
+
 			if (!fired) {
-				
+
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
 			}
 		}
-		
+
 		else {
-			
+
 			fired = false;
 		}
 	}

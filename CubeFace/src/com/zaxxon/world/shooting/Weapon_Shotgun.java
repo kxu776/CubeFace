@@ -22,7 +22,6 @@ public class Weapon_Shotgun extends Weapon {
 		super.weaponName = "Shotgun";
 		super.bulletDamage = damage;
 		super.despawnDistance = despawnDistance;
-
 	}
 	
 	@Override
@@ -71,7 +70,7 @@ public class Weapon_Shotgun extends Weapon {
 			}	
 		}
 		
-		else if (Input.isKeyPressed(KeyCode.SPACE)&& !super.test) {
+		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
 			
 			if (!fired) {
 				

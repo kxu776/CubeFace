@@ -45,7 +45,7 @@ public class Client extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("Game closed");
 			}
 			process(packet);
 		}
