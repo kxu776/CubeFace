@@ -335,6 +335,7 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
+					
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
@@ -348,6 +349,8 @@ public class MainGame {
 						FacingDir m = play.get(id).getdir();
 
 						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
+						play.get(id).weaponManager.getCurrentWeapon().test = true;
+
 						play.get(id).weaponManager.update(normalisedFPS, pos, play.get(id).getplayerDimensions(), m);
 
 					}
