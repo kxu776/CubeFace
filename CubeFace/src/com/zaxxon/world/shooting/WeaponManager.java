@@ -8,6 +8,7 @@ import com.zaxxon.ui.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 
+import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
 //Written by Dan
@@ -23,13 +24,16 @@ public class WeaponManager {
 	int currentWeapon = 0;
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
+	private Player player;
+
+	public WeaponManager(){};
 	
-	public WeaponManager () {
+	public WeaponManager (Player player) {
 		
 		weapons = new ArrayList<Weapon>();
-		weapons.add(new Weapon_Default());
-		weapons.add(new Weapon_MG());
-		weapons.add(new Weapon_Shotgun());
+		weapons.add(new Weapon_Default(player));
+		weapons.add(new Weapon_MG(player));
+		weapons.add(new Weapon_Shotgun(player));
 		
 		allBullets = new ArrayList<Bullet>();
 	}

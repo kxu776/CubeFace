@@ -43,6 +43,7 @@ public class Player extends MovableSprite{
 	final double acceleration = 1.2;
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
+	public int score = 0;
 	
     public Player() {
         
@@ -64,7 +65,7 @@ public class Player extends MovableSprite{
         facingDir = FacingDir.up;
         this.setX(500);
         this.setY(800);
-        weaponManager = new WeaponManager();
+        weaponManager = new WeaponManager(this);
     }
     
     public void update(double time) {
@@ -80,13 +81,12 @@ public class Player extends MovableSprite{
 		
 		Vector2 playerPos = new Vector2 (this.getX(), this.getY());
 
-		//System.out.println("\nposX: " + Double.valueOf(this.getX()) + " posY: " + Double.valueOf(this.getY()));
-		
-		
 		weaponManager.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
-		
+
 		draw();
-    }
+
+		System.out.println("P1 Score: " + String.valueOf(score));
+	}
     
    
     

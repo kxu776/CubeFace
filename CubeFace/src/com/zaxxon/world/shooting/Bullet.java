@@ -9,6 +9,7 @@ import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
+import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
@@ -24,12 +25,11 @@ public class Bullet extends MovableSprite {
 	private Vector2 direction;
 	private double speed = 10.0;
 	private double damage = 10;
+	public Player player;
 
 	private double despawnDistance;
 	
-	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd) {
-
-		
+	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd, Player player) {
 		MainGame.addSpriteToForeground(this);
 		
 		this.setX(pos.x);
@@ -41,6 +41,7 @@ public class Bullet extends MovableSprite {
 		setImage(SpriteImages.BULLET_SPRITESHEET_IMAGE);
 		this.setWidth(8);
 		this.setHeight(8);
+		this.player = player;
 	}
 	
 	public void update(double deltaTime) {
@@ -80,7 +81,7 @@ public class Bullet extends MovableSprite {
 		}
 		for(Enemy enemy : enemies){
 			if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
-				enemy.takeDamage(damage);
+				enemy.takeDamage(damage, player);
 				delete();
 				return;
 			}
