@@ -29,6 +29,7 @@ public class Server {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
+	private InetAddress ServerAddress;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -38,7 +39,8 @@ public class Server {
 		try {
 			System.out.println("Server started on port " + SERVER_PORT);
 			serverSocket = new DatagramSocket(SERVER_PORT);
-			SERVER_IP = InetAddress.getLocalHost().toString();
+			ServerAddress = InetAddress.getLocalHost();
+			SERVER_IP = ServerAddress.toString();
 
 			listening = true;
 			listenThread = new Thread(new Runnable() {
@@ -99,6 +101,7 @@ public class Server {
 				baos.close();
 				return playerinfo;
 			} catch (IOException e) {
+				System.out.println(bs.toString());
 				e.printStackTrace();
 			}
 		} catch (ClassNotFoundException | IOException e) {
@@ -182,6 +185,11 @@ public class Server {
 
 			send(("/c/Connected/" + id + "/").getBytes(), address, port);
 
+			
+			if(clients.size()<2) {
+				return;
+			}
+			
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
 				System.out.println("I've sent this ID: " + c.getKey());
@@ -200,24 +208,35 @@ public class Server {
 			return;
 		}
 
-		if (clients.size() < 2) {
-			String currentPlayer = clients.get(port).getID();
-			updatePos(packet.getData(), currentPlayer);
-			return;
-		}
-
 		else if (action.startsWith("/d/")) {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
+					
+					if(c.getValue().getAddress().equals(ServerAddress)) {
+						sendToRelevant("/b/".getBytes(),port,address);
+						close();
+						return;
+					}
+					
+					
 					String idToRemove = c.getValue().getID();
 					String disconnectIT = "/d/" + idToRemove + "/";
+					
+					
 					lastKnownPos.remove(c.getValue().getID());
 					clients.remove(c.getKey(), c.getValue());
 					System.out.println(disconnectIT);
 					byte[] disconnected = disconnectIT.getBytes();
 					sendToRelevant(disconnected, port, address);
+					return;
 				}
 			}
+		}
+		
+		if (clients.size() < 2) {
+			String currentPlayer = clients.get(port).getID();
+			updatePos(packet.getData(), currentPlayer);
+			return;
 		}
 
 		else {
@@ -241,7 +260,6 @@ public class Server {
 	}
 
 	public String getServerIP() {
-
 		return SERVER_IP;
 	}
 
@@ -254,11 +272,17 @@ public class Server {
 	}
 
 	public void close() {
-		listening = false;
-		serverSocket.close();
 		try {
-			listenThread.join();
-		} catch (InterruptedException e) {
+			System.out.println("do i even run");
+			System.out.println(listening);
+			listening = false;
+			System.out.println(listening);
+
+			listenThread.interrupt();
+			serverSocket.setSoTimeout(1000);
+			serverSocket.close();
+
+		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 	}

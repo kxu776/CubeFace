@@ -61,7 +61,7 @@ public class MainGame {
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
-	static boolean f = false;
+	static boolean fired = false;
 
 	private static Player player1;
 	public static ConcurrentHashMap<String, Player> play = new ConcurrentHashMap<>();
@@ -282,14 +282,14 @@ public class MainGame {
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
 				&& ((player1.getY() - client.getY()) == 0.0)) {
-			if (f == false) {
+			if (fired == false) {
 				client.setX(player1.getX());
 				client.setY(player1.getY());
 				client.setHealth(player1.getHealth());
 				client.shoot = true;
 				networkingClient.sendPlayerObj(client);
 				client.shoot = false;
-				f = true;
+				fired = true;
 			}
 		}
 		// Standing still
@@ -298,8 +298,8 @@ public class MainGame {
 		}
 
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			if (!f) {
-				f = true;
+			if (!fired) {
+				fired = true;
 				client.shoot = true;
 			}
 		}
@@ -309,7 +309,7 @@ public class MainGame {
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
 		client.shoot = false;
-		f = false;
+		fired = false;
 	}
 
 	private static void getUpdatesFromQueue() {
