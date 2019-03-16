@@ -211,8 +211,9 @@ public class Server {
 		else if (action.startsWith("/d/")) {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
-					
-					if(c.getValue().getAddress().equals(ServerAddress)) {
+					String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
+					String disconnectIP= disconnectIParray[1];
+					if(c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost") || disconnectIP.equals("127.0.0.1")) {
 						sendToRelevant("/b/".getBytes(),port,address);
 						close();
 						return;

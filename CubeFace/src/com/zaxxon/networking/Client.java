@@ -79,13 +79,11 @@ public class Client extends Thread {
 			message = message.substring(3);
 			String[] messID = message.split("/");
 			setID(messID[1]);			
-			System.out.println("Server >: " + messID[0]);
 			return;
 		}
 
 		else if (message.startsWith("/s/")) {
 			message = message.substring(3, message.length());
-			System.out.println(message);
 			return;
 		}
 		
@@ -127,7 +125,6 @@ public class Client extends Thread {
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
 				
-				// System.out.println(data.getID());
 				MainGame.inputUpdateQueue.add(data);
 				
 				// socket.close();
@@ -173,9 +170,7 @@ public class Client extends Thread {
 
 	public void disconnect() {
 		send("/d/".getBytes());
-		System.out.println(running);
 		running = false;
-		System.out.println(running);
 		try {
 			if ((in == null)){
 				if(bais == null) {

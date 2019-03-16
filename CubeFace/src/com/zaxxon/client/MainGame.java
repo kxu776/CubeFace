@@ -261,7 +261,6 @@ public class MainGame {
 		client.currWep = player1.getCurrentWeaponNum();
 
 		if (spawn == false) {
-			System.out.println("Spawning in...");
 			client.setX(player1.getX());
 			client.setY(player1.getY());
 			client.setHealth(player1.getHealth());
@@ -327,7 +326,6 @@ public class MainGame {
 				play.get(id).weaponManager.getCurrentWeapon().test = true;
 				play.get(id).weaponManager.mp = true;
 
-				System.out.println("Creating player on this ID " + id);
 				addSpriteToForeground(play.get(id));
 			}
 
