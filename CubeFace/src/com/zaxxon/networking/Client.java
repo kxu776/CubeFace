@@ -46,7 +46,6 @@ public class Client extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			process(packet);
 		}
@@ -112,7 +111,7 @@ public class Client extends Thread {
 				return;
 		}
 		
-		if(message.startsWith("/C/")) {
+		if(message.startsWith("/C/") || message.startsWith("/b/")) {
 			return;
 		}
 
@@ -136,8 +135,8 @@ public class Client extends Thread {
 				// }
 
 			} catch (Exception e) {
+				System.out.println(packet.getData().toString());
 				System.out.println(message);
-				e.printStackTrace();
 			}
 		}
 	
@@ -172,10 +171,13 @@ public class Client extends Thread {
 		running = false;
 		try {
 			if ((in == null)){
+				socket.close();		
+
 				if(bais == null) {
 					socket.close();		
 					return;
 				}
+				return;
 			}
 			in.close();
 			bais.close();
