@@ -117,7 +117,6 @@ public class Client extends Thread {
 		}
 
 		else	
-			if(MainGame.play.size()>=1) {
 			try {
 
 				// Here is where we should update the client.
@@ -141,7 +140,7 @@ public class Client extends Thread {
 				e.printStackTrace();
 			}
 		}
-	}
+	
 
 	public void sendPlayerObj(ClientSender c) {
 		if (ID != null) {
