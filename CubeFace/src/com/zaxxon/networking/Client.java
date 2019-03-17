@@ -61,7 +61,6 @@ public class Client extends Thread {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			e.printStackTrace();
 		}
 		sendConnectionPacket();
 	}
@@ -104,6 +103,7 @@ public class Client extends Thread {
 				MainGame.multiplayer = false;
 				try {
 					running = false;
+					MainGame.removeAllMp();
 				}
 				finally {
 					socket.close();		
@@ -183,7 +183,6 @@ public class Client extends Thread {
 			bais.close();
 			socket.close();		
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 	}

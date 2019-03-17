@@ -333,7 +333,7 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
-					
+
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
@@ -390,6 +390,14 @@ public class MainGame {
 			enemiesList.remove(sprite);
 			sprite.delete();
 		}
+	}
+
+	public static void removeAllMp() {
+		for (ConcurrentHashMap.Entry<String, Player> players : play.entrySet()) {
+			getSprite(players.getKey()).delete();
+			removeFromGame(getSprite(players.getKey()));
+		}
+		play.clear();
 	}
 
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
