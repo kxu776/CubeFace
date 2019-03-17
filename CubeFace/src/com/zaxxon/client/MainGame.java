@@ -4,11 +4,14 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zaxxon.input.Input;
+import com.zaxxon.maths.Vector2;
 import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
@@ -24,7 +27,6 @@ import com.zaxxon.world.Sprite;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
-import com.zaxxon.world.mobile.MultiplayerPlayer;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
@@ -51,7 +53,7 @@ public class MainGame {
 	private static Group overlay;
 	private static Group collidables;
 	private static Camera camera;
-	private static LinkedList<Sprite> spriteList;
+	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
 	public static Client networkingClient;
@@ -59,8 +61,10 @@ public class MainGame {
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
+	static boolean fired = false;
+
 	private static Player player1;
-	private static HashMap<String, MultiplayerPlayer> play = new HashMap<>();
+	public static ConcurrentHashMap<String, Player> play = new ConcurrentHashMap<>();
 	private static AnchorPane anchorPane;
 
 	private static long fpsLong;
@@ -81,7 +85,7 @@ public class MainGame {
 		foreground = new Group();
 		foreground.setId("foreground");
 		overlay = new Group();
-		overlay.setId("overlay");		
+		overlay.setId("overlay");
 		world.getChildren().add(background);
 		world.getChildren().add(foreground);
 		world.getChildren().add(collidables);
@@ -98,7 +102,6 @@ public class MainGame {
 		// clip the group
 		grpGame.setClip(gameRect);
 
-
 		// make a statsbox
 		BorderPane borderPane = StatsBox.statsBox();
 
@@ -106,7 +109,6 @@ public class MainGame {
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
-
 
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
@@ -120,7 +122,7 @@ public class MainGame {
 
 		// set up new arrays and objects
 		Wall.resetWalls();
-		spriteList = new LinkedList<Sprite>();
+		spriteList = new ConcurrentLinkedQueue<Sprite>();
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
 		player1 = new Player();
@@ -145,7 +147,6 @@ public class MainGame {
 		rect.setArcHeight(10.0);
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
-
 
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
@@ -181,9 +182,6 @@ public class MainGame {
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
-					for (HashMap.Entry<String, MultiplayerPlayer> c : play.entrySet()) {
-						c.getValue().update(normalisedFPS);
-					}
 				}
 				updateEnemies();
 				camera.update();
@@ -250,7 +248,6 @@ public class MainGame {
 		}
 	}
 
-
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
@@ -261,9 +258,9 @@ public class MainGame {
 	}
 
 	private static void sendNetworkUpdate() {
+		client.currWep = player1.getCurrentWeaponNum();
 
 		if (spawn == false) {
-			System.out.println("Spawning in...");
 			client.setX(player1.getX());
 			client.setY(player1.getY());
 			client.setHealth(player1.getHealth());
@@ -284,13 +281,15 @@ public class MainGame {
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
 				&& ((player1.getY() - client.getY()) == 0.0)) {
-			client.setX(player1.getX());
-			client.setY(player1.getY());
-			client.setHealth(player1.getHealth());
-			client.shoot = true;
-			networkingClient.sendPlayerObj(client);
-			client.shoot = false;
-			return;
+			if (fired == false) {
+				client.setX(player1.getX());
+				client.setY(player1.getY());
+				client.setHealth(player1.getHealth());
+				client.shoot = true;
+				networkingClient.sendPlayerObj(client);
+				client.shoot = false;
+				fired = true;
+			}
 		}
 		// Standing still
 		if (((player1.getX() - client.getX()) == 0.0) && ((player1.getY() - client.getY()) == 0.0)) {
@@ -298,7 +297,10 @@ public class MainGame {
 		}
 
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			client.shoot = true;
+			if (!fired) {
+				fired = true;
+				client.shoot = true;
+			}
 		}
 		// Moving
 		client.setX(player1.getX());
@@ -306,36 +308,57 @@ public class MainGame {
 		client.setHealth(player1.getHealth());
 		networkingClient.sendPlayerObj(client);
 		client.shoot = false;
+		fired = false;
 	}
 
 	private static void getUpdatesFromQueue() {
+
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			if (!play.containsKey(data.getID().trim())) {
-				System.out.println(play.size());
-				play.put(data.getID(), new MultiplayerPlayer());
-				;
-				play.get(data.getID()).setX(900);
-				play.get(data.getID()).setY(900);
-				play.get(data.getID()).setId(data.getID().trim());
-				System.out.println("Creating player on this ID " + data.getID());
-				System.out.println(play.size());
-				addSpriteToForeground(play.get(data.getID()));
+			String id = data.getID().trim();
+			if (!play.containsKey(id)) {
+
+				play.put(id, new Player());
+				play.get(id).setX(900);
+				play.get(id).setY(900);
+				play.get(id).setId(id);
+				play.get(id).mp = true;
+				play.get(id).weaponManager.getCurrentWeapon().test = true;
+				play.get(id).weaponManager.mp = true;
+
+				addSpriteToForeground(play.get(id));
 			}
-			for (Sprite s : spriteList) {
-				if ((data.getID()).equals(s.getId().trim())) {
-					s.setX(data.getX());
-					s.setY(data.getY());
-					((MultiplayerPlayer) s).setDir(data.pos);
-					if ((data.shoot == true)) {
-						System.out.println("Wtf");
-						((MultiplayerPlayer) s).weapon.update(normalisedFPS, ((MovableSprite) s).getPosition(),
-								((MultiplayerPlayer) s).getplayerDimensions(), ((MultiplayerPlayer) s).getdir());
-						((MultiplayerPlayer) s).weapon.getCurrentWeapon().fire(((MultiplayerPlayer) s).weapon.dir,
-								((MovableSprite) s).getPosition(), true);
+
+			Iterator<Sprite> iterator = spriteList.iterator();
+			while (iterator.hasNext()) {
+				Sprite sprite = iterator.next();
+				if (sprite.getId().equals(id)) {
+					
+					sprite.setX(data.getX());
+					sprite.setY(data.getY());
+					((Player) sprite).setDir(data.pos);
+
+					if (sprite instanceof MovableSprite) {
+						((MovableSprite) sprite).setHealth(data.getHealth());
 					}
-					if (s instanceof MovableSprite) {
-						((MovableSprite) s).setHealth(data.getHealth());
+
+					if ((play.get(id).weaponManager.getCurrentWeaponNum() != data.currWep)) {
+						Vector2 pos = play.get(id).getplayerDimensions();
+						FacingDir m = play.get(id).getdir();
+
+						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
+						play.get(id).weaponManager.getCurrentWeapon().test = true;
+
+						play.get(id).weaponManager.update(normalisedFPS, pos, play.get(id).getplayerDimensions(), m);
+
+					}
+
+					if ((data.shoot == true)) {
+						FacingDir m = play.get(id).getdir();
+						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
+						Vector2 pos = play.get(id).getplayerDimensions();
+						play.get(id).weaponManager.getCurrentWeapon().fire(vect, pos, true);
+
 					}
 				}
 			}
@@ -348,7 +371,7 @@ public class MainGame {
 		boolean updatedPlayerPos = false;
 		for (Enemy sprite : enemiesList) {
 			if (!sprite.isAlive()) {
-				killList.add(sprite);	//Cannot kill sprite during iteration
+				killList.add(sprite); // Cannot kill sprite during iteration
 			} else {
 				Pair<Double, Player> closestPlayer = null;
 				for (Player player : playerList) {
@@ -361,7 +384,7 @@ public class MainGame {
 				((Enemy) sprite).update(normalisedFPS, closestPlayer.getValue());
 			}
 		}
-		for(Enemy sprite: killList){
+		for (Enemy sprite : killList) {
 			sprite.lastHitReceived.score += sprite.killReward;
 			spriteList.remove(sprite);
 			enemiesList.remove(sprite);
@@ -369,6 +392,17 @@ public class MainGame {
 		}
 	}
 
+	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
+		return spriteList;
+	}
+
+	public static Sprite getSprite(String id) {
+		for (Sprite sprite : spriteList) {
+			if (sprite.getId().equals(id)) {
+				return sprite;
+			}
+		}
+		return null;
+	}
 
 }
-

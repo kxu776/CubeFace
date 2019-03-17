@@ -7,6 +7,8 @@ public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
 	public String name;
 	public int pos;
+	public int currWep;
+
 	public double x;
 	public double y;
 	public double health;
@@ -41,7 +43,6 @@ public class ClientSender implements Serializable{
 		return health;
 	}
 
-	
 	public void setHealth(double health) {
 		this.health = health;
 	}
@@ -56,6 +57,10 @@ public class ClientSender implements Serializable{
 
 	public void setID(String iD) {
 		ID = iD;
+	}
+	
+	public int getCurrWep() {
+		return currWep;
 	}
 	
 }

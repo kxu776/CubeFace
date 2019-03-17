@@ -20,6 +20,7 @@ public class Client extends Thread {
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
 	private int MAX_PACKET_SIZE = 1024;
+	private String ID = null;
 
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 	private ObjectOutputStream out = null;
@@ -27,6 +28,7 @@ public class Client extends Thread {
 	private ByteArrayOutputStream baos;
 	private ByteArrayInputStream bais;
 	private boolean running = false;
+	protected boolean runningServer = false;
 	private String player;
 	
 
@@ -44,12 +46,11 @@ public class Client extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
-			getPlayerObj(packet);
+			process(packet);
 		}
-		
 	}
+		
 
 	public void connect() {
 		try {
@@ -71,25 +72,50 @@ public class Client extends Thread {
 		running = true;
 	}
 
-	private void getPlayerObj(DatagramPacket packet) {
+	private void process(DatagramPacket packet) {
 		String message = new String(packet.getData());
 		if (message.trim().startsWith("/c/")) {
-			System.out.println("Server >: " + message.substring(3));
+			message = message.substring(3);
+			String[] messID = message.split("/");
+			setID(messID[1]);			
 			return;
 		}
 
 		else if (message.startsWith("/s/")) {
 			message = message.substring(3, message.length());
-			System.out.println(message);
 			return;
 		}
 		
-		else if(message.startsWith("/b/")) {
-			message = message.substring(3, message.length());
-			String bullet[] = message.split("/");
-			}
+		else if(message.startsWith("/d/")) {
+			String[] throwAwayPlayer = message.split("/");
+			System.out.println(throwAwayPlayer[2]);
 
-		else		
+			if(MainGame.getSprite(throwAwayPlayer[2])== null) {
+				System.out.println("Im not working properly");
+				return;
+			}
+			MainGame.getSprite(throwAwayPlayer[2]).delete();
+			MainGame.getSpriteList().remove(MainGame.getSprite(throwAwayPlayer[2].trim()));
+			MainGame.removeFromGame(MainGame.getSprite(throwAwayPlayer[2]));
+			MainGame.play.remove(throwAwayPlayer[2].trim());
+			return;
+		}
+		else if(message.startsWith("/b/")) {
+				MainGame.multiplayer = false;
+				try {
+					running = false;
+				}
+				finally {
+					socket.close();		
+				}
+				return;
+		}
+		
+		if(message.startsWith("/C/") || message.startsWith("/b/")) {
+			return;
+		}
+
+		else	
 			try {
 
 				// Here is where we should update the client.
@@ -97,7 +123,6 @@ public class Client extends Thread {
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();
 				
-				// System.out.println(data.getID());
 				MainGame.inputUpdateQueue.add(data);
 				
 				// socket.close();
@@ -110,11 +135,14 @@ public class Client extends Thread {
 				// }
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println(packet.getData().toString());
+				System.out.println(message);
 			}
-	}
+		}
+	
 
 	public void sendPlayerObj(ClientSender c) {
+		if (ID != null) {
 		c.name = player;
 		baos = new ByteArrayOutputStream();
 		try {
@@ -122,32 +150,46 @@ public class Client extends Thread {
 			out.writeObject(c);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-
+			
 			send(playerinfo);
 			
 			out.close();
 			baos.close();
 			
-			Thread.sleep(20);
-			
+			Thread.sleep(25);
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		}
 	}
 
 	public void disconnect() {
 		send("/d/".getBytes());
-		System.out.println("No, closing socket");
 		running = false;
 		try {
-			bais.close();
+			if ((in == null)){
+				socket.close();		
+
+				if(bais == null) {
+					socket.close();		
+					return;
+				}
+				return;
+			}
 			in.close();
-			socket.close();
+			bais.close();
+			socket.close();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+	}
+	
+	protected void setID(String s) {
+		ID = s;
 	}
 
 	public void send(byte[] data) {

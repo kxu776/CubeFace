@@ -8,14 +8,14 @@ import javax.imageio.ImageIO;
 
 public class SpriteImages {
 
-	public static final String BRUTE_ZOMBIE_SPRITESHEET_URL = "src/com/zaxxon/gameart/brute-zombie.png";
-	public static final String CUBEFACE_SPRITESHEET_URL = "src/com/zaxxon/gameart/cubeface-sprite-sheet.png";
-	public static final String HUNTER_ZOMBIE_SPRITESHEET_URL = "src/com/zaxxon/gameart/hunter-zombie-sprite-sheet.png";
-	public static final String MUTANT_ZOMBIE_SPRITESHEET_URL = "src/com/zaxxon/gameart/mutant-zombie-sprite-sheet.png";
-	public static final String WALL_SPRITESHEET_URL = "src/com/zaxxon/gameart/wall-sprite-sheet.png";
-	public static final String ZOMBIE_SPRITESHEET_URL = "src/com/zaxxon/gameart/zombie-sprite-sheet.png";
-	public static final String BULLET_SPRITESHEET_URL = "src/com/zaxxon/gameart/bullet.png";
-	public static final String BACKGROUND_TILE_URL = "src/com/zaxxon/ui/img/ground.png";
+	public static final String BRUTE_ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/brute-zombie.png";
+	public static final String CUBEFACE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/cubeface-sprite-sheet.png";
+	public static final String HUNTER_ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/hunter-zombie-sprite-sheet.png";
+	public static final String MUTANT_ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/mutant-zombie-sprite-sheet.png";
+	public static final String WALL_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/wall-sprite-sheet.png";
+	public static final String ZOMBIE_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/zombie-sprite-sheet.png";
+	public static final String BULLET_SPRITESHEET_URL = "CubeFace/src/com/zaxxon/gameart/bullet.png";
+	public static final String BACKGROUND_TILE_URL = "CubeFace/src/com/zaxxon/ui/img/ground.png";
 
 
 	public static final BufferedImage BRUTE_ZOMBIE_SPRITESHEET_IMAGE = getBufferedImageFromURL(

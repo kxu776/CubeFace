@@ -9,30 +9,39 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
 
-	private final int serverPort;
 	private DatagramSocket serverSocket;
-	private boolean listening = false;
 	private Thread listenThread;
+	private boolean listening = false;
+	private final int SERVER_PORT;
+	private String SERVER_IP;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
-	public static HashMap<Integer, ServerClient> clients = new HashMap<>();
-	private HashMap<String, byte[]> lastKnownPos = new HashMap<>();
+
+	private ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, byte[]> lastKnownPos = new ConcurrentHashMap<>();
+
 	@SuppressWarnings("unused")
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
+	private InetAddress ServerAddress;
 
 	public Server(int serverPort) {
-		this.serverPort = serverPort;
+		this.SERVER_PORT = serverPort;
 	}
 
 	public void start() {
 		try {
-			serverSocket = new DatagramSocket(serverPort);
+			System.out.println("Server started on port " + SERVER_PORT);
+			serverSocket = new DatagramSocket(SERVER_PORT);
+			ServerAddress = InetAddress.getLocalHost();
+			SERVER_IP = ServerAddress.toString();
+
 			listening = true;
 			listenThread = new Thread(new Runnable() {
 				public void run() {
@@ -42,6 +51,9 @@ public class Server {
 			listenThread.start();
 
 		} catch (SocketException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			System.out.println("Server can't be started, IP isnt known");
 			e.printStackTrace();
 		}
 	}
@@ -68,7 +80,6 @@ public class Server {
 	}
 
 	private byte[] editObj(byte[] bs, String ID) {
-
 		try {
 			bais = new ByteArrayInputStream(bs);
 			in = new ObjectInputStream(bais);
@@ -90,6 +101,7 @@ public class Server {
 				baos.close();
 				return playerinfo;
 			} catch (IOException e) {
+				System.out.println(bs.toString());
 				e.printStackTrace();
 			}
 		} catch (ClassNotFoundException | IOException e) {
@@ -99,60 +111,56 @@ public class Server {
 		return bs;
 	}
 
-	private void sendToRelevant(byte[] b,int port, InetAddress address) {
+	private void sendToRelevant(byte[] b, int port, InetAddress address) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (port == c.getKey()) {
-					if(address.equals(c.getValue().getAddress())) {
-						continue;
-					}
+				if (address.equals(c.getValue().getAddress())) {
+					continue;
+				}
 			}
-			
-			send(b,c.getValue().getAddress(),c.getKey());
+			send(b, c.getValue().getAddress(), c.getKey());
+			try {
+				Thread.sleep(15);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
+
 	private void broadcastPlayers(DatagramPacket packet) {
 		int port = packet.getPort();
 		InetAddress address = packet.getAddress();
 		ServerClient associatedID;
 		byte[] b;
-		
+
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			
+
 			// If only one player exists in the server
 			// we store their current location
-			
-			byte[] d = editObj(packet.getData(), c.getValue().getID());		
-			
-			if (lastKnownPos.containsKey(c.getValue().getID())) {
-			}
-			
-			else {
-				lastKnownPos.put(c.getValue().getID(), d);
-			}
-			
-			
+
 			if (port == c.getKey()) {
-				if(address.equals(c.getValue().getAddress())) {
+				if (address.equals(c.getValue().getAddress())) {
 					associatedID = c.getValue();
-					
+
 					// Setup its ID and get ready to send to other players
-					
-					b = editObj(packet.getData(),associatedID.getID());
-					sendToRelevant(b,port,address);		
+
+					b = editObj(packet.getData(), associatedID.getID());
+					if (!lastKnownPos.containsKey(c.getValue().getID())) {
+						lastKnownPos.put(c.getValue().getID(), b);
+					}
+					sendToRelevant(b, port, address);
 					break;
 				}
 			}
 		}
-		
-		
 
 		// Can't have the port of the client sending the info be the same as the port
 		// from a different machine
 		// each client has a unique IP
 		// so we have to account for that and make sure we only send info to those who
-		// need it.		
-		
+		// need it.
+
 	}
 
 	private void process(DatagramPacket packet) {
@@ -162,65 +170,77 @@ public class Server {
 		String action = new String(data);
 
 		if (action.startsWith("/C/")) {
-			
+
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 
 			String id = UUID.randomUUID().toString().trim();
-			
+
 			System.out.println("I have this ID: " + id);
-			
+
 			clients.put(packet.getPort(),
-					   (new ServerClient(action.substring(3),
-							   			packet.getAddress(),
-							   			packet.getPort(), 
-							   			id)));
+					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), id)));
+
+			send(("/c/Connected/" + id + "/").getBytes(), address, port);
+
 			
-			
-			send("/c/Connected".getBytes(), address, port);
-		
+			if(clients.size()<2) {
+				return;
+			}
 			
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
-				System.out.println("I've sent this ID: "+ c.getKey());
+				System.out.println("I've sent this ID: " + c.getKey());
 			}
 
-		
-			
 			// Send the last known positions of any other player
-			// to the one who connected. 
-			
+			// to the one who connected.
+
 			// Client -> Server
 			// Server Checks how many current players
 			// When Server has 2 or more connections we start broadcasting
 			// Server Sends relevant info to player
 			// If new client connects midgame we iterate through hashmap
 			// send the last known co-ordinates to that player of each player
-			
+
+			return;
 		}
 
-		if (action.startsWith("/b/")) {
-			broadcastGen(packet);
-		}
-
-		if (action.startsWith("/d/")) {
+		else if (action.startsWith("/d/")) {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-				if (port == c.getKey() && address != c.getValue().getAddress()) {
+				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
+					String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
+					String disconnectIP= disconnectIParray[1];
+					if(c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost") || disconnectIP.equals("127.0.0.1")) {
+						sendToRelevant("/b/".getBytes(),port,address);
+						close();
+						return;
+					}
+					
+					
+					String idToRemove = c.getValue().getID();
+					String disconnectIT = "/d/" + idToRemove + "/";
+					
+					
+					lastKnownPos.remove(c.getValue().getID());
 					clients.remove(c.getKey(), c.getValue());
+					System.out.println(disconnectIT);
+					byte[] disconnected = disconnectIT.getBytes();
+					sendToRelevant(disconnected, port, address);
 					return;
 				}
 			}
 		}
-
 		
-		
-		if (action.startsWith("/C/")) {
+		if (clients.size() < 2) {
+			String currentPlayer = clients.get(port).getID();
+			updatePos(packet.getData(), currentPlayer);
 			return;
-		
-		} else {
-			
+		}
+
+		else {
 			// Game starts
 			broadcastPlayers(packet);
 		}
@@ -240,16 +260,30 @@ public class Server {
 		}
 	}
 
-	public InetAddress getServerIP() {
-		return serverSocket.getInetAddress();
+	public String getServerIP() {
+		return SERVER_IP;
+	}
+
+	private void updatePos(byte[] b, String ID) {
+		if (!lastKnownPos.containsKey(ID)) {
+			lastKnownPos.put(ID, b);
+		} else {
+			editObj(b, ID);
+		}
 	}
 
 	public void close() {
-		listening = false;
-		serverSocket.close();
 		try {
-			listenThread.join();
-		} catch (InterruptedException e) {
+			System.out.println("do i even run");
+			System.out.println(listening);
+			listening = false;
+			System.out.println(listening);
+
+			listenThread.interrupt();
+			serverSocket.setSoTimeout(1000);
+			serverSocket.close();
+
+		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 	}
