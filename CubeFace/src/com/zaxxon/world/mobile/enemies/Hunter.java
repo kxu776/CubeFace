@@ -26,6 +26,7 @@ public class Hunter extends Enemy {
 		isAlive = true;
 		pathfinding = false;
 		health = 50.0;
+		killReward = 750;
 	}
 
 	@Override

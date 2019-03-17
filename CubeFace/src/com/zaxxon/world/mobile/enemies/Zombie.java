@@ -17,6 +17,7 @@ public class Zombie extends Enemy {
 		isAlive = true;
 		health = 100.0;
 		pathfinding = false;
+		killReward = 500;
 	}
 
 	@Override
