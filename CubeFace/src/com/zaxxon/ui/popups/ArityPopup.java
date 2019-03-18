@@ -1,29 +1,33 @@
-package com.zaxxon.ui;
+package com.zaxxon.ui.popups;
 
 import com.zaxxon.client.MainGame;
+
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.stage.*;
 
 
-public class QuitPopup {
+public class ArityPopup {
 
 
-    public static void display(Stage primaryStage)
+
+
+    public static void display(Stage primaryStage, Scene renderedScene)
     {
+
+        double[] xOffset = {0};
+        double[] yOffset = {0};
         Stage popupwindow = new Stage();
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
@@ -35,32 +39,30 @@ public class QuitPopup {
 
         //****************************CONTENTS
 
-        Label label = new Label("Are you sure you would like to quit?");
+        Label label = new Label("Choose the mode you would like to play in:");
         GridPane.setConstraints(label, 0, 0);
 
         //***********SINGLE PLAYER BUTTON
-        Button single = new Button("Yes");
+        Button single = new Button("single player");
         GridPane.setConstraints(single,0, 0);
         single.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	if(MainGame.multiplayer) {
-            		MainGame.networkingClient.disconnect();
-            	}
                 popupwindow.close();
-                primaryStage.close();
-            
-        }});
+                primaryStage.setScene(MainGame.getRenderedScene());
+                MainGame.start(primaryStage);
+            }
+        });
 
 
         //************ MULTIPLAYER BUTTON
-        Button multiplayer= new Button("No");
+        Button multiplayer= new Button("multiplayer");
         GridPane.setConstraints(multiplayer, 1, 0);
         multiplayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 popupwindow.close();
-                //JoinGamePopup.display(primaryStage, renderedScene);
+                JoinGamePopup.display(primaryStage, renderedScene);
             }
         });
 
@@ -90,6 +92,9 @@ public class QuitPopup {
         borderPane.setCenter(middle);
         borderPane.setBottom(bottom);
 
+
+
+
         //make a rectangle and set clip
         Rectangle rect = new Rectangle(400,150);
         rect.setArcHeight(10.0);
@@ -99,7 +104,26 @@ public class QuitPopup {
         //Scene
         Scene scene1= new Scene(borderPane, 400, 150);
         scene1.setFill(Color.TRANSPARENT);
-        scene1.getStylesheets().add(QuitPopup.class.getResource("popup.css").toString());
+        scene1.getStylesheets().add(MainMenu.class.getResource("css/popup.css").toString());
+
+        //make it movable
+        scene1.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset[0] = event.getSceneX();
+                yOffset[0] = event.getSceneY();
+            }
+        });
+
+        scene1.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popupwindow.setX(event.getScreenX() - xOffset[0]);
+                popupwindow.setY(event.getScreenY() - yOffset[0]);
+            }
+        });
+
+
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
 

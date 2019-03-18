@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.ui.StatsBox;
-import com.zaxxon.world.Wall;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 
 import com.zaxxon.world.mobile.Player;

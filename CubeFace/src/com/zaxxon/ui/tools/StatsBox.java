@@ -1,4 +1,4 @@
-package com.zaxxon.ui;
+package com.zaxxon.ui.tools;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -6,14 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 
 import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
 
@@ -107,7 +100,7 @@ public class StatsBox {
         //borderPane.setMaxHeight(300);
         borderPane.setMaxSize(270, 125);
 
-        borderPane.getStylesheets().add(StatsBox.class.getResource("statsbox.css").toString());
+        borderPane.getStylesheets().add(StatsBox.class.getResource("../css/statsbox.css").toString());
 
         return borderPane;
 

@@ -2,7 +2,6 @@ package com.zaxxon.client;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,11 +14,11 @@ import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.Toolbox;
+import com.zaxxon.ui.tools.Toolbox;
 import com.zaxxon.sound.MusicPlayer;
 
 import com.zaxxon.world.TrackingCamera;
-import com.zaxxon.ui.StatsBox;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
@@ -34,12 +33,14 @@ import com.zaxxon.world.mobile.enemies.Zombie;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -94,6 +95,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		double[] xOffset = {0}; //array for making window movable
+		double[] yOffset = {0};
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(998, 498);
@@ -121,7 +124,7 @@ public class MainGame {
 		ImageView audioView = new ImageView(audioIcon); //make an imageview for the minimise icon
 		audio.setGraphic(audioView); //add the image to the button
 		audio.setOnAction(e -> music.stop());
-		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 30 0 0 0;");
+		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
 
 
 		// make an anchor pane to hold the game and the stats box
@@ -130,7 +133,7 @@ public class MainGame {
 		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
-		anchorPane.setLeftAnchor(audio, 10.0);
+		anchorPane.setLeftAnchor(audio, 0.0);
 		anchorPane.setCenterShape(true);
 		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox, audio);
 		anchorPane.setId("anchorpane");
@@ -166,7 +169,24 @@ public class MainGame {
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
 		renderedScene.setFill(Color.TRANSPARENT);
-		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
+		renderedScene.getStylesheets().add(MainMenu.class.getResource("css/maingame.css").toString());
+
+		//make it movable
+		renderedScene.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				xOffset[0] = event.getSceneX();
+				yOffset[0] = event.getSceneY();
+			}
+		});
+
+		renderedScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				primaryStage.setX(event.getScreenX() - xOffset[0]);
+				primaryStage.setY(event.getScreenY() - yOffset[0]);
+			}
+		});
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL2);
