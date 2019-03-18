@@ -119,7 +119,7 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
-	 * 	updates all movement, ai and damage functions at each game loop
+	 * 	Updates all movement, ai and damage functions at each game loop
 	 *
 	 * @param time number of seconds which have elapsed since last update call
 	 * @param player closest player object to enemy
@@ -157,6 +157,12 @@ public abstract class Enemy extends MovableSprite {
 
 	}
 
+	/**
+	 * Calculates and executes movement of enemy towards a set of target coordinates
+	 *
+	 * @param pX target x-coordinate
+	 * @param pY target y-coordinate
+	 */
 	protected void movement(double pX, double pY) {
 
 		inputDir = new Vector2();
@@ -180,6 +186,10 @@ public abstract class Enemy extends MovableSprite {
 		velocity = new Vector2(moveDir.x * currentSpeed, moveDir.y * currentSpeed);
 	}
 
+	/**
+	 * Calculates the cardinal direction of the target point relative to the enemy in the horizontal plain
+	 * @param pX target x-coordinate
+	 */
 	protected void moveX(double pX) {
 		if (this.getX() < pX) { // enemy is to the left of the player
 			inputDir.x = 1;
@@ -189,6 +199,11 @@ public abstract class Enemy extends MovableSprite {
 			inputDir.x = 0; // enemy is horizontally inline with the player.
 	}
 
+	/**
+	 *	Calculates the cardinal direction of the target point relative to the enemy in the vertical plain
+	 *
+	 * @param pY target x-coordinate
+	 */
 	protected void moveY(double pY) {
 		if (this.getY() < pY) { // enemy is above the player
 			inputDir.y = 1;
@@ -197,7 +212,7 @@ public abstract class Enemy extends MovableSprite {
 		} else
 			inputDir.y = 0; // enemy is vertically inline with the player.
 	}
-
+	
 	protected void rotate(double pX, double pY) {
 		double deltaX = getX() - pX;
 		double deltaY = getY() - pY;
@@ -287,8 +302,9 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
+	 *	Returns a collection of all attribute vales for network transmission
 	 *
-	 * @return
+	 * @return Hashmap of attributes and their titles
 	 */
 	@Override
 	public LinkedHashMap<String, Object> getAttributes() {
