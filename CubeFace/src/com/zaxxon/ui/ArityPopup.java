@@ -2,6 +2,7 @@ package com.zaxxon.ui;
 
 import com.zaxxon.client.MainGame;
 
+import com.zaxxon.sound.MusicPlayer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

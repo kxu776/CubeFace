@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import static com.zaxxon.ui.MainMenu.music;
+
 public class ClientMain extends Application{
 
 	public static void main(String[] args) {
@@ -24,7 +26,7 @@ public class ClientMain extends Application{
 		primaryStage.setScene(mainmenu);
 		primaryStage.setResizable(false);
 		primaryStage.show();
-		MainGame.reset(primaryStage);
+		MainGame.reset(primaryStage, music);
 	}
 
 }

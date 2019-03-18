@@ -1,7 +1,6 @@
 package com.zaxxon.client;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +16,7 @@ import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
 import com.zaxxon.ui.Toolbox;
+import com.zaxxon.sound.MusicPlayer;
 
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.StatsBox;
@@ -36,6 +36,9 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -72,7 +75,7 @@ public class MainGame {
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset(Stage primaryStage) {
+	public static void reset(Stage primaryStage, MusicPlayer music) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -110,14 +113,26 @@ public class MainGame {
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
+		//make an audio button
+		Button audio = new Button();
+		//load audio icon
+		//load the icon
+		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
+		ImageView audioView = new ImageView(audioIcon); //make an imageview for the minimise icon
+		audio.setGraphic(audioView); //add the image to the button
+		audio.setOnAction(e -> music.stop());
+		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 30 0 0 0;");
+
+
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
 		anchorPane.setTopAnchor(toolbox, 0.0);
 		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
+		anchorPane.setLeftAnchor(audio, 10.0);
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
+		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox, audio);
 		anchorPane.setId("anchorpane");
 
 		// set up new arrays and objects
