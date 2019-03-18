@@ -212,7 +212,13 @@ public abstract class Enemy extends MovableSprite {
 		} else
 			inputDir.y = 0; // enemy is vertically inline with the player.
 	}
-	
+
+	/**
+	 *	Calculates the cardinal direction of target coordinates in relation to this enemy. This corresponding texture of this will be set, based upon which way it should be facing.
+	 *
+	 * @param pX target x-coordinate
+	 * @param pY target y-coordinate
+	 */
 	protected void rotate(double pX, double pY) {
 		double deltaX = getX() - pX;
 		double deltaY = getY() - pY;
