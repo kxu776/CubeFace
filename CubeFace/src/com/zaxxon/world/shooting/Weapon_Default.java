@@ -28,12 +28,12 @@ public class Weapon_Default extends Weapon {
 	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
 
 		if (multiplayer) {
-
+			System.out.println("I am firing");
 			if (!fired) {
-
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
+				System.out.println("I am firing2");
 			}
 		}
 

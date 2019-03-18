@@ -1,5 +1,7 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.networking.Server;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Toolbox {
+	public static boolean runningServer = false;
 
     public AnchorPane toolbar(Stage popupwindow, int type, String title) {
 
@@ -49,11 +52,13 @@ public class Toolbox {
         Button close = new Button();
         if (type ==3) {
             close.setOnAction(e -> QuitPopup.display(popupwindow));
-            if(type == 2) {
-            	
-            }
-        } else {
+            if(runningServer == true) {
+    				runningServer = false;
+    			}
+        } 
+        else {
             close.setOnAction(e -> popupwindow.close());
+            
         }
 
         //load the icon
@@ -91,5 +96,8 @@ public class Toolbox {
         return anchorPane;
     }
 
+    public static void closeServer(Server s) {
+    		s.close();
+    }
 
 }

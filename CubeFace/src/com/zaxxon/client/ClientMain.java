@@ -28,7 +28,7 @@ public class ClientMain extends Application{
 		//primaryStage.setMinHeight(MainMenu.HEIGHT + 37);
 		primaryStage.show();
 		MainGame.reset(primaryStage);
-	//	MainMenu.music.loop();
+		MainMenu.music.loop();
 	}
 
 }

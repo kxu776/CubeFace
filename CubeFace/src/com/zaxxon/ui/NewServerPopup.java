@@ -57,8 +57,8 @@ public class NewServerPopup {
             public void handle(ActionEvent event) {
 
                 //get info from text field and pass to networking
-            		new Server(Integer.parseInt(portField.getText())).start();
-            		
+            		Server server = new Server(Integer.parseInt(portField.getText()));
+            		server.start();            		
 
             		// Expect to fail if same port num
             		

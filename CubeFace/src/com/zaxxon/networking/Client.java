@@ -199,7 +199,6 @@ public class Client extends Thread {
 		try {
 			socket.send(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
 		} 
 	}
 }

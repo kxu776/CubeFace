@@ -179,6 +179,7 @@ public class MainGame {
 					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
+					fired = false;
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
 				}
@@ -265,6 +266,7 @@ public class MainGame {
 			client.setHealth(player1.getHealth());
 			networkingClient.sendPlayerObj(client);
 			spawn = true;
+			return;
 		}
 
 		if (player1.getdir() == (FacingDir.up)) {
@@ -278,8 +280,9 @@ public class MainGame {
 		}
 
 		// Standing still and shooting
-		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
-				&& ((player1.getY() - client.getY()) == 0.0)) {
+		if (Input.isKeyPressed(KeyCode.SPACE) &&
+			((player1.getX() - client.getX()) == 0.0) &&
+			((player1.getY() - client.getY()) == 0.0)) {
 			if (fired == false) {
 				client.setX(player1.getX());
 				client.setY(player1.getY());
@@ -288,6 +291,7 @@ public class MainGame {
 				networkingClient.sendPlayerObj(client);
 				client.shoot = false;
 				fired = true;
+				return;
 			}
 		}
 		// Standing still
@@ -296,7 +300,7 @@ public class MainGame {
 		}
 
 		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			if (!fired) {
+			if (fired == false) {
 				fired = true;
 				client.shoot = true;
 			}
@@ -348,14 +352,13 @@ public class MainGame {
 						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
 						play.get(id).weaponManager.getCurrentWeapon().test = true;
 
-						play.get(id).weaponManager.update(normalisedFPS, pos, play.get(id).getplayerDimensions(), m);
-
 					}
 
 					if ((data.shoot == true)) {
 						FacingDir m = play.get(id).getdir();
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
-						Vector2 pos = play.get(id).getplayerDimensions();
+						Vector2 pos = play.get(id).weaponManager.playerPos;
+					//	play.get(id).weaponManager.getCurrentWeapon().test = true;
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, pos, true);
 
 					}
