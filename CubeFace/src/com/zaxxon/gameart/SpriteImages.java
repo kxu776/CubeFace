@@ -6,6 +6,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * URLs and BufferedImages for relevant game textures
+ * 
+ * @author Philip Eagles
+ *
+ */
 public class SpriteImages {
 
 	/**
