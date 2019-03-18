@@ -1,7 +1,7 @@
 
 .root {
     -fx-background-color: #c1e9b3;
-    -fx-background-image: url(img/popup-bg.png);
+    -fx-background-image: url(../img/popup-bg.png);
     -fx-background-repeat: repeat;
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";

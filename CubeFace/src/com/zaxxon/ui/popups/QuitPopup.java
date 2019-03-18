@@ -1,6 +1,8 @@
-package com.zaxxon.ui;
+package com.zaxxon.ui.popups;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -8,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -24,6 +27,8 @@ public class QuitPopup {
 
     public static void display(Stage primaryStage)
     {
+        double[] xOffset = {0};
+        double[] yOffset = {0};
         Stage popupwindow = new Stage();
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
@@ -99,7 +104,26 @@ public class QuitPopup {
         //Scene
         Scene scene1= new Scene(borderPane, 400, 150);
         scene1.setFill(Color.TRANSPARENT);
-        scene1.getStylesheets().add(QuitPopup.class.getResource("popup.css").toString());
+        scene1.getStylesheets().add(MainMenu.class.getResource("css/popup.css").toString());
+
+        //make it movable
+        scene1.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset[0] = event.getSceneX();
+                yOffset[0] = event.getSceneY();
+            }
+        });
+
+        scene1.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popupwindow.setX(event.getScreenX() - xOffset[0]);
+                popupwindow.setY(event.getScreenY() - yOffset[0]);
+            }
+        });
+
+
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
 

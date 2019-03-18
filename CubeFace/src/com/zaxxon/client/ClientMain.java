@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import static com.zaxxon.ui.MainMenu.music;
 
 /**
  * the Client for a game to run on/with
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
  *
  */
 public class ClientMain extends Application {
+
 
 	/**
 	 * runs the client side program
@@ -35,11 +37,10 @@ public class ClientMain extends Application {
 		// primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
 		primaryStage.setResizable(false);
-		// primaryStage.setMinWidth(MainMenu.WIDTH);
-		// primaryStage.setMinHeight(MainMenu.HEIGHT + 37);
+		primaryStage.setScene(mainmenu);
+		primaryStage.setResizable(false);
 		primaryStage.show();
-		MainGame.reset(primaryStage);
-		// MainMenu.music.loop();
+		MainGame.reset(primaryStage, music);
 	}
 
 }

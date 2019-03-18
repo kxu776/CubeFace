@@ -3,15 +3,17 @@ package com.zaxxon.ui;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.sound.MusicPlayer;
 
+import com.zaxxon.ui.popups.ArityPopup;
+import com.zaxxon.ui.tools.Toolbox;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -33,11 +35,14 @@ public class MainMenu {
 
 
     //a method that makes the main menu scene
-    public Scene makeMainMenu(Stage window) {
+    public Scene makeMainMenu(Stage primaryStage) {
+
+        double[] xOffset = {0};
+        double[] yOffset = {0};
 
         //stage settings
-        window.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
-        window.setResizable(false);
+        primaryStage.initStyle(StageStyle.TRANSPARENT); //remove automatic formatting for the stage
+        primaryStage.setResizable(false);
 
 
         //******************************GRIDPANE 1***********************************
@@ -61,7 +66,7 @@ public class MainMenu {
 
         start = new Button("START");
         start.setOnAction(e -> {
-            ArityPopup.display(window, MainGame.getRenderedScene());
+            ArityPopup.display(primaryStage, MainGame.getRenderedScene());
         });
         grid1.setConstraints(start, 0, 3);
 
@@ -162,7 +167,7 @@ public class MainMenu {
         grid2.getChildren().add(zombieView);
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(window, 2, "CubeFace");
+        AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 2, "CubeFace");
         //toolbox.setPadding(new Insets(0, 0, 0, 0));
         toolbox.setId("toolbox");
 
@@ -188,7 +193,23 @@ public class MainMenu {
         mainmenu.setFill(Color.TRANSPARENT);
 
 
-        mainmenu.getStylesheets().add(getClass().getResource("mainmenu.css").toString()); //add the stylesheet
+        //make it movable
+        mainmenu.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset[0] = event.getSceneX();
+                yOffset[0] = event.getSceneY();
+            }
+        });
+
+        mainmenu.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                primaryStage.setX(event.getScreenX() - xOffset[0]);
+                primaryStage.setY(event.getScreenY() - yOffset[0]);
+            }
+        });
+        mainmenu.getStylesheets().add(getClass().getResource("css/mainmenu.css").toString()); //add the stylesheet
 
 
         return mainmenu;

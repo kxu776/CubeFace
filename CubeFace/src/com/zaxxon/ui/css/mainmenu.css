@@ -1,6 +1,6 @@
 
 .root {
-    -fx-background-image: url(img/gui-prototypes.png), url(img/wallbg.png);
+    -fx-background-image: url(../img/gui-prototypes.png), url(../img/wallbg.png);
     -fx-background-repeat: repeat;
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";

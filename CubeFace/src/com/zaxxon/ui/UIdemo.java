@@ -1,11 +1,11 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.ui.popups.ArityPopup;
 import javafx.application.Application;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,16 +17,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
-import javafx.scene.web.WebView;
-import javafx.scene.control.Label;
-import sun.awt.resources.awt;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class UIdemo extends Application {
 
