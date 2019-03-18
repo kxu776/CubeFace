@@ -12,6 +12,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import com.zaxxon.client.MainGame;
+import com.zaxxon.maths.Vector2;
 
 public class Client extends Thread {
 
@@ -52,7 +53,7 @@ public class Client extends Thread {
 	}
 		
 
-	public void connect() {
+	private void connect() {
 		try {
 			serverAddress = InetAddress.getByName(ipAddress);
 		} catch (UnknownHostException e) {
@@ -73,6 +74,7 @@ public class Client extends Thread {
 
 	private void process(DatagramPacket packet) {
 		String message = new String(packet.getData());
+		
 		if (message.trim().startsWith("/c/")) {
 			message = message.substring(3);
 			String[] messID = message.split("/");
@@ -80,8 +82,20 @@ public class Client extends Thread {
 			return;
 		}
 
-		else if (message.startsWith("/s/")) {
+		else if (message.startsWith("/z/")) {
 			message = message.substring(3, message.length());
+			String messageArr[] = message.split("/");
+			try {
+				double x = Double.parseDouble(messageArr[0]);
+				double y = Double.parseDouble(messageArr[1]);
+				Vector2 pos = new Vector2(x,y);
+				MainGame.enemiesList.get(0).setPosition(pos);
+			
+			} catch(NumberFormatException e) {
+				System.out.println((messageArr[1]));
+				e.printStackTrace();
+			}
+
 			return;
 		}
 		
@@ -118,21 +132,11 @@ public class Client extends Thread {
 		else	
 			try {
 
-				// Here is where we should update the client.
+				// Here is where we should update the client about other players.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
-				ClientSender data = (ClientSender) in.readObject();
-				
+				ClientSender data = (ClientSender) in.readObject();		
 				MainGame.inputUpdateQueue.add(data);
-				
-				// socket.close();
-				// running = false;
-				// try {
-				// bais.close();
-				// in.close();
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
 
 			} catch (Exception e) {
 				System.out.println(packet.getData().toString());
@@ -184,7 +188,6 @@ public class Client extends Thread {
 			socket.close();		
 		} catch (IOException e) {
 		}
-
 	}
 	
 	protected void setID(String s) {

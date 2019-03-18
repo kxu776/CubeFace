@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.zaxxon.client.MainGame;
+import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.mobile.enemies.Enemy;
+
 public class Server {
 
 	private DatagramSocket serverSocket;
@@ -20,6 +24,7 @@ public class Server {
 	private String SERVER_IP;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
+	protected MainGame mG;
 
 	private ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, byte[]> lastKnownPos = new ConcurrentHashMap<>();
@@ -62,7 +67,10 @@ public class Server {
 		DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 		try {
 			serverSocket.send(packet);
+			Thread.sleep(15);	 
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -79,6 +87,7 @@ public class Server {
 		}
 	}
 
+	// Read in the info and set the ID corresponding to ServerClient info.
 	private byte[] editObj(byte[] bs, String ID) {
 		try {
 			bais = new ByteArrayInputStream(bs);
@@ -93,6 +102,7 @@ public class Server {
 				out.writeObject(data);
 				out.flush();
 				byte[] playerinfo = baos.toByteArray();
+				// Update last Known position server side.
 				if (lastKnownPos.containsKey(ID)) {
 					lastKnownPos.remove(ID);
 					lastKnownPos.put(ID, playerinfo);
@@ -119,20 +129,14 @@ public class Server {
 				}
 			}
 			send(b, c.getValue().getAddress(), c.getKey());
-			try {
-				Thread.sleep(15);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
-
 	}
 
 	private void broadcastPlayers(DatagramPacket packet) {
 		int port = packet.getPort();
 		InetAddress address = packet.getAddress();
 		ServerClient associatedID;
-		byte[] b;
+		byte[] playerAttributes;
 
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 
@@ -145,11 +149,11 @@ public class Server {
 
 					// Setup its ID and get ready to send to other players
 
-					b = editObj(packet.getData(), associatedID.getID());
+					playerAttributes = editObj(packet.getData(), associatedID.getID());
 					if (!lastKnownPos.containsKey(c.getValue().getID())) {
-						lastKnownPos.put(c.getValue().getID(), b);
+						lastKnownPos.put(c.getValue().getID(), playerAttributes);
 					}
-					sendToRelevant(b, port, address);
+					sendToRelevant(playerAttributes, port, address);
 					break;
 				}
 			}
@@ -170,29 +174,26 @@ public class Server {
 		String action = new String(data);
 
 		if (action.startsWith("/C/")) {
-
 			System.out.println("------------");
 			System.out.println("New Player ");
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
-
 			String id = UUID.randomUUID().toString().trim();
-
-			System.out.println("I have this ID: " + id);
-
+			
 			clients.put(packet.getPort(),
-					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), id)));
-
+					(new ServerClient(action.substring(3),
+									 packet.getAddress(), 
+									 packet.getPort(), id)));
+			
 			send(("/c/Connected/" + id + "/").getBytes(), address, port);
 
-			
+			// No need to send last known position to only one player.
 			if(clients.size()<2) {
 				return;
 			}
 			
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
-				System.out.println("I've sent this ID: " + c.getKey());
 			}
 
 			// Send the last known positions of any other player
@@ -204,7 +205,6 @@ public class Server {
 			// Server Sends relevant info to player
 			// If new client connects midgame we iterate through hashmap
 			// send the last known co-ordinates to that player of each player
-
 			return;
 		}
 
@@ -213,20 +213,19 @@ public class Server {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
 					String disconnectIP= disconnectIParray[1];
+					
+					// Should host disconnect we remove everyone from multiplayer
 					if(c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost") || disconnectIP.equals("127.0.0.1")) {
 						sendToRelevant("/b/".getBytes(),port,address);
 						close();
 						return;
 					}
 					
-					
+					// Otherwise we tell everyone who disconnected and remove them.
 					String idToRemove = c.getValue().getID();
-					String disconnectIT = "/d/" + idToRemove + "/";
-					
-					
+					String disconnectIT = "/d/" + idToRemove + "/";	
 					lastKnownPos.remove(c.getValue().getID());
 					clients.remove(c.getKey(), c.getValue());
-					System.out.println(disconnectIT);
 					byte[] disconnected = disconnectIT.getBytes();
 					sendToRelevant(disconnected, port, address);
 					return;
@@ -234,7 +233,9 @@ public class Server {
 			}
 		}
 		
+		// If we don't have enough players we just update the position of who is currently connected.
 		if (clients.size() < 2) {
+			System.out.println("amI running");
 			String currentPlayer = clients.get(port).getID();
 			updatePos(packet.getData(), currentPlayer);
 			return;
@@ -243,27 +244,34 @@ public class Server {
 		else {
 			// Game starts
 			broadcastPlayers(packet);
+			//distrubuteZombies(port,address);
 		}
 	}
 
-	private void broadcastGen(DatagramPacket p) {
-		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			if (p.getPort() != c.getKey() && p.getAddress() != c.getValue().getAddress()) {
-				p.setPort(c.getKey());
-				p.setAddress(c.getValue().getAddress());
-				try {
-					serverSocket.send(p);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	
+	//TODO: implement a way of sending zombies to other players that is synchronised.
+	// Perhaps simulate game on server.
+	private void distrubuteZombies(int port,InetAddress address) {
+		while(MainGame.enemiesList.iterator().hasNext()){
+			Enemy e = MainGame.enemiesList.iterator().next();
+			sendZombies(e.getPosition(),port,address);
 		}
 	}
-
+	
+	
+	private void sendZombies(Vector2 vec,int port,InetAddress address) {
+		String x = ""+ vec.x;
+		String y = ""+ vec.y;
+		String zombie = "/z/"+x+"/"+y+"/";
+		sendToRelevant(zombie.getBytes(),port,address);
+	}
+	
+	
+	// Could be used by UI to show user what to enter.
 	public String getServerIP() {
 		return SERVER_IP;
 	}
-
+	// Update the players position
 	private void updatePos(byte[] b, String ID) {
 		if (!lastKnownPos.containsKey(ID)) {
 			lastKnownPos.put(ID, b);
@@ -272,17 +280,13 @@ public class Server {
 		}
 	}
 
+	// Close the server.
 	public void close() {
 		try {
-			System.out.println("do i even run");
-			System.out.println(listening);
 			listening = false;
-			System.out.println(listening);
-
 			listenThread.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
-
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}

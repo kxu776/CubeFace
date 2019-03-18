@@ -49,6 +49,9 @@ public class Toolbox {
         Button close = new Button();
         if (type ==3) {
             close.setOnAction(e -> QuitPopup.display(popupwindow));
+            if(type == 2) {
+            	
+            }
         } else {
             close.setOnAction(e -> popupwindow.close());
         }
