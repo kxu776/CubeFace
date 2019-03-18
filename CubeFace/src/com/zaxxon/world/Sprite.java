@@ -13,30 +13,79 @@ import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
 
+/**
+ * An abstract representation of a Sprite to be rendered in a JavaFX Scene
+ * 
+ * @author Philip Eagles
+ *
+ */
 public abstract class Sprite extends Rectangle {
 
+	/**
+	 * used to ensure each Sprite has a unique ID
+	 */
 	protected static int idCounter = 0;
 
+	/**
+	 * the Image texture used by the Sprite
+	 */
 	protected javafx.scene.image.Image image;
+	/**
+	 * a spriteSheet of Images used by the Sprite
+	 */
 	protected javafx.scene.image.Image[] spriteSheet;
 
+	/**
+	 * creates a simple Sprite
+	 */
 	public Sprite() {
 		init(0, 0, 0, 0);
 	}
 
+	/**
+	 * creates a simple Sprite
+	 * 
+	 * @param width  width of the Sprite
+	 * @param height height of the Sprite
+	 */
 	public Sprite(int width, int height) {
 		init(width, height, 0, 0);
 	}
 
+	/**
+	 * creates a simple Sprite
+	 * 
+	 * @param width  width of the Sprite
+	 * @param height height of the Sprite
+	 * @param x      x coordinate of the Sprite
+	 * @param y      y coordinate of the Sprite
+	 */
 	public Sprite(int width, int height, int x, int y) {
 		init(width, height, x, y);
 	}
 
+	/**
+	 * creates a simple Sprite
+	 * 
+	 * @param width  width of the Sprite
+	 * @param height height of the Sprite
+	 * @param x      x coordinate of the Sprite
+	 * @param y      y coordinate of the Sprite
+	 * @param _image the Image to use as the Sprite's texture
+	 */
 	public Sprite(int width, int height, int x, int y, javafx.scene.image.Image _image) {
 		init(width, height, x, y);
 		this.image = _image;
 	}
 
+	/**
+	 * initialises the Sprite by setting up its properties
+	 * 
+	 * @param width  the width of the Sprite
+	 * @param height the height of the Sprite
+	 * @param x      x coordinate of the Sprite
+	 * @param y      y coordinate of the Sprite
+	 */
 	private void init(int width, int height, int x, int y) {
 		this.setId(Integer.toString(idCounter));
 		idCounter++;
@@ -45,7 +94,10 @@ public abstract class Sprite extends Rectangle {
 		this.setWidth(width);
 		this.setHeight(height);
 	}
-	
+
+	/**
+	 * removes the Sprite from the game and from all references
+	 */
 	public abstract void delete();
 
 	public void setImageSpriteSheet(BufferedImage image, int rows, int columns) {
@@ -59,7 +111,7 @@ public abstract class Sprite extends Rectangle {
 			}
 		}
 	}
-	
+
 	public void setImage(BufferedImage i) {
 		setImage(SwingFXUtils.toFXImage(i, null));
 	}
@@ -107,6 +159,12 @@ public abstract class Sprite extends Rectangle {
 		return attributes;
 	}
 
+	/**
+	 * returns the distance between this Sprite and another Sprite
+	 * 
+	 * @param s the SPrite to measure the distance to
+	 * @return the distance between Sprites (in terms of pixels)
+	 */
 	public double getDistanceToSprite(Sprite s) {
 		double differenceX = s.getX() - this.getX();
 		double differenceY = s.getY() - this.getY();
@@ -115,6 +173,12 @@ public abstract class Sprite extends Rectangle {
 		return Math.sqrt(differenceX + differenceY);
 	}
 
+	/**
+	 * whether the Sprite is considered alive (non-alive Sprites are may include
+	 * Sprites with no health property)
+	 * 
+	 * @return true if alive else false
+	 */
 	public abstract Boolean isAlive();
 
 }
