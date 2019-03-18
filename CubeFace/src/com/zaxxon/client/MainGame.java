@@ -44,6 +44,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+/**
+ * The main window for the game and all its processes
+ * 
+ * @author Philip Eagles
+ *
+ */
+/**
+ * @author Philip Eagles
+ *
+ */
 public class MainGame {
 
 	private static Group grpGame;
@@ -198,10 +208,20 @@ public class MainGame {
 		fpsLong = System.currentTimeMillis();
 	}
 
+	/**
+	 * Getter for the renderedScene Scene
+	 * 
+	 * @return the renderedScene
+	 */
 	public static Scene getRenderedScene() {
 		return renderedScene;
 	}
 
+	/**
+	 * Getter for the world Group
+	 * 
+	 * @return the world
+	 */
 	public static Group getWorld() {
 		return world;
 	}
@@ -235,11 +255,19 @@ public class MainGame {
 		});
 	}
 
+	/**
+	 * adds a Sprite to the background of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToBackground(Sprite s) {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
 
+	/**
+	 * adds a Sprite to the foreground of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
 		spriteList.add(s);
@@ -248,11 +276,19 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * adds a Sprite to the overlay of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
 	}
 
+	/**
+	 * adds a CollidableRectangle to the collidable of the game
+	 * @param c the CollidableRectangle to be added
+	 */
 	public static void addCollidable(CollidableRectangle c) {
 		collidables.getChildren().add(c);
 	}
@@ -333,7 +369,7 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
-					
+
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
@@ -392,10 +428,21 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * Getter for the spriteList
+	 * 
+	 * @return the spriteList
+	 */
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
 
+	/**
+	 * returns a Sprite based off its unique ID
+	 * 
+	 * @param id the ID of the Sprite
+	 * @return the Sprite if it exists else null
+	 */
 	public static Sprite getSprite(String id) {
 		for (Sprite sprite : spriteList) {
 			if (sprite.getId().equals(id)) {

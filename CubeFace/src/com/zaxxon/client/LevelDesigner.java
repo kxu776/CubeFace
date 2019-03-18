@@ -1,7 +1,5 @@
 package com.zaxxon.client;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 
 import com.zaxxon.input.Input;
@@ -17,17 +15,54 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+/**
+ * A tool for developing new levels. Keyboard controls: wasd move camera, qe
+ * zoom camera, arrows move wall to place, b change wall texture, space place a
+ * wall, enter print level to console
+ * 
+ * @author Philip Eagles
+ *
+ */
 public class LevelDesigner extends Application {
 
+	/**
+	 * Camera that is used to traverse the Scene
+	 */
 	private static StaticCamera camera;
+	/**
+	 * integer representation of the Wall type (texture from sprite sheet)
+	 */
 	private static int wallToSet = 0;
+	/**
+	 * size of the template Wall
+	 */
 	private static int width = 256;
+	/**
+	 * size of the template Wall
+	 */
 	private static int height = 256;
+	/**
+	 * position of the template Wall
+	 */
 	private static int posX = 0;
+	/**
+	 * position of the template Wall
+	 */
 	private static int posY = 0;
+	/**
+	 * preview of the wall object to be placed/inserted
+	 */
 	private static Wall templateWall;
+	/**
+	 * Group for all Sprites to be placed into
+	 */
 	private static Group world;
 
+	/**
+	 * runs the level designer tool
+	 * 
+	 * @param args command line input options (unused)
+	 */
 	public static void main(String[] args) {
 		launch();
 	}
@@ -87,6 +122,9 @@ public class LevelDesigner extends Application {
 		mainGameLoop.start();
 	}
 
+	/**
+	 * takes keyboard input and changes the state accordingly
+	 */
 	private static void dealWithKeyInput() {
 		if (Input.isKeyPressed(KeyCode.W)) {
 			camera.setPositionY(camera.getPositionY() + 1);
@@ -140,6 +178,9 @@ public class LevelDesigner extends Application {
 		}
 	}
 
+	/**
+	 * prints the array of Wall objects to the console
+	 */
 	private static void printWallsArray() {
 		System.out.println("printWallsArray");
 		ArrayList<ArrayList<Wall>> allWalls = new ArrayList<ArrayList<Wall>>();
@@ -177,6 +218,14 @@ public class LevelDesigner extends Application {
 		print2DArray(allWallsArray);
 	}
 
+	/**
+	 * Converts an array of arrays where children array lengths do not match into
+	 * one where they do match
+	 * 
+	 * @param jaggedArray an array of arrays where the children arrays length's do
+	 *                    not match
+	 * @return a 2D array where children arrays lengt's math
+	 */
 	private static ArrayList<ArrayList<Wall>> fillJaggedArray(ArrayList<ArrayList<Wall>> jaggedArray) {
 		System.out.println("fillJaggedArray");
 		int maxSize = 0;
@@ -193,6 +242,11 @@ public class LevelDesigner extends Application {
 		return jaggedArray;
 	}
 
+	/**
+	 * prints a 2D array of Walls
+	 * 
+	 * @param array 2D array of Walls
+	 */
 	private static void print2DArray(Wall[][] array) {
 		System.out.println("print2DArray");
 		String toPrint = "{";
