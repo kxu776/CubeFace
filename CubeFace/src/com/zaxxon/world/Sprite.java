@@ -137,6 +137,9 @@ public abstract class Sprite extends Rectangle {
 		setImage(i);
 	}
 
+	/**
+	 * @param index the index of the image to set the Sprite's texture to
+	 */
 	public void setImageFromSpriteSheet(int index) {
 		setImage(spriteSheet[index % spriteSheet.length]);
 	}
@@ -145,10 +148,19 @@ public abstract class Sprite extends Rectangle {
 		return "ID: " + this.getId() + ", " + super.toString();
 	}
 
+	/**
+	 * @return the Sprite's Image array representation of the spriteSheet
+	 */
 	public javafx.scene.image.Image[] getSpriteSheet() {
 		return spriteSheet;
 	}
 
+	/**
+	 * getter for the list of the Sprite's attributes
+	 * 
+	 * @return LinkedHashMap<String, Object> where the String is the property name
+	 *         and the Object is its value
+	 */
 	public LinkedHashMap<String, Object> getAttributes() {
 		LinkedHashMap<String, Object> attributes = new LinkedHashMap<>();
 		attributes.put("posX", this.getX());
