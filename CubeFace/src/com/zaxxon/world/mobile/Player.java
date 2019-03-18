@@ -25,6 +25,9 @@ import javafx.util.Pair;
 
 //Written by Dan
 
+/**
+ * Represents the player controlled sprite in this game.
+ */
 public class Player extends MovableSprite{
 	
 	public WeaponManager weaponManager;
@@ -45,13 +48,31 @@ public class Player extends MovableSprite{
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
 	public int score = 0;
-	
-    public Player() {
+
+	/**
+	 * Default class constructor - spawns player at (500, 500)
+	 */
+	public Player() {
         
     	controllable = true;
-        
+		this.setX(500);
+		this.setY(800);
         init();
     }
+
+	/**
+	 * Class constructor - specifies spawn location of player
+	 *
+	 * @param spawnX x-coordinate of spawn location
+	 * @param spawnY y-coordinate of spawn location
+	 */
+	public Player(double spawnX, double spawnY) {
+
+		controllable = true;
+		this.setX(spawnX);
+		this.setY(spawnY);
+		init();
+	}
     
     private void init() {
     	
@@ -64,8 +85,6 @@ public class Player extends MovableSprite{
         isAlive = true;
         
         facingDir = FacingDir.up;
-        this.setX(500);
-        this.setY(800);
         weaponManager = new WeaponManager(this);
     }
     
