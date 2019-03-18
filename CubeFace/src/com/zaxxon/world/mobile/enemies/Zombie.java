@@ -21,12 +21,6 @@ public class Zombie extends Enemy {
 	}
 
 	@Override
-	protected void attack() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void delete() {
 
 		MainGame.removeFromGame(this);

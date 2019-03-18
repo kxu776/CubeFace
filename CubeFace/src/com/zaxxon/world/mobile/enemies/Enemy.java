@@ -56,6 +56,9 @@ public abstract class Enemy extends MovableSprite {
 	private double damage = 0.1;
 	final double pfOffset = 0.9;  //1.0
 
+	/**
+	 * Default Class constructor - spawns enemy at point (0,0)
+	 */
 	public Enemy() {
 		controllable = false;
 		setX(0);
@@ -66,6 +69,12 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * Class constructor specifying spawn location of enemy
+	 *
+	 * @param spawnX x-coordinate of spawn location
+	 * @param spawnY y-coordinate of spawn location
+	 */
 	public Enemy(double spawnX, double spawnY) {
 		controllable = false;
 		this.setX(spawnX);
@@ -80,6 +89,13 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * Class constructor specifying spawn location and texture file-path of enemy
+	 *
+	 * @param spawnX	x-coordinate of spawn location
+	 * @param spawnY	Y-coordinate of spawn location
+	 * @param spritesheet	filepath to texture spritesheet.
+	 */
 	public Enemy(double spawnX, double spawnY, BufferedImage spritesheet) {
 		controllable = false;
 		setX(spawnX);
@@ -102,6 +118,12 @@ public abstract class Enemy extends MovableSprite {
 		return TARGET_HEIGHT;
 	}
 
+	/**
+	 * 	updates all movement, ai and damage functions at each game loop
+	 *
+	 * @param time number of seconds which have elapsed since last update call
+	 * @param player closest player object to enemy
+	 */
 	public void update(double time, Player player) {
 		Point2D.Double closestNode = closestPoint();
 		pX = player.getX();
@@ -210,12 +232,19 @@ public abstract class Enemy extends MovableSprite {
 		}
 	}
 
+	/**
+	 * Initiates collision between enemy and walls
+	 */
 	protected void collision() {
 		Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
 		this.translate(toMove);
 	}
 
-	// Inflicts damage to player if collision occurs
+	/**
+	 * Inflicts damage to closest player if in proximity to this enemy
+	 * .
+	 * @param player player object
+	 */
 	protected void damage(Player player) {
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
 																														// check
@@ -224,8 +253,11 @@ public abstract class Enemy extends MovableSprite {
 		}
 	}
 
-	protected abstract void attack();
-
+	/**
+	 * Returns the closest path-finding node to the enemy.
+	 *
+	 * @return Point2D.Double containing coordinates of closest path-finding node
+	 */
 	public Point2D.Double closestPoint() {
 		Map<Point2D.Double, Double> dists = new HashMap<>();
 		Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
@@ -237,6 +269,11 @@ public abstract class Enemy extends MovableSprite {
 		return closest.getKey();
 	}
 
+	/**
+	 * Checks for line-of-sight obstructions between an enemy and the closest player
+	 *
+	 * @return true if an unobstructed line-of-sight exists between enemy and player
+	 */
 	public boolean lineOfSight() {
 		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
@@ -249,10 +286,15 @@ public abstract class Enemy extends MovableSprite {
 		return true;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public LinkedHashMap<String, Object> getAttributes() {
 		LinkedHashMap<String, Object> attributes = super.getAttributes();
 		attributes.put("Damage", damage);
 		return attributes;
 	}
+
 }
