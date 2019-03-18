@@ -3,8 +3,17 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 
+/**
+ * A base enemy instance. This possesses default health, damage and movement characteristics.
+ */
 public class Zombie extends Enemy {
 
+	/**
+	 * Class constructor - specifies spawn coordinates
+	 *
+	 * @param spawnX	x-coordinate of spawn location
+	 * @param spawnY	y-coordinated of spawn location
+	 */
 	public Zombie(double spawnX, double spawnY) {
 		controllable = false;
 		this.setX(spawnX);
@@ -19,6 +28,7 @@ public class Zombie extends Enemy {
 		pathfinding = false;
 		killReward = 500;
 	}
+
 
 	@Override
 	public void delete() {

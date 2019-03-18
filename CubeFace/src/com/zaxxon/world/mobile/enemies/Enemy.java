@@ -26,6 +26,11 @@ import java.util.*;
 import static com.zaxxon.world.Levels.L2_WAYPOINTS;
 import static java.lang.Math.abs;
 
+
+/**
+ * Abstract representation of an AI controlled enemy sprite
+ *
+ */
 public abstract class Enemy extends MovableSprite {
 
 	FacingDir facingDir;
