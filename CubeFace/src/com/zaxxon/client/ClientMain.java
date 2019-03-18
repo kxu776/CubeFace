@@ -21,14 +21,10 @@ public class ClientMain extends Application{
 		primaryStage.setTitle("CubeFace");
 		MainMenu mainMenu2 = new MainMenu();
 		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);
-		//primaryStage.setMaximized(true);
 		primaryStage.setScene(mainmenu);
 		primaryStage.setResizable(false);
-		//primaryStage.setMinWidth(MainMenu.WIDTH);
-		//primaryStage.setMinHeight(MainMenu.HEIGHT + 37);
 		primaryStage.show();
 		MainGame.reset(primaryStage);
-	//	MainMenu.music.loop();
 	}
 
 }
