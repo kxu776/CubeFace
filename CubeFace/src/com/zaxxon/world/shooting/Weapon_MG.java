@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 
 public class Weapon_MG extends Weapon {
 
-	private final double damage = 4;
+	private final double damage = 2;
 	private final double despawnDistance = 1000;
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/LaserShoot_2.wav");
 
