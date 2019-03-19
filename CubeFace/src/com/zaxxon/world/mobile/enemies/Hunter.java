@@ -38,7 +38,9 @@ public class Hunter extends Enemy {
 		killReward = 750;
 	}
 
-
+	/**
+	 * Class destructor - removes all references to object instance in order to un-instantiate object.
+	 */
 	@Override
 	public void delete() {
 		MainGame.removeFromGame(this);

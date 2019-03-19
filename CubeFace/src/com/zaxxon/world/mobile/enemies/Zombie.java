@@ -30,6 +30,9 @@ public class Zombie extends Enemy {
 	}
 
 
+	/**
+	 * Class destructor - removes all references to object instance in order to un-instantiate object.
+	 */
 	@Override
 	public void delete() {
 

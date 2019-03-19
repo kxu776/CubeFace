@@ -14,7 +14,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -268,7 +267,7 @@ public abstract class Enemy extends MovableSprite {
 
 	/**
 	 * Inflicts damage to closest player if in proximity to this enemy
-	 * .
+	 *
 	 * @param player player object
 	 */
 	protected void damage(Player player) {

@@ -73,8 +73,11 @@ public class Player extends MovableSprite{
 		this.setY(spawnY);
 		init();
 	}
-    
-    private void init() {
+
+	/**
+	 * Initialises relevant attribute values for instantiation
+	 */
+	private void init() {
     	
     	setImageSpriteSheet(SpriteImages.CUBEFACE_SPRITESHEET_IMAGE, 2, 4);
     	setImageFromSpriteSheet(0);
