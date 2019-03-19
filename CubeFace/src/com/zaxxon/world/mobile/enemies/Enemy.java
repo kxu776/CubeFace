@@ -137,7 +137,7 @@ public abstract class Enemy extends MovableSprite {
 		// collision();
 		deltaTime = time;
 		// movement(pX, pY);
-		pathfinding = !lineOfSight();
+		if(lineOfSight()){ pathfinding = false;}
 		if (pathfinding) {
 			movement(closestNode.x, closestNode.y);
 		} else {
