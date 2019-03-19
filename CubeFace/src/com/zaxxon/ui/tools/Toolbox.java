@@ -1,7 +1,9 @@
-package com.zaxxon.ui;
+package com.zaxxon.ui.tools;
 
-import com.zaxxon.networking.Server;
-
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.popups.ArityPopup;
+import com.zaxxon.ui.popups.QuitPopup;
+import com.zaxxon.ui.popups.ServerConfirmationPopup;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 public class Toolbox {
 	public static boolean runningServer = false;
@@ -29,22 +34,25 @@ public class Toolbox {
 
         Button minimise = new Button();
         //if window is not a popup window
-        if (type != 2) {
+        if (type != 1) {
             minimise.setOnAction(e -> popupwindow.setIconified(true));
         }
         //load the icon
-        Image minimiseIcon = new Image(ServerConfirmationPopup.class.getResource("img/minimise.png").toString());
+        Image minimiseIcon = new Image(MainMenu.class.getResource("img/minimise.png").toString());
         ImageView minView = new ImageView(minimiseIcon); //make an imageview for the minimise icon
         minimise.setGraphic(minView); //add the image to the button
         minimise.setId("toolbarbutton");
 
         Button maximise = new Button();
         //if window is not a popup window
-        if (type != 2) {
-            maximise.setOnAction(e -> popupwindow.setMaximized(true));
+        if (type != 1) {
+            maximise.setOnAction(e -> {popupwindow.setMaximized(true);
+            Rectangle rect = new Rectangle(popupwindow.getMinWidth(), popupwindow.getMinHeight());
+            //popupwindow.getScene().getRoot().setClip(rect);
+                        });
         }
         //load the icon
-        Image maximiseIcon = new Image(ServerConfirmationPopup.class.getResource("img/maximise.png").toString());
+        Image maximiseIcon = new Image(MainMenu.class.getResource("img/maximise.png").toString());
         ImageView maxView = new ImageView(maximiseIcon); //make an imageview for the minimise icon
         maximise.setGraphic(maxView); //add the image to the button
         maximise.setId("toolbarbutton");
@@ -62,7 +70,7 @@ public class Toolbox {
         }
 
         //load the icon
-        Image closeIcon = new Image(ServerConfirmationPopup.class.getResource("img/close.png").toString());
+        Image closeIcon = new Image(MainMenu.class.getResource("img/close.png").toString());
         ImageView closeView = new ImageView(closeIcon); //make an imageview for the minimise icon
         close.setGraphic(closeView); //add the image to the button
         close.setId("toolbarbutton");
@@ -85,19 +93,15 @@ public class Toolbox {
 
 
         if(type == 1) {
-            anchorPane.getStylesheets().add(ArityPopup.class.getResource("popup-toolbox.css").toString());
+            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/popup-toolbox.css").toString());
         } else if(type == 2) {
-            anchorPane.getStylesheets().add(ArityPopup.class.getResource("mainmenu-toolbox.css").toString());
+            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/mainmenu-toolbox.css").toString());
         } else if(type ==3) {
-            anchorPane.getStylesheets().add(ArityPopup.class.getResource("game-toolbox.css").toString());
+            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/game-toolbox.css").toString());
         }
 
 
         return anchorPane;
-    }
-
-    public static void closeServer(Server s) {
-    		s.close();
     }
 
 }

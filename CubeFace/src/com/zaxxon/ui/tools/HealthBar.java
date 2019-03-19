@@ -1,4 +1,4 @@
-package com.zaxxon.ui;
+package com.zaxxon.ui.tools;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

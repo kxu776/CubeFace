@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.ui.Toolbox;
 import com.zaxxon.world.mobile.enemies.Enemy;
 
 public class Server {
@@ -48,7 +47,6 @@ public class Server {
 			ServerAddress = InetAddress.getLocalHost();
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
-    			Toolbox.runningServer = true;
 			listening = true;
 			listenThread = new Thread(new Runnable() {
 				public void run() {
@@ -174,10 +172,6 @@ public class Server {
 		InetAddress address = packet.getAddress();
 		int port = packet.getPort();
 		String action = new String(data);
-		
-		if(Toolbox.runningServer = false) {
-			close();
-		}
 
 		if (action.startsWith("/C/")) {
 			System.out.println("------------");

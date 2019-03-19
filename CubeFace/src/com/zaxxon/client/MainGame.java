@@ -1,7 +1,6 @@
 package com.zaxxon.client;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,10 +14,11 @@ import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.Toolbox;
+import com.zaxxon.ui.tools.Toolbox;
+import com.zaxxon.sound.MusicPlayer;
 
 import com.zaxxon.world.TrackingCamera;
-import com.zaxxon.ui.StatsBox;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Camera;
 import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
@@ -33,9 +33,14 @@ import com.zaxxon.world.mobile.enemies.Zombie;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -43,6 +48,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+/**
+ * The main window for the game and all its processes
+ * 
+ * @author Philip Eagles
+ *
+ */
+/**
+ * @author Philip Eagles
+ *
+ */
 public class MainGame {
 
 	private static Group grpGame;
@@ -71,7 +86,7 @@ public class MainGame {
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset(Stage primaryStage) {
+	public static void reset(Stage primaryStage, MusicPlayer music) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -90,6 +105,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		double[] xOffset = {0}; //array for making window movable
+		double[] yOffset = {0};
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(998, 498);
@@ -109,14 +126,26 @@ public class MainGame {
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
+		//make an audio button
+		Button audio = new Button();
+		//load audio icon
+		//load the icon
+		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
+		ImageView audioView = new ImageView(audioIcon); //make an imageview for the minimise icon
+		audio.setGraphic(audioView); //add the image to the button
+		audio.setOnAction(e -> music.stop());
+		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
+
+
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
 		anchorPane.setTopAnchor(toolbox, 0.0);
 		anchorPane.setLeftAnchor(toolbox, 0.0);
 		anchorPane.setBottomAnchor(borderPane, 0.0);
 		anchorPane.setRightAnchor(borderPane, 0.0);
+		anchorPane.setLeftAnchor(audio, 0.0);
 		anchorPane.setCenterShape(true);
-		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox);
+		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox, audio);
 		anchorPane.setId("anchorpane");
 
 		// set up new arrays and objects
@@ -150,7 +179,24 @@ public class MainGame {
 		// sets up the scene
 		renderedScene = new Scene(anchorPane, 1000, 500);
 		renderedScene.setFill(Color.TRANSPARENT);
-		renderedScene.getStylesheets().add(MainMenu.class.getResource("maingame.css").toString());
+		renderedScene.getStylesheets().add(MainMenu.class.getResource("css/maingame.css").toString());
+
+		//make it movable
+		renderedScene.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				xOffset[0] = event.getSceneX();
+				yOffset[0] = event.getSceneY();
+			}
+		});
+
+		renderedScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				primaryStage.setX(event.getScreenX() - xOffset[0]);
+				primaryStage.setY(event.getScreenY() - yOffset[0]);
+			}
+		});
 
 		// loads the level
 		Levels.generateLevel(Levels.LEVEL2);
@@ -198,10 +244,20 @@ public class MainGame {
 		fpsLong = System.currentTimeMillis();
 	}
 
+	/**
+	 * Getter for the renderedScene Scene
+	 * 
+	 * @return the renderedScene
+	 */
 	public static Scene getRenderedScene() {
 		return renderedScene;
 	}
 
+	/**
+	 * Getter for the world Group
+	 * 
+	 * @return the world
+	 */
 	public static Group getWorld() {
 		return world;
 	}
@@ -235,11 +291,19 @@ public class MainGame {
 		});
 	}
 
+	/**
+	 * adds a Sprite to the background of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToBackground(Sprite s) {
 		background.getChildren().add(s);
 		spriteList.add(s);
 	}
 
+	/**
+	 * adds a Sprite to the foreground of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
 		spriteList.add(s);
@@ -248,11 +312,19 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * adds a Sprite to the overlay of the game
+	 * @param s the Sprite to be added
+	 */
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
 		spriteList.add(s);
 	}
 
+	/**
+	 * adds a CollidableRectangle to the collidable of the game
+	 * @param c the CollidableRectangle to be added
+	 */
 	public static void addCollidable(CollidableRectangle c) {
 		collidables.getChildren().add(c);
 	}
@@ -402,10 +474,21 @@ public class MainGame {
 		play.clear();
 	}
 
+	/**
+	 * Getter for the spriteList
+	 * 
+	 * @return the spriteList
+	 */
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
 
+	/**
+	 * returns a Sprite based off its unique ID
+	 * 
+	 * @param id the ID of the Sprite
+	 * @return the Sprite if it exists else null
+	 */
 	public static Sprite getSprite(String id) {
 		for (Sprite sprite : spriteList) {
 			if (sprite.getId().equals(id)) {

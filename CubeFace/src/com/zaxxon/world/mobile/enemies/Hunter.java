@@ -12,8 +12,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ *  A special enemy type - A Hunter possess less health, but faster movement than a base zombie enemy. Furthermore, the reward for killing a hunter is greater than that of a base zombie.
+ */
 public class Hunter extends Enemy {
 
+	/**
+	 * Class constructor - specifies spawn coordinates
+	 *
+	 * @param spawnX	x-coordinate of spawn location
+	 * @param spawnY	y-coordinated of spawn location
+	 */
 	public Hunter(double spawnX, double spawnY) {
 		controllable = false;
 		this.setX(spawnX);
@@ -26,18 +35,12 @@ public class Hunter extends Enemy {
 		isAlive = true;
 		pathfinding = false;
 		health = 50.0;
+		killReward = 750;
 	}
 
-	@Override
-	protected void attack() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void delete() {
-
 		MainGame.removeFromGame(this);
 	}
-
 }

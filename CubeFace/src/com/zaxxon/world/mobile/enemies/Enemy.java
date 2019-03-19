@@ -26,6 +26,11 @@ import java.util.*;
 import static com.zaxxon.world.Levels.L2_WAYPOINTS;
 import static java.lang.Math.abs;
 
+
+/**
+ * Abstract representation of an AI controlled enemy sprite
+ *
+ */
 public abstract class Enemy extends MovableSprite {
 
 	FacingDir facingDir;
@@ -42,7 +47,7 @@ public abstract class Enemy extends MovableSprite {
 	protected double prevX, prevY;
 	protected boolean pathfinding;
 
-	public final int killReward = 1000;
+	public int killReward;
 
 	double deltaTime;
 
@@ -56,6 +61,9 @@ public abstract class Enemy extends MovableSprite {
 	private double damage = 0.1;
 	final double pfOffset = 0.9;  //1.0
 
+	/**
+	 * Default Class constructor - spawns enemy at point (0,0)
+	 */
 	public Enemy() {
 		controllable = false;
 		setX(0);
@@ -66,6 +74,12 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * Class constructor specifying spawn location of enemy
+	 *
+	 * @param spawnX x-coordinate of spawn location
+	 * @param spawnY y-coordinate of spawn location
+	 */
 	public Enemy(double spawnX, double spawnY) {
 		controllable = false;
 		this.setX(spawnX);
@@ -80,6 +94,13 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * Class constructor specifying spawn location and texture file-path of enemy
+	 *
+	 * @param spawnX	x-coordinate of spawn location
+	 * @param spawnY	Y-coordinate of spawn location
+	 * @param spritesheet	filepath to texture spritesheet.
+	 */
 	public Enemy(double spawnX, double spawnY, BufferedImage spritesheet) {
 		controllable = false;
 		setX(spawnX);
@@ -102,6 +123,12 @@ public abstract class Enemy extends MovableSprite {
 		return TARGET_HEIGHT;
 	}
 
+	/**
+	 * 	Updates all movement, ai and damage functions at each game loop
+	 *
+	 * @param time number of seconds which have elapsed since last update call
+	 * @param player closest player object to enemy
+	 */
 	public void update(double time, Player player) {
 		Point2D.Double closestNode = closestPoint();
 		pX = player.getX();
@@ -110,7 +137,7 @@ public abstract class Enemy extends MovableSprite {
 		// collision();
 		deltaTime = time;
 		// movement(pX, pY);
-		pathfinding = !lineOfSight();
+		if(lineOfSight()){ pathfinding = false;}
 		if (pathfinding) {
 			movement(closestNode.x, closestNode.y);
 		} else {
@@ -135,6 +162,12 @@ public abstract class Enemy extends MovableSprite {
 
 	}
 
+	/**
+	 * Calculates and executes movement of enemy towards a set of target coordinates
+	 *
+	 * @param pX target x-coordinate
+	 * @param pY target y-coordinate
+	 */
 	protected void movement(double pX, double pY) {
 
 		inputDir = new Vector2();
@@ -158,6 +191,10 @@ public abstract class Enemy extends MovableSprite {
 		velocity = new Vector2(moveDir.x * currentSpeed, moveDir.y * currentSpeed);
 	}
 
+	/**
+	 * Calculates the cardinal direction of the target point relative to the enemy in the horizontal plain
+	 * @param pX target x-coordinate
+	 */
 	protected void moveX(double pX) {
 		if (this.getX() < pX) { // enemy is to the left of the player
 			inputDir.x = 1;
@@ -167,6 +204,11 @@ public abstract class Enemy extends MovableSprite {
 			inputDir.x = 0; // enemy is horizontally inline with the player.
 	}
 
+	/**
+	 *	Calculates the cardinal direction of the target point relative to the enemy in the vertical plain
+	 *
+	 * @param pY target x-coordinate
+	 */
 	protected void moveY(double pY) {
 		if (this.getY() < pY) { // enemy is above the player
 			inputDir.y = 1;
@@ -176,6 +218,12 @@ public abstract class Enemy extends MovableSprite {
 			inputDir.y = 0; // enemy is vertically inline with the player.
 	}
 
+	/**
+	 *	Calculates the cardinal direction of target coordinates in relation to this enemy. This corresponding texture of this will be set, based upon which way it should be facing.
+	 *
+	 * @param pX target x-coordinate
+	 * @param pY target y-coordinate
+	 */
 	protected void rotate(double pX, double pY) {
 		double deltaX = getX() - pX;
 		double deltaY = getY() - pY;
@@ -210,12 +258,19 @@ public abstract class Enemy extends MovableSprite {
 		}
 	}
 
+	/**
+	 * Initiates collision between enemy and walls
+	 */
 	protected void collision() {
 		Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
 		this.translate(toMove);
 	}
 
-	// Inflicts damage to player if collision occurs
+	/**
+	 * Inflicts damage to closest player if in proximity to this enemy
+	 * .
+	 * @param player player object
+	 */
 	protected void damage(Player player) {
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
 																														// check
@@ -224,8 +279,11 @@ public abstract class Enemy extends MovableSprite {
 		}
 	}
 
-	protected abstract void attack();
-
+	/**
+	 * Returns the closest path-finding node to the enemy.
+	 *
+	 * @return Point2D.Double containing coordinates of closest path-finding node
+	 */
 	public Point2D.Double closestPoint() {
 		Map<Point2D.Double, Double> dists = new HashMap<>();
 		Point2D.Double currentPoint = new Point2D.Double(this.getX(), this.getY());
@@ -237,6 +295,11 @@ public abstract class Enemy extends MovableSprite {
 		return closest.getKey();
 	}
 
+	/**
+	 * Checks for line-of-sight obstructions between an enemy and the closest player
+	 *
+	 * @return true if an unobstructed line-of-sight exists between enemy and player
+	 */
 	public boolean lineOfSight() {
 		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
@@ -249,10 +312,16 @@ public abstract class Enemy extends MovableSprite {
 		return true;
 	}
 
+	/**
+	 *	Returns a collection of all attribute vales for network transmission
+	 *
+	 * @return Hashmap of attributes and their titles
+	 */
 	@Override
 	public LinkedHashMap<String, Object> getAttributes() {
 		LinkedHashMap<String, Object> attributes = super.getAttributes();
 		attributes.put("Damage", damage);
 		return attributes;
 	}
+
 }
