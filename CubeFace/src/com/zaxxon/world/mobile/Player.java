@@ -1,26 +1,11 @@
 package com.zaxxon.world.mobile;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.world.Wall;
-import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.shooting.WeaponManager;
-
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Bounds;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.ImagePattern;
-import javafx.util.Pair;
 
 
 //Written by Dan

@@ -2,15 +2,6 @@ package com.zaxxon.world.mobile.enemies;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  *  A special enemy type - A Hunter possess less health, but faster movement than a base zombie enemy. Furthermore, the reward for killing a hunter is greater than that of a base zombie.
