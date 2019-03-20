@@ -88,6 +88,7 @@ public class Client extends Thread {
 			try {
 				double x = Double.parseDouble(messageArr[0]);
 				double y = Double.parseDouble(messageArr[1]);
+				int zombies = Integer.parseInt(messageArr[2]);
 				Vector2 pos = new Vector2(x,y);
 				MainGame.enemiesList.get(0).setPosition(pos);
 			

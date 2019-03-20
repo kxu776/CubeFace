@@ -225,7 +225,6 @@ public class MainGame {
 					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
-					fired = false;
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
 				}
@@ -331,7 +330,11 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		client.currWep = player1.getCurrentWeaponNum();
-
+		
+		if (!Input.isKeyPressed(KeyCode.SPACE)) {
+			fired = false;
+		}
+		
 		if (spawn == false) {
 			client.setX(player1.getX());
 			client.setY(player1.getY());
@@ -350,19 +353,19 @@ public class MainGame {
 		} else if (player1.getdir() == (FacingDir.right)) {
 			client.pos = 4;
 		}
-
+		
 		// Standing still and shooting
 		if (Input.isKeyPressed(KeyCode.SPACE) &&
 			((player1.getX() - client.getX()) == 0.0) &&
 			((player1.getY() - client.getY()) == 0.0)) {
 			if (fired == false) {
+				fired = true;
 				client.setX(player1.getX());
 				client.setY(player1.getY());
 				client.setHealth(player1.getHealth());
 				client.shoot = true;
 				networkingClient.sendPlayerObj(client);
 				client.shoot = false;
-				fired = true;
 				return;
 			}
 		}
@@ -377,13 +380,13 @@ public class MainGame {
 				client.shoot = true;
 			}
 		}
-		// Moving
-		client.setX(player1.getX());
-		client.setY(player1.getY());
-		client.setHealth(player1.getHealth());
-		networkingClient.sendPlayerObj(client);
-		client.shoot = false;
-		fired = false;
+
+			// Moving
+			client.setX(player1.getX());
+			client.setY(player1.getY());
+			client.setHealth(player1.getHealth());
+			networkingClient.sendPlayerObj(client);
+			client.shoot = false;
 	}
 
 	private static void getUpdatesFromQueue() {
@@ -425,14 +428,12 @@ public class MainGame {
 						play.get(id).weaponManager.getCurrentWeapon().test = true;
 
 					}
-
 					if ((data.shoot == true)) {
 						FacingDir m = play.get(id).getdir();
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
-					//	play.get(id).weaponManager.getCurrentWeapon().test = true;
-						play.get(id).weaponManager.getCurrentWeapon().fire(vect, pos, true);
-
+						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos, play.get(id).getplayerDimensions(), vect);
+						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
 			}

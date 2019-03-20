@@ -24,9 +24,8 @@ public class Server {
 	private String SERVER_IP;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
-	protected MainGame mG;
 
-	private ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, byte[]> lastKnownPos = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unused")
@@ -35,6 +34,7 @@ public class Server {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
+	private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -48,12 +48,14 @@ public class Server {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
+			simulator = new ServerGameSimulator(this);
 			listenThread = new Thread(new Runnable() {
 				public void run() {
 					listen();
 				}
 			});
 			listenThread.start();
+			simulator.start();
 
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -66,8 +68,11 @@ public class Server {
 	public void send(byte[] data, InetAddress address, int port) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 		try {
-			serverSocket.send(packet);
-			Thread.sleep(15);	 
+			if(listening == true) {
+				serverSocket.send(packet);
+				Thread.sleep(15);	 
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -120,8 +125,16 @@ public class Server {
 		}
 		return bs;
 	}
+	
+	
 
-	private void sendToRelevant(byte[] b, int port, InetAddress address) {
+	  protected void sendToAll(byte[] b) {
+			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {	
+				send(b, c.getValue().getAddress(), c.getKey());	
+			}
+		}
+
+   protected void sendToRelevant(byte[] b, int port, InetAddress address) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (port == c.getKey()) {
 				if (address.equals(c.getValue().getAddress())) {
@@ -235,7 +248,6 @@ public class Server {
 		
 		// If we don't have enough players we just update the position of who is currently connected.
 		if (clients.size() < 2) {
-			System.out.println("amI running");
 			String currentPlayer = clients.get(port).getID();
 			updatePos(packet.getData(), currentPlayer);
 			return;
@@ -248,16 +260,6 @@ public class Server {
 		}
 	}
 
-	
-	//TODO: implement a way of sending zombies to other players that is synchronised.
-	// Perhaps simulate game on server.
-	private void distrubuteZombies(int port,InetAddress address) {
-		while(MainGame.enemiesList.iterator().hasNext()){
-			Enemy e = MainGame.enemiesList.iterator().next();
-			sendZombies(e.getPosition(),port,address);
-		}
-	}
-	
 	
 	private void sendZombies(Vector2 vec,int port,InetAddress address) {
 		String x = ""+ vec.x;
@@ -280,12 +282,16 @@ public class Server {
 		}
 	}
 	
-	
+	public boolean isRunning() {
+		return listening;
+	}
 	// Close the server.
 	public void close() {
 		try {
 			listening = false;
 			listenThread.interrupt();
+			simulator.run = false;
+			simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 		} catch (SocketException e) {
