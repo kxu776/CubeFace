@@ -45,7 +45,7 @@ public abstract class Enemy extends MovableSprite {
 	Vector2 inputDir = new Vector2();
 	Vector2 moveDir = new Vector2();
 	Vector2 velocity = new Vector2();
-	final double maxSpeed = 1.5;
+	double maxSpeed = 1.5;
 	final double acceleration = 1.2;
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
@@ -63,6 +63,13 @@ public abstract class Enemy extends MovableSprite {
 		isAlive = true;
 		pathfinding = false;
 		MainGame.enemiesList.add(this);
+		setDifficultyScaling(MainGame.getGameStartTime() - System.currentTimeMillis());
+	}
+	
+	public void setDifficultyScaling(long timeSinceStart) {
+		maxSpeed *= (1.0 + timeSinceStart / 60000.0);
+		health *= (1.0 + timeSinceStart / 40000.0);
+		damage *= (1.0 + timeSinceStart / 80000.0);
 	}
 
 	/**
