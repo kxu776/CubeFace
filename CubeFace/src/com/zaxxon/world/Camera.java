@@ -1,5 +1,9 @@
 package com.zaxxon.world;
 
+import com.zaxxon.client.MainGame;
+
+import javafx.scene.shape.Rectangle;
+
 /**
  * An abstract class used to implement 2D cameras
  * 
@@ -118,6 +122,21 @@ public abstract class Camera {
 	 */
 	public void setScaleY(double scaleY) {
 		this.scaleY = scaleY;
+	}
+
+	/**
+	 * generates a Rectangle to represent the bounds of the viewing area for a
+	 * camera
+	 * 
+	 * @return Rectangle with bounds matching the area visible to the camera
+	 */
+	public Rectangle getViewingBounds() {
+		double minX = -MainGame.getWorld().getTranslateX();
+		double width = MainGame.getRenderedScene().getWidth() / scaleX;
+		double minY = -MainGame.getWorld().getTranslateY();
+		double height = MainGame.getRenderedScene().getHeight() / scaleY;
+		Rectangle r = new Rectangle(minX, minY, width, height);
+		return r;
 	}
 
 }
