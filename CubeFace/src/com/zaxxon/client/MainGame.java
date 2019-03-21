@@ -105,8 +105,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		double[] xOffset = {0}; //array for making window movable
-		double[] yOffset = {0};
+		double[] xOffset = { 0 }; // array for making window movable
+		double[] yOffset = { 0 };
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(998, 498);
@@ -126,16 +126,18 @@ public class MainGame {
 		toolbox.setPrefWidth(998.0);
 		toolbox.setId("toolbox");
 
-		//make an audio button
+		// make an audio button
 		Button audio = new Button();
-		//load audio icon
-		//load the icon
+		// load audio icon
+		// load the icon
 		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
-		ImageView audioView = new ImageView(audioIcon); //make an imageview for the minimise icon
-		audio.setGraphic(audioView); //add the image to the button
-		audio.setOnAction(e -> music.stop());
+		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
+		audio.setGraphic(audioView); // add the image to the button
+		audio.setOnAction(e -> {
+			music.stop();
+			MainGame.setGameFocus();
+		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
-
 
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
@@ -181,7 +183,7 @@ public class MainGame {
 		renderedScene.setFill(Color.TRANSPARENT);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("css/maingame.css").toString());
 
-		//make it movable
+		// make it movable
 		renderedScene.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -207,7 +209,7 @@ public class MainGame {
 	public static void start(Stage primaryStage) {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
-		grpGame.requestFocus();
+		setGameFocus();
 		primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
 		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
@@ -234,6 +236,10 @@ public class MainGame {
 			}
 		};
 		mainGameLoop.start();
+	}
+
+	public static void setGameFocus() {
+		grpGame.requestFocus();
 	}
 
 	private static void calculateFPS() {
@@ -292,6 +298,7 @@ public class MainGame {
 
 	/**
 	 * adds a Sprite to the background of the game
+	 * 
 	 * @param s the Sprite to be added
 	 */
 	public static void addSpriteToBackground(Sprite s) {
@@ -301,6 +308,7 @@ public class MainGame {
 
 	/**
 	 * adds a Sprite to the foreground of the game
+	 * 
 	 * @param s the Sprite to be added
 	 */
 	public static void addSpriteToForeground(Sprite s) {
@@ -313,6 +321,7 @@ public class MainGame {
 
 	/**
 	 * adds a Sprite to the overlay of the game
+	 * 
 	 * @param s the Sprite to be added
 	 */
 	public static void addSpriteToOverlay(Sprite s) {
@@ -322,6 +331,7 @@ public class MainGame {
 
 	/**
 	 * adds a CollidableRectangle to the collidable of the game
+	 * 
 	 * @param c the CollidableRectangle to be added
 	 */
 	public static void addCollidable(CollidableRectangle c) {
