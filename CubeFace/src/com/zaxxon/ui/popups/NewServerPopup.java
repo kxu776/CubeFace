@@ -1,7 +1,5 @@
 package com.zaxxon.ui.popups;
 
-import java.net.BindException;
-
 import com.zaxxon.networking.Server;
 
 import com.zaxxon.ui.MainMenu;

@@ -22,6 +22,7 @@ public class ServerGameSimulator extends Thread{
 			}
 			try {
 				serverSize = MainGame.enemiesList.size();
+				System.out.println(serverSize);
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();

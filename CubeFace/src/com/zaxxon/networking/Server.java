@@ -11,11 +11,9 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.zaxxon.client.MainGame;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.world.mobile.enemies.Enemy;
 
-public class Server {
+public class Server extends Thread{
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
@@ -40,7 +38,7 @@ public class Server {
 		this.SERVER_PORT = serverPort;
 	}
 
-	public void start() {
+	public void run() {
 		try {
 			System.out.println("Server started on port " + SERVER_PORT);
 			serverSocket = new DatagramSocket(SERVER_PORT);
@@ -76,6 +74,7 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			this.close();
 			e.printStackTrace();
 		}
 	}
