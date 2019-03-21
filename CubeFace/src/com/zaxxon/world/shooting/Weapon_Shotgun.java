@@ -48,8 +48,6 @@ public class Weapon_Shotgun extends Weapon {
 				
 				else {
 
-					sound.play();
-
 					Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance,player);
 					WeaponManager.addBulletToList(b0);
 					
@@ -62,9 +60,9 @@ public class Weapon_Shotgun extends Weapon {
 					Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage, despawnDistance,player);
 					WeaponManager.addBulletToList(b3);
 				}
-				
-				
-				
+
+
+				sound.shoot();
 				
 				fired = true;
 			}	
@@ -73,6 +71,8 @@ public class Weapon_Shotgun extends Weapon {
 		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
 			
 			if (!fired) {
+
+				sound.shoot();
 				
 				if (Math.abs(dir.y) > 0) {
 					

@@ -62,4 +62,12 @@ public class MusicPlayer {
 		stop();
 		clip.close();
 	}
+
+	public void shoot(){
+		if(clip == null)
+			return;
+		if(clip.isRunning()) clip.stop();
+		clip.setFramePosition(0);
+		clip.start();
+	}
 }

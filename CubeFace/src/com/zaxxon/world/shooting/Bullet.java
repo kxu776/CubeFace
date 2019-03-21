@@ -1,9 +1,5 @@
 package com.zaxxon.world.shooting;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-import com.sun.org.apache.xpath.internal.SourceTree;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
@@ -11,10 +7,11 @@ import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
-import javafx.scene.paint.ImagePattern;
 import javafx.util.Pair;
+
+import java.util.ArrayList;
+
 
 
 //Written by Dan
