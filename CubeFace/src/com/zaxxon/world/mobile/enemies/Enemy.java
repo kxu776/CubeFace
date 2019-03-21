@@ -37,6 +37,8 @@ public abstract class Enemy extends MovableSprite {
 	protected static double pX, pY;
 	protected double prevX, prevY;
 	protected boolean pathfinding;
+	
+	long damageTime = 0;
 
 	public int killReward;
 
@@ -263,10 +265,20 @@ public abstract class Enemy extends MovableSprite {
 	 * @param player player object
 	 */
 	protected void damage(Player player) {
+		
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
-																														// check
-			player.takeDamage(this.damage);
-			// System.out.println("Health: " + String.valueOf(player.getHealth()));
+				
+			//invincibility frames
+			
+			if (System.currentTimeMillis() - damageTime >= 1000) {
+				
+				// check
+				player.takeDamage(this.damage);
+				// System.out.println("Health: " + String.valueOf(player.getHealth()));
+				
+				damageTime = System.currentTimeMillis();
+			}
+			
 		}
 	}
 
