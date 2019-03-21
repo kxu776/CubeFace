@@ -15,6 +15,7 @@ public class StatsBox {
     public static Label weapon;
     public static HealthBar healthBar;
     public static HealthBar opHealthBar;
+    public static Label score;
 
     public static BorderPane statsBox() {
 
@@ -55,7 +56,7 @@ public class StatsBox {
         scoreLbl.setTextAlignment(TextAlignment.CENTER);
 
         //score
-        Label score = new Label("*");
+        score = new Label("*");
         score.setId("score");
         score.setMaxWidth(80);
         score.setMinWidth(80);
@@ -122,6 +123,12 @@ public class StatsBox {
     public static void updateOpHealthBar(Integer newHealth) {
 
         opHealthBar.updateHealthBar(newHealth);
+
+    }
+
+    public static void updateScore(Integer newScore) {
+
+        score.setText(newScore.toString());
 
     }
 
