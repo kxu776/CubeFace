@@ -43,7 +43,7 @@ public class QuitPopup {
         Label label = new Label("Are you sure you would like to quit?");
         GridPane.setConstraints(label, 0, 0);
 
-        //***********SINGLE PLAYER BUTTON
+        //***********YES - quit
         Button single = new Button("Yes");
         GridPane.setConstraints(single,0, 0);
         single.setOnAction(new EventHandler<ActionEvent>() {
@@ -53,12 +53,13 @@ public class QuitPopup {
             		MainGame.networkingClient.disconnect();
             	}
                 popupwindow.close();
-                primaryStage.close();
+            	
+                primaryStage.setScene(MainMenu.mainmenu);
             
         }});
 
 
-        //************ MULTIPLAYER BUTTON
+        //************ NO - continue game
         Button multiplayer= new Button("No");
         GridPane.setConstraints(multiplayer, 1, 0);
         multiplayer.setOnAction(new EventHandler<ActionEvent>() {

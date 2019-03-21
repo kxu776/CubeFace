@@ -28,6 +28,7 @@ public class MainMenu {
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 500;
 	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
+	public static Scene mainmenu;
 	
     Button start;
     Button audio;
@@ -189,7 +190,7 @@ public class MainMenu {
         rect.setArcWidth(9.0);
         borderPane.setClip(rect);
 
-        Scene mainmenu = new Scene(borderPane, WIDTH, HEIGHT);
+        mainmenu = new Scene(borderPane, WIDTH, HEIGHT);
         mainmenu.setFill(Color.TRANSPARENT);
 
 
