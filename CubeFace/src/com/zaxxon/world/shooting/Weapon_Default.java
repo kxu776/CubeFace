@@ -3,6 +3,7 @@ package com.zaxxon.world.shooting;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 
+import com.zaxxon.sound.MusicPlayer;
 import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
@@ -12,7 +13,7 @@ public class Weapon_Default extends Weapon {
 
 	private final double damage = 10;
 	private final double despawnDistance = 600;
-
+	public static MusicPlayer sound = new MusicPlayer("/mainmenu/LaserShoot_2.wav");
 	private Boolean fired = false;
 
 	public Weapon_Default(Player player) {
@@ -29,6 +30,11 @@ public class Weapon_Default extends Weapon {
 
 		if (multiplayer) {
 			if (!fired) {
+
+
+				sound.shoot();
+
+
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
@@ -38,6 +44,8 @@ public class Weapon_Default extends Weapon {
 		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
 
 			if (!fired) {
+
+				sound.shoot();
 
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);

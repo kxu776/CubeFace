@@ -1,26 +1,17 @@
 package com.zaxxon.world.mobile.enemies;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.world.Levels;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.WallCollision;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
-import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static com.zaxxon.world.Levels.L2_WAYPOINTS;
@@ -268,7 +259,7 @@ public abstract class Enemy extends MovableSprite {
 
 	/**
 	 * Inflicts damage to closest player if in proximity to this enemy
-	 * .
+	 *
 	 * @param player player object
 	 */
 	protected void damage(Player player) {

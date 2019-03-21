@@ -46,9 +46,11 @@ public class Toolbox {
         Button maximise = new Button();
         //if window is not a popup window
         if (type != 1) {
-            maximise.setOnAction(e -> {popupwindow.setMaximized(true);
+
             Rectangle rect = new Rectangle(popupwindow.getMinWidth(), popupwindow.getMinHeight());
-            //popupwindow.getScene().getRoot().setClip(rect);
+            //popupwindow.getScene().getRoot().getParent().setClip(rect);
+            maximise.setOnAction(e -> {popupwindow.setMaximized(true);
+
                         });
         }
         //load the icon
