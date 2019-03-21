@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
@@ -23,6 +24,7 @@ import com.zaxxon.world.Camera;
 import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
+import com.zaxxon.world.Tile;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
@@ -83,6 +85,7 @@ public class MainGame {
 
 	private static long fpsLong;
 	private static double normalisedFPS;
+	private static long gameStartTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<Enemy> enemyUpdateQueue = new LinkedBlockingQueue<Enemy>();
@@ -163,11 +166,6 @@ public class MainGame {
 
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		Zombie enemy = new Zombie(600, 600);
-		Hunter enemy2 = new Hunter(1800, 1700);
-		addSpriteToForeground(enemy);
-		addSpriteToForeground(enemy2);
-
 		// sets the scene to the screen size
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
@@ -220,6 +218,11 @@ public class MainGame {
 
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
+		gameStartTime = System.currentTimeMillis();
+
+		for (int i = 0; i < 5; i++) {
+			spawnRandomEnemy();
+		}
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -240,6 +243,34 @@ public class MainGame {
 		mainGameLoop.start();
 	}
 
+	private static void spawnRandomEnemy() {
+		double randomPercentage = Math.random();
+		Tile randomTile;
+		boolean escapeFlag = true;
+		do {
+			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
+			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
+			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
+			int sum = 0;
+			for (int i = 0; i < 4; i++) {
+				sum += Levels.LEVEL2[baseTileY + (i / 2) % 2][baseTileX + i % 2];
+			}
+			if (sum == 0) {
+				escapeFlag = false;
+			}
+		} while (escapeFlag);
+		if (randomPercentage < 0.7) {
+			Zombie enemy = new Zombie(randomTile.getX(), randomTile.getY());
+			addSpriteToForeground(enemy);
+		} else {
+			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
+			addSpriteToForeground(enemy);
+		}
+	}
+
+	/**
+	 * sets the focus on the game scene for control input
+	 */
 	public static void setGameFocus() {
 		grpGame.requestFocus();
 	}
@@ -249,6 +280,10 @@ public class MainGame {
 		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
 				+ ((1.0 / normalisedFPS) * (1.0 - smoothingFactor)));
 		fpsLong = System.currentTimeMillis();
+	}
+
+	public static long getGameStartTime() {
+		return gameStartTime;
 	}
 
 	/**
@@ -314,11 +349,13 @@ public class MainGame {
 	 * @param s the Sprite to be added
 	 */
 	public static void addSpriteToForeground(Sprite s) {
-		foreground.getChildren().add(s);
-		spriteList.add(s);
-		if (s.getClass() == Player.class) {
-			playerList.add((Player) s);
-		}
+		Platform.runLater(() -> {
+			foreground.getChildren().add(s);
+			spriteList.add(s);
+			if (s.getClass() == Player.class) {
+				playerList.add((Player) s);
+			}
+		});
 	}
 
 	/**

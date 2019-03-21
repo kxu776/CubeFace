@@ -4,6 +4,7 @@ import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.shooting.WeaponManager;
 import javafx.scene.input.KeyCode;
 
@@ -83,13 +84,16 @@ public class Player extends MovableSprite{
     	movement();
 		
 		Vector2 toMove = new Vector2 (velocity.x * deltaTime, velocity.y * deltaTime);
+
 		this.translate(toMove);
 		
-		collision();
+		collision();		//Checks for wall collision
 		
-		Vector2 playerPos = new Vector2 (this.getX(), this.getY());
+		Vector2 playerPos = new Vector2 (this.getX(), this.getY()); 	//Creates vector of player position
 
 		weaponManager.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
+
+		StatsBox.updateScore(score);	//Updates on-screen score display.
 
 		draw();
 	}

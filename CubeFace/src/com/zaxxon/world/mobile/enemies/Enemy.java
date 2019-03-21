@@ -37,6 +37,8 @@ public abstract class Enemy extends MovableSprite {
 	protected static double pX, pY;
 	protected double prevX, prevY;
 	protected boolean pathfinding;
+	
+	long damageTime = 0;
 
 	public int killReward;
 
@@ -45,7 +47,7 @@ public abstract class Enemy extends MovableSprite {
 	Vector2 inputDir = new Vector2();
 	Vector2 moveDir = new Vector2();
 	Vector2 velocity = new Vector2();
-	final double maxSpeed = 1.5;
+	double maxSpeed = 1.5;
 	final double acceleration = 1.2;
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
@@ -63,6 +65,13 @@ public abstract class Enemy extends MovableSprite {
 		isAlive = true;
 		pathfinding = false;
 		MainGame.enemiesList.add(this);
+		setDifficultyScaling(MainGame.getGameStartTime() - System.currentTimeMillis());
+	}
+	
+	public void setDifficultyScaling(long timeSinceStart) {
+		maxSpeed *= (1.0 + timeSinceStart / 60000.0);
+		health *= (1.0 + timeSinceStart / 40000.0);
+		damage *= (1.0 + timeSinceStart / 80000.0);
 	}
 
 	/**
@@ -263,10 +272,20 @@ public abstract class Enemy extends MovableSprite {
 	 * @param player player object
 	 */
 	protected void damage(Player player) {
+		
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
-																														// check
-			player.takeDamage(this.damage);
-			// System.out.println("Health: " + String.valueOf(player.getHealth()));
+				
+			//invincibility frames
+			
+			if (System.currentTimeMillis() - damageTime >= 1000) {
+				
+				// check
+				player.takeDamage(this.damage);
+				// System.out.println("Health: " + String.valueOf(player.getHealth()));
+				
+				damageTime = System.currentTimeMillis();
+			}
+			
 		}
 	}
 
