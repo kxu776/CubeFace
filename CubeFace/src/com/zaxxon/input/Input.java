@@ -25,11 +25,13 @@ public class Input {
 		attachedStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
 				keysPressed.add(key.getCode());
+				key.consume();
 			}
 		});
 		attachedStage.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
 				keysPressed.remove(key.getCode());
+				key.consume();
 			}
 		});
 	}

@@ -64,6 +64,7 @@ public class QuitPopup {
         multiplayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	MainGame.setGameFocus();
                 popupwindow.close();
                 //JoinGamePopup.display(primaryStage, renderedScene);
             }

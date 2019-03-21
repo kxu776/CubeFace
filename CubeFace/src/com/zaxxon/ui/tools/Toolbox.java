@@ -1,5 +1,6 @@
 package com.zaxxon.ui.tools;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.ui.MainMenu;
 import com.zaxxon.ui.popups.ArityPopup;
 import com.zaxxon.ui.popups.QuitPopup;
@@ -34,7 +35,10 @@ public class Toolbox {
         Button minimise = new Button();
         //if window is not a popup window
         if (type != 1) {
-            minimise.setOnAction(e -> popupwindow.setIconified(true));
+            minimise.setOnAction(e -> {
+            	popupwindow.setIconified(true);
+            	MainGame.setGameFocus();
+            });
         }
         //load the icon
         Image minimiseIcon = new Image(MainMenu.class.getResource("img/minimise.png").toString());
@@ -48,9 +52,10 @@ public class Toolbox {
 
             Rectangle rect = new Rectangle(popupwindow.getMinWidth(), popupwindow.getMinHeight());
             //popupwindow.getScene().getRoot().getParent().setClip(rect);
-            maximise.setOnAction(e -> {popupwindow.setMaximized(true);
-
-                        });
+            maximise.setOnAction(e -> {
+            	popupwindow.setMaximized(true);
+            	MainGame.setGameFocus();
+            });
         }
         //load the icon
         Image maximiseIcon = new Image(MainMenu.class.getResource("img/maximise.png").toString());
@@ -60,7 +65,10 @@ public class Toolbox {
 
         Button close = new Button();
         if (type ==3) {
-            close.setOnAction(e -> QuitPopup.display(popupwindow));
+            close.setOnAction(e -> {
+            	QuitPopup.display(popupwindow);
+            	MainGame.setGameFocus();
+            });
         } else {
             close.setOnAction(e -> popupwindow.close());
         }
