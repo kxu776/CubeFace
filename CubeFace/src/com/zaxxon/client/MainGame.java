@@ -220,7 +220,6 @@ public class MainGame {
 		gameStartTime = System.currentTimeMillis();
 
 		for (int i = 0; i < 5; i++) {
-			System.out.print(i);
 			spawnRandomEnemy();
 		}
 
