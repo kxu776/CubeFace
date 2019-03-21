@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.zaxxon.maths.Vector2;
 
-public class Server extends Thread{
+public class Server {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
@@ -38,7 +38,7 @@ public class Server extends Thread{
 		this.SERVER_PORT = serverPort;
 	}
 
-	public void run() {
+	public void start() {
 		try {
 			System.out.println("Server started on port " + SERVER_PORT);
 			serverSocket = new DatagramSocket(SERVER_PORT);
@@ -72,10 +72,7 @@ public class Server extends Thread{
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (InterruptedException e) {
-			this.close();
-			e.printStackTrace();
 		}
 	}
 
@@ -290,11 +287,10 @@ public class Server extends Thread{
 			listening = false;
 			listenThread.interrupt();
 			simulator.run = false;
-			simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
+			simulator.interrupt();
 		} catch (SocketException e) {
-			e.printStackTrace();
 		}
 	}
 }

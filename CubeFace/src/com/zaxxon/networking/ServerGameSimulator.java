@@ -23,26 +23,28 @@ public class ServerGameSimulator extends Thread{
 			}
 			try {
 				serverSize = MainGame.enemiesList.size();
-				System.out.println(serverSize);
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 			
-			for (Iterator<Enemy> it = MainGame.enemiesList.iterator(); it.hasNext(); ) {
+
+			Iterator<Enemy> it =MainGame.enemiesList.iterator();
+
+			while( it.hasNext()) {
 				Enemy e = MainGame.enemiesList.iterator().next();
-				if(e.isAlive()&& e.getId()!= null) {
+				if(e.isAlive()&& e.getId() != null && run == true) {
 					sendZombies(e.getPosition(),e);
 				}
-				else if(e.isAlive()) {
+				else if(e.isAlive() && run == true) {
 					String id = UUID.randomUUID().toString();
 					e.setId(id);
-					String spawn = "/s/"+id+"/"+e.getPosition().toString();
+					String spawn = "/s/"+e.getPosition().toString()+"/"+id+"/";
 					spawnZombies(spawn);
 				}
+				break;
 			}
 		}
-		server.close();
 	}
 	
 	

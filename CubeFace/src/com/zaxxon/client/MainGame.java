@@ -88,7 +88,7 @@ public class MainGame {
 	private static long gameStartTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
-	public static LinkedBlockingQueue<Enemy> enemyUpdateQueue = new LinkedBlockingQueue<Enemy>();
+	public static LinkedBlockingQueue<String> enemyUpdateQueue = new LinkedBlockingQueue<String>();
 
 	public static void reset(Stage primaryStage, MusicPlayer music) {
 		// set up game groups
@@ -529,25 +529,70 @@ public class MainGame {
 	}
 	
 	private static void getAiUpdatesFromQueue() {
+		boolean exists = false;
 		while (!enemyUpdateQueue.isEmpty()) {
-			Enemy enemy = enemyUpdateQueue.poll();
-			if(!spriteList.contains(enemy)) {
-				addSpriteToForeground(enemy);
+			String enemy = enemyUpdateQueue.poll();
+			String messageArr[] = enemy.split("/");
+			double x = 0.00;
+			double y = 0.00;
+			try {
+				 x = Double.parseDouble(messageArr[0]);
+				 y = Double.parseDouble(messageArr[1]);
 			}
-			else {
-				Iterator<Sprite> iterator = spriteList.iterator();
-				while (iterator.hasNext()) {
-					Sprite sprite = iterator.next();
-					if (sprite.getId().equals(enemy.getId())) {
-						sprite.setX(enemy.getX());
-						sprite.setY(enemy.getY());
-		
+			catch(NumberFormatException e) {
+				e.printStackTrace();
+			}			
+			for(Enemy sprite: enemiesList) {
+				if(sprite.getId().equals(messageArr[2])){
+					
+					if(sprite.isAlive() && !spriteList.contains(sprite)) {
+						sprite.setX(x);
+						sprite.setY(y);
+						exists = true;
+						System.out.println("not visible");
+						// addSpriteToForeground(sprite);
+						break;
+					}
+					else if(sprite.isAlive() && spriteList.contains(sprite)) {
+						System.out.println(x);
+						System.out.println(y);
+						sprite.setX(x);
+						sprite.setY(y);
+						exists = true;
+						break;
+					}
+					else {
+						break;
 					}
 				}
 			}
+			
+			if(exists == true) {
+				continue;
+			}
+			else {
+				Enemy enemymp  = new Zombie(x,y);
+
+				enemymp.setId(messageArr[2]);
+				addSpriteToForeground(enemymp);
+				exists = false;
+				continue;
+				}
+			}
+			
+//			else {
+//				Iterator<Sprite> iterator = spriteList.iterator();
+//				while (iterator.hasNext()) {
+//					Sprite sprite = iterator.next();
+//					if (sprite.getId().equals(enemy.getId())) {
+//						sprite.setX(enemy.getX());
+//						sprite.setY(enemy.getY());
+//		
+//					}
+//				}
+//			}
 
 		}
-	}
 
 	/**
 	 * returns a Sprite based off its unique ID
