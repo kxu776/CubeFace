@@ -85,6 +85,7 @@ public class MainGame {
 	private static double normalisedFPS;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
+	public static LinkedBlockingQueue<Enemy> enemyUpdateQueue = new LinkedBlockingQueue<Enemy>();
 
 	public static void reset(Stage primaryStage, MusicPlayer music) {
 		// set up game groups
@@ -228,7 +229,8 @@ public class MainGame {
 				}
 				if (multiplayer) {
 					sendNetworkUpdate();
-					getUpdatesFromQueue();
+					getPlayerUpdatesFromQueue();
+					getAiUpdatesFromQueue();
 				}
 				updateEnemies();
 				camera.update();
@@ -399,7 +401,7 @@ public class MainGame {
 			client.shoot = false;
 	}
 
-	private static void getUpdatesFromQueue() {
+	private static void getPlayerUpdatesFromQueue() {
 
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
@@ -421,22 +423,17 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
-
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
-
 					if (sprite instanceof MovableSprite) {
 						((MovableSprite) sprite).setHealth(data.getHealth());
 					}
-
 					if ((play.get(id).weaponManager.getCurrentWeaponNum() != data.currWep)) {
 						Vector2 pos = play.get(id).getplayerDimensions();
 						FacingDir m = play.get(id).getdir();
-
 						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
 						play.get(id).weaponManager.getCurrentWeapon().test = true;
-
 					}
 					if ((data.shoot == true)) {
 						FacingDir m = play.get(id).getdir();
@@ -493,6 +490,27 @@ public class MainGame {
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
+	
+	private static void getAiUpdatesFromQueue() {
+		while (!enemyUpdateQueue.isEmpty()) {
+			Enemy enemy = enemyUpdateQueue.poll();
+			if(!spriteList.contains(enemy)) {
+				addSpriteToForeground(enemy);
+			}
+			else {
+				Iterator<Sprite> iterator = spriteList.iterator();
+				while (iterator.hasNext()) {
+					Sprite sprite = iterator.next();
+					if (sprite.getId().equals(enemy.getId())) {
+						sprite.setX(enemy.getX());
+						sprite.setY(enemy.getY());
+		
+					}
+				}
+			}
+
+		}
+	}
 
 	/**
 	 * returns a Sprite based off its unique ID
@@ -508,5 +526,6 @@ public class MainGame {
 		}
 		return null;
 	}
+	
 
 }

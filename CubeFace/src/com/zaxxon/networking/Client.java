@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.world.mobile.enemies.Zombie;
 
 public class Client extends Thread {
 
@@ -81,6 +82,27 @@ public class Client extends Thread {
 			setID(messID[1]);			
 			return;
 		}
+		else if(message.startsWith("/s/")) {
+			message = message.substring(3, message.length());
+			String messageArr[] = message.split("/");
+			
+			try {
+				String  ID =messageArr[0] ;
+				double x = Double.parseDouble(messageArr[1]);
+				double y = Double.parseDouble(messageArr[2]);
+
+				Vector2 pos = new Vector2(x,y);
+				
+				Zombie e = new Zombie(x, y);
+				e.setId(ID);
+				MainGame.enemyUpdateQueue.add(e);
+				
+			} catch(NumberFormatException e) {
+				System.out.println((messageArr[1]));
+				e.printStackTrace();
+			}
+
+		}
 
 		else if (message.startsWith("/z/")) {
 			message = message.substring(3, message.length());
@@ -88,10 +110,9 @@ public class Client extends Thread {
 			try {
 				double x = Double.parseDouble(messageArr[0]);
 				double y = Double.parseDouble(messageArr[1]);
-				int zombies = Integer.parseInt(messageArr[2]);
 				Vector2 pos = new Vector2(x,y);
-				MainGame.enemiesList.get(0).setPosition(pos);
-			
+				String id = messageArr[2];
+				
 			} catch(NumberFormatException e) {
 				System.out.println((messageArr[1]));
 				e.printStackTrace();
