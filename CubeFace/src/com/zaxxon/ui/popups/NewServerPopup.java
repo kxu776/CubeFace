@@ -1,5 +1,7 @@
 package com.zaxxon.ui.popups;
 
+import java.net.BindException;
+
 import com.zaxxon.networking.Server;
 
 import com.zaxxon.ui.MainMenu;
@@ -64,8 +66,8 @@ public class NewServerPopup {
 
                 //get info from text field and pass to networking
             		Server server = new Server(Integer.parseInt(portField.getText()));
-            		server.start();            		
-
+            		server.start(); 
+            		
             		// Expect to fail if same port num
             		
                 popupwindow.close();

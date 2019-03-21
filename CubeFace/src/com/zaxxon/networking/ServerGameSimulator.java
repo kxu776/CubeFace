@@ -17,7 +17,6 @@ public class ServerGameSimulator extends Thread{
 	public void run(){
 		run = true;
 		while(run) {
-			
 			if(server.clients.size()<2) {
 				continue;
 			}
