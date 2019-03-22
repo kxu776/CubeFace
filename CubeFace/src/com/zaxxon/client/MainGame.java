@@ -220,10 +220,13 @@ public class MainGame {
 		normalisedFPS = 1;
 		gameStartTime = System.currentTimeMillis();
 
-		for (int i = 0; i < 5; i++) {
-			spawnRandomEnemy();
+		if (!multiplayer) {
+			
+			for (int i = 0; i < 5; i++) {
+				spawnRandomEnemy();
+			}
 		}
-
+		
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				dealWithKeyInput();
@@ -233,9 +236,13 @@ public class MainGame {
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
-					getAiUpdatesFromQueue();
+					//getAiUpdatesFromQueue();
 				}
-				updateEnemies();
+				else {
+					
+					updateEnemies();
+				}
+				
 				camera.update();
 				calculateFPS();
 			}

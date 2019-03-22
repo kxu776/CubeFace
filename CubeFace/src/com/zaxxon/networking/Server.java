@@ -32,7 +32,7 @@ public class Server {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
-	private ServerGameSimulator simulator;
+	//private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -46,14 +46,14 @@ public class Server {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
-			simulator = new ServerGameSimulator(this);
+			//simulator = new ServerGameSimulator(this);
 			listenThread = new Thread(new Runnable() {
 				public void run() {
 					listen();
 				}
 			});
 			listenThread.start();
-			simulator.start();
+			//simulator.start();
 
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -286,10 +286,10 @@ public class Server {
 		try {
 			listening = false;
 			listenThread.interrupt();
-			simulator.run = false;
+			//simulator.run = false;
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
-			simulator.interrupt();
+			//simulator.interrupt();
 		} catch (SocketException e) {
 		}
 	}
