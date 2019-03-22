@@ -89,8 +89,8 @@ public class MainGame {
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<String> enemyUpdateQueue = new LinkedBlockingQueue<String>();
-
-	public static void reset(Stage primaryStage, MusicPlayer music) {
+	
+	public static void reset() {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -109,6 +109,47 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
+		
+		grpGame.prefWidth(998);
+		grpGame.prefHeight(498);
+
+		Wall.resetWalls();
+		spriteList = new ConcurrentLinkedQueue<Sprite>();
+		playerList = new ArrayList<Player>();
+		enemiesList = new ArrayList<Enemy>();
+		player1 = new Player();
+		player1.setX(500);
+		player1.setY(500);
+		addSpriteToForeground(player1);
+
+		renderedScene = new Scene(grpGame, 1000, 500);
+		
+		// loads the level
+		Levels.generateLevel(Levels.LEVEL2);
+	}
+
+	public static void reset(Stage primaryStage, MusicPlayer music) {
+		// set up game groups
+//		grpGame = new Group();
+//		grpGame.setId("grpGame");
+//		world = new Group();
+//		world.setId("world");
+//		collidables = new Group();
+//		collidables.setId("collidables");
+//		background = new Group();
+//		background.setId("background");
+//		foreground = new Group();
+//		foreground.setId("foreground");
+//		overlay = new Group();
+//		overlay.setId("overlay");
+//		world.getChildren().add(background);
+//		world.getChildren().add(foreground);
+//		world.getChildren().add(collidables);
+//		grpGame.getChildren().add(world);
+//		grpGame.getChildren().add(overlay);
+		
+		reset();
+		
 		double[] xOffset = { 0 }; // array for making window movable
 		double[] yOffset = { 0 };
 
@@ -117,8 +158,8 @@ public class MainGame {
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
-		grpGame.prefWidth(998);
-		grpGame.prefHeight(498);
+//		grpGame.prefWidth(998);
+//		grpGame.prefHeight(498);
 		// clip the group
 		grpGame.setClip(gameRect);
 
@@ -155,14 +196,14 @@ public class MainGame {
 		anchorPane.setId("anchorpane");
 
 		// set up new arrays and objects
-		Wall.resetWalls();
-		spriteList = new ConcurrentLinkedQueue<Sprite>();
-		playerList = new ArrayList<Player>();
-		enemiesList = new ArrayList<Enemy>();
-		player1 = new Player();
-		player1.setX(500);
-		player1.setY(500);
-		addSpriteToForeground(player1);
+//		Wall.resetWalls();
+//		spriteList = new ConcurrentLinkedQueue<Sprite>();
+//		playerList = new ArrayList<Player>();
+//		enemiesList = new ArrayList<Enemy>();
+//		player1 = new Player();
+//		player1.setX(500);
+//		player1.setY(500);
+//		addSpriteToForeground(player1);
 
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
@@ -200,7 +241,7 @@ public class MainGame {
 		});
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL2);
+//		Levels.generateLevel(Levels.LEVEL2);
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
@@ -220,14 +261,12 @@ public class MainGame {
 		normalisedFPS = 1;
 		gameStartTime = System.currentTimeMillis();
 
-
 		if (!multiplayer) {
-			
+
 			for (int i = 0; i < 5; i++) {
 				spawnRandomEnemy();
 			}
 		}
-		
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -238,10 +277,9 @@ public class MainGame {
 				if (multiplayer) {
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
-					//getAiUpdatesFromQueue();
-				}
-				else {
-					
+					// getAiUpdatesFromQueue();
+				} else {
+
 					updateEnemies();
 				}
 
@@ -388,7 +426,7 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		client.currWep = player1.getCurrentWeaponNum();
-		
+
 		if (spawn == false) {
 			client.setX(player1.getX());
 			client.setY(player1.getY());
@@ -410,11 +448,10 @@ public class MainGame {
 		} else if (player1.getdir() == (FacingDir.right)) {
 			client.pos = 4;
 		}
-		
+
 		// Standing still and shooting
-		if (Input.isKeyPressed(KeyCode.SPACE) &&
-			((player1.getX() - client.getX()) == 0.0) &&
-			((player1.getY() - client.getY()) == 0.0)) {
+		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
+				&& ((player1.getY() - client.getY()) == 0.0)) {
 			if (fired == false) {
 				fired = true;
 				client.setX(player1.getX());
@@ -437,12 +474,12 @@ public class MainGame {
 				client.shoot = true;
 			}
 		}
-			// Moving
-			client.setX(player1.getX());
-			client.setY(player1.getY());
-			client.setHealth(player1.getHealth());
-			networkingClient.sendPlayerObj(client);
-			client.shoot = false;
+		// Moving
+		client.setX(player1.getX());
+		client.setY(player1.getY());
+		client.setHealth(player1.getHealth());
+		networkingClient.sendPlayerObj(client);
+		client.shoot = false;
 	}
 
 	private static void getPlayerUpdatesFromQueue() {
@@ -470,7 +507,8 @@ public class MainGame {
 						FacingDir m = play.get(id).getdir();
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
-						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos, play.get(id).getplayerDimensions(), vect);
+						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos,
+								play.get(id).getplayerDimensions(), vect);
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
@@ -521,7 +559,7 @@ public class MainGame {
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
-	
+
 	private static void getAiUpdatesFromQueue() {
 		boolean exists = false;
 		while (!enemyUpdateQueue.isEmpty()) {
@@ -530,55 +568,52 @@ public class MainGame {
 			double x = 0.00;
 			double y = 0.00;
 			try {
-				 x = Double.parseDouble(messageArr[0]);
-				 y = Double.parseDouble(messageArr[1]);
-			}
-			catch(NumberFormatException e) {
+				x = Double.parseDouble(messageArr[0]);
+				y = Double.parseDouble(messageArr[1]);
+			} catch (NumberFormatException e) {
 				e.printStackTrace();
-			}			
-			for(Enemy sprite: enemiesList) {
-				if(sprite.getId().equals(messageArr[2])){
-					if(sprite.isAlive() && spriteList.contains(sprite)) {
+			}
+			for (Enemy sprite : enemiesList) {
+				if (sprite.getId().equals(messageArr[2])) {
+					if (sprite.isAlive() && spriteList.contains(sprite)) {
 						sprite.setX(x);
 						sprite.setY(y);
 						exists = true;
 						break;
-					}
-					else {
+					} else {
 						break;
 					}
 				}
 			}
-			
-			if(exists == true) {
+
+			if (exists == true) {
 				continue;
-			}
-			else {
+			} else {
 				System.out.println("creating new zombie4");
-				Enemy enemymp  = new Zombie(x,y);
+				Enemy enemymp = new Zombie(x, y);
 				enemymp.setId(messageArr[2]);
 				addSpriteToForeground(enemymp);
 				exists = false;
 				continue;
-				}
 			}
 		}
+	}
 
 	public static void newPlayer(ClientSender data) {
 		String id = data.getID();
-		if(!play.containsKey(data.getID())) {
-				play.put(id, new Player());
-				Player player = play.get(id);
-				player.setX(data.getX());
-				player.setY(data.getY());
-				player.setId(id);
-				player.mp = true;
-				player.weaponManager.getCurrentWeapon().test = true;
-				player.weaponManager.mp = true;
-				addSpriteToForeground(player);
+		if (!play.containsKey(data.getID())) {
+			play.put(id, new Player());
+			Player player = play.get(id);
+			player.setX(data.getX());
+			player.setY(data.getY());
+			player.setId(id);
+			player.mp = true;
+			player.weaponManager.getCurrentWeapon().test = true;
+			player.weaponManager.mp = true;
+			addSpriteToForeground(player);
 		}
 	}
-	
+
 	/**
 	 * returns a Sprite based off its unique ID
 	 * 
@@ -593,11 +628,12 @@ public class MainGame {
 		}
 		return null;
 	}
+
 	public static void addZombie() {
-		Zombie zombie = new Zombie(500,500);
+		Zombie zombie = new Zombie(500, 500);
 		addSpriteToForeground(zombie);
 	}
-	
+
 	public static void startMP() {
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
@@ -619,7 +655,5 @@ public class MainGame {
 		};
 		mainGameLoop.start();
 	}
-
-	
 
 }
