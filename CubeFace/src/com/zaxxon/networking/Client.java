@@ -73,8 +73,6 @@ public class Client extends Thread {
 
 	private void process(DatagramPacket packet) {
 		String message = new String(packet.getData()).trim();
-		
-		
 		if (message.startsWith("/c/")) {
 			message = message.substring(3);
 			String[] messID = message.split("/");
@@ -145,7 +143,7 @@ public class Client extends Thread {
 	
 
 	public void sendPlayerObj(ClientSender c) {
-		if (ID != null) {
+		if(ID!=null) {
 		c.name = player;
 		baos = new ByteArrayOutputStream();
 		try {
@@ -166,7 +164,7 @@ public class Client extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		}
+		}	
 	}
 
 	public void disconnect() {
@@ -192,6 +190,7 @@ public class Client extends Thread {
 	protected void setID(String s) {
 		ID = s;
 	}
+	
 
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);

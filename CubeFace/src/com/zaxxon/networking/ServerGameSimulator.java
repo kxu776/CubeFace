@@ -1,7 +1,7 @@
 package com.zaxxon.networking;
 
 import java.net.InetAddress;
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.UUID;
 
 import com.zaxxon.client.MainGame;
@@ -10,29 +10,25 @@ import com.zaxxon.world.mobile.enemies.Enemy;
 
 public class ServerGameSimulator extends Thread{
 	Server server;
+	InetAddress serverAddress = null;
+	int serverPort;
+	protected MainGame mg;
 	boolean run = false;
-	public ServerGameSimulator(Server server) {
+	public ServerGameSimulator(Server server,int serverPort,InetAddress serverAddress) {
 		this.server = server;
+		this.serverAddress = serverAddress;
+		this.serverPort = serverPort;
 		run = true;
+		mg = new MainGame();
+		mg.multiplayer = true;
+		mg.startMP();
 	}
 	int serverSize;
 	public void run(){
 		while(run) {
-			if(server.clients.size()<2) {
-				continue;
-			}
-			try {
-				serverSize = MainGame.enemiesList.size();
-				Thread.sleep(10);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
 			
-
-			Iterator<Enemy> it =MainGame.enemiesList.iterator();
-
-			while( it.hasNext()) {
-				Enemy e = MainGame.enemiesList.iterator().next();
+			for (ListIterator<Enemy> iter = mg.enemiesList.listIterator(); iter.hasNext();) {
+			    Enemy e = iter.next();
 				if(e.isAlive()&& e.getId() != null && run == true) {
 					sendZombies(e.getPosition(),e);
 				}
@@ -47,14 +43,9 @@ public class ServerGameSimulator extends Thread{
 		}
 	}
 	
-	
-	
 	private void spawnZombies(String spawn) {
 		server.sendToAll(spawn.getBytes());
 	}
-	
-	
-	
 	
 	private void sendZombies(Vector2 vec,Enemy e) {
 		String ID = e.getId();
@@ -69,9 +60,9 @@ public class ServerGameSimulator extends Thread{
 	//TODO: implement a way of sending zombies to other players that is synchronised.
 		// Perhaps simulate game on server.
 		private void distrubuteZombies(int port,InetAddress address) {
-			while(MainGame.enemiesList.iterator().hasNext()){
-				Enemy e = MainGame.enemiesList.iterator().next();
-				//sendZombies(e.getPosition());
+			while(mg.enemiesList.iterator().hasNext()){
+				Enemy e = mg.enemiesList.iterator().next();
+				sendZombies(e.getPosition(),e);
 			}
 		}
 

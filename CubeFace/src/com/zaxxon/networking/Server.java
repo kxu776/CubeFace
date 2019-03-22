@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.zaxxon.maths.Vector2;
-
-public class Server {
+public class Server extends Thread {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
@@ -32,13 +30,13 @@ public class Server {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
-	private ServerGameSimulator simulator;
+	//private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
 	}
 
-	public void start() {
+	public void run() {
 		try {
 			System.out.println("Server started on port " + SERVER_PORT);
 			serverSocket = new DatagramSocket(SERVER_PORT);
@@ -46,14 +44,14 @@ public class Server {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
-			simulator = new ServerGameSimulator(this);
+			//simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
 			listenThread = new Thread(new Runnable() {
 				public void run() {
 					listen();
 				}
 			});
 			listenThread.start();
-			simulator.start();
+			//simulator.start();
 
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -95,6 +93,7 @@ public class Server {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
+			//simulator.mg.inputUpdateQueue.add(data);
 			bais.close();
 			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -195,25 +194,13 @@ public class Server {
 									 packet.getPort(), id)));
 			
 			send(("/c/Connected/" + id + "/").getBytes(), address, port);
-
 			// No need to send last known position to only one player.
 			if(clients.size()<2) {
 				return;
 			}
-			
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
 			}
-
-			// Send the last known positions of any other player
-			// to the one who connected.
-
-			// Client -> Server
-			// Server Checks how many current players
-			// When Server has 2 or more connections we start broadcasting
-			// Server Sends relevant info to player
-			// If new client connects midgame we iterate through hashmap
-			// send the last known co-ordinates to that player of each player
 			return;
 		}
 
@@ -222,14 +209,12 @@ public class Server {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
 					String disconnectIP= disconnectIParray[1];
-					
 					// Should host disconnect we remove everyone from multiplayer
 					if(c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost") || disconnectIP.equals("127.0.0.1")) {
 						sendToRelevant("/b/".getBytes(),port,address);
 						close();
 						return;
 					}
-					
 					// Otherwise we tell everyone who disconnected and remove them.
 					String idToRemove = c.getValue().getID();
 					String disconnectIT = "/d/" + idToRemove + "/";	
@@ -252,18 +237,8 @@ public class Server {
 		else {
 			// Game starts
 			broadcastPlayers(packet);
-			//distrubuteZombies(port,address);
 		}
 	}
-
-	
-	private void sendZombies(Vector2 vec,int port,InetAddress address) {
-		String x = ""+ vec.x;
-		String y = ""+ vec.y;
-		String zombie = "/z/"+x+"/"+y+"/";
-		sendToRelevant(zombie.getBytes(),port,address);
-	}
-	
 	
 	// Could be used by UI to show user what to enter.
 	public String getServerIP() {
@@ -273,6 +248,7 @@ public class Server {
 	private void updatePos(byte[] b, String ID) {
 		if (!lastKnownPos.containsKey(ID)) {
 			lastKnownPos.put(ID, b);
+			System.out.println(lastKnownPos.size());
 		} else {
 			editObj(b, ID);
 		}
@@ -281,16 +257,29 @@ public class Server {
 	public boolean isRunning() {
 		return listening;
 	}
+	
 	// Close the server.
 	public void close() {
 		try {
 			listening = false;
 			listenThread.interrupt();
-			simulator.run = false;
+			//simulator.run = false;
+			//simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
-			simulator.interrupt();
 		} catch (SocketException e) {
 		}
 	}
+	
+	
+	
+	// Send the last known positions of any other player
+	// to the one who connected.
+
+	// Client -> Server
+	// Server Checks how many current players
+	// When Server has 2 or more connections we start broadcasting
+	// Server Sends relevant info to player
+	// If new client connects midgame we iterate through hashmap
+	// send the last known co-ordinates to that player of each player
 }

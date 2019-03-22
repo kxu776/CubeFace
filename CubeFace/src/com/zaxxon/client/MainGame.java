@@ -220,8 +220,10 @@ public class MainGame {
 		normalisedFPS = 1;
 		gameStartTime = System.currentTimeMillis();
 
+		if(!multiplayer) {
 		for (int i = 0; i < 5; i++) {
 			spawnRandomEnemy();
+		}
 		}
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -235,7 +237,9 @@ public class MainGame {
 					getPlayerUpdatesFromQueue();
 					getAiUpdatesFromQueue();
 				}
-				updateEnemies();
+				else {
+					updateEnemies();
+				}
 				camera.update();
 				calculateFPS();
 			}
@@ -380,10 +384,6 @@ public class MainGame {
 	private static void sendNetworkUpdate() {
 		client.currWep = player1.getCurrentWeaponNum();
 		
-		if (!Input.isKeyPressed(KeyCode.SPACE)) {
-			fired = false;
-		}
-		
 		if (spawn == false) {
 			client.setX(player1.getX());
 			client.setY(player1.getY());
@@ -391,6 +391,9 @@ public class MainGame {
 			networkingClient.sendPlayerObj(client);
 			spawn = true;
 			return;
+		}
+		if (!Input.isKeyPressed(KeyCode.SPACE)) {
+			fired = false;
 		}
 
 		if (player1.getdir() == (FacingDir.up)) {
@@ -429,7 +432,6 @@ public class MainGame {
 				client.shoot = true;
 			}
 		}
-
 			// Moving
 			client.setX(player1.getX());
 			client.setY(player1.getY());
@@ -443,18 +445,7 @@ public class MainGame {
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
 			String id = data.getID().trim();
-			if (!play.containsKey(id)) {
-
-				play.put(id, new Player());
-				play.get(id).setX(900);
-				play.get(id).setY(900);
-				play.get(id).setId(id);
-				play.get(id).mp = true;
-				play.get(id).weaponManager.getCurrentWeapon().test = true;
-				play.get(id).weaponManager.mp = true;
-
-				addSpriteToForeground(play.get(id));
-			}
+			newPlayer(data);
 
 			Iterator<Sprite> iterator = spriteList.iterator();
 			while (iterator.hasNext()) {
@@ -467,8 +458,6 @@ public class MainGame {
 						((MovableSprite) sprite).setHealth(data.getHealth());
 					}
 					if ((play.get(id).weaponManager.getCurrentWeaponNum() != data.currWep)) {
-						Vector2 pos = play.get(id).getplayerDimensions();
-						FacingDir m = play.get(id).getdir();
 						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
 						play.get(id).weaponManager.getCurrentWeapon().test = true;
 					}
@@ -484,7 +473,7 @@ public class MainGame {
 		}
 	}
 
-	private static void updateEnemies() {
+	public static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
 		boolean updatedPlayerPos = false;
@@ -544,18 +533,7 @@ public class MainGame {
 			}			
 			for(Enemy sprite: enemiesList) {
 				if(sprite.getId().equals(messageArr[2])){
-					
-					if(sprite.isAlive() && !spriteList.contains(sprite)) {
-						sprite.setX(x);
-						sprite.setY(y);
-						exists = true;
-						System.out.println("not visible");
-						// addSpriteToForeground(sprite);
-						break;
-					}
-					else if(sprite.isAlive() && spriteList.contains(sprite)) {
-						System.out.println(x);
-						System.out.println(y);
+					if(sprite.isAlive() && spriteList.contains(sprite)) {
 						sprite.setX(x);
 						sprite.setY(y);
 						exists = true;
@@ -571,29 +549,31 @@ public class MainGame {
 				continue;
 			}
 			else {
+				System.out.println("creating new zombie4");
 				Enemy enemymp  = new Zombie(x,y);
-
 				enemymp.setId(messageArr[2]);
 				addSpriteToForeground(enemymp);
 				exists = false;
 				continue;
 				}
 			}
-			
-//			else {
-//				Iterator<Sprite> iterator = spriteList.iterator();
-//				while (iterator.hasNext()) {
-//					Sprite sprite = iterator.next();
-//					if (sprite.getId().equals(enemy.getId())) {
-//						sprite.setX(enemy.getX());
-//						sprite.setY(enemy.getY());
-//		
-//					}
-//				}
-//			}
-
 		}
 
+	public static void newPlayer(ClientSender data) {
+		String id = data.getID();
+		if(!play.containsKey(data.getID())) {
+				play.put(id, new Player());
+				Player player = play.get(id);
+				player.setX(data.getX());
+				player.setY(data.getY());
+				player.setId(id);
+				player.mp = true;
+				player.weaponManager.getCurrentWeapon().test = true;
+				player.weaponManager.mp = true;
+				addSpriteToForeground(player);
+		}
+	}
+	
 	/**
 	 * returns a Sprite based off its unique ID
 	 * 
@@ -608,6 +588,33 @@ public class MainGame {
 		}
 		return null;
 	}
+	public static void addZombie() {
+		Zombie zombie = new Zombie(500,500);
+		addSpriteToForeground(zombie);
+	}
+	
+	public static void startMP() {
+		fpsLong = System.currentTimeMillis();
+		normalisedFPS = 1;
+		gameStartTime = System.currentTimeMillis();
+
+		for (int i = 0; i < 5; i++) {
+			spawnRandomEnemy();
+		}
+
+		AnimationTimer mainGameLoop = new AnimationTimer() {
+			public void handle(long currentNanoTime) {
+				for (Player player : playerList) {
+					player.update(normalisedFPS);
+				}
+				getPlayerUpdatesFromQueue();
+				updateEnemies();
+				calculateFPS();
+			}
+		};
+		mainGameLoop.start();
+	}
+
 	
 
 }
