@@ -45,6 +45,7 @@ public class Server extends Thread {
 			System.out.println(SERVER_IP);
 			listening = true;
 			//simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
+
 			listenThread = new Thread(new Runnable() {
 				public void run() {
 					listen();
@@ -267,6 +268,7 @@ public class Server extends Thread {
 			//simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
+
 		} catch (SocketException e) {
 		}
 	}
