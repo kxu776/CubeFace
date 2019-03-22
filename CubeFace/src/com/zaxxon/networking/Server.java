@@ -30,7 +30,7 @@ public class Server extends Thread {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
-	//private ServerGameSimulator simulator;
+	// private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -44,7 +44,7 @@ public class Server extends Thread {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
-			//simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
+			// simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
 
 			listenThread = new Thread(new Runnable() {
 				public void run() {
@@ -52,7 +52,7 @@ public class Server extends Thread {
 				}
 			});
 			listenThread.start();
-			//simulator.start();
+			// simulator.start();
 
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -65,9 +65,9 @@ public class Server extends Thread {
 	public void send(byte[] data, InetAddress address, int port) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 		try {
-			if(listening == true) {
+			if (listening == true) {
 				serverSocket.send(packet);
-				Thread.sleep(15);	 
+				Thread.sleep(15);
 			}
 
 		} catch (IOException e) {
@@ -94,7 +94,7 @@ public class Server extends Thread {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
-			//simulator.mg.inputUpdateQueue.add(data);
+			// simulator.mg.inputUpdateQueue.add(data);
 			bais.close();
 			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -121,16 +121,14 @@ public class Server extends Thread {
 		}
 		return bs;
 	}
-	
-	
 
-	  protected void sendToAll(byte[] b) {
-			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {	
-				send(b, c.getValue().getAddress(), c.getKey());	
-			}
+	protected void sendToAll(byte[] b) {
+		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+			send(b, c.getValue().getAddress(), c.getKey());
 		}
+	}
 
-   protected void sendToRelevant(byte[] b, int port, InetAddress address) {
+	protected void sendToRelevant(byte[] b, int port, InetAddress address) {
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (port == c.getKey()) {
 				if (address.equals(c.getValue().getAddress())) {
@@ -188,15 +186,13 @@ public class Server extends Thread {
 			System.out.println(address.getHostAddress() + " : " + port);
 			System.out.println("------------");
 			String id = UUID.randomUUID().toString().trim();
-			
+
 			clients.put(packet.getPort(),
-					(new ServerClient(action.substring(3),
-									 packet.getAddress(), 
-									 packet.getPort(), id)));
-			
+					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), id)));
+
 			send(("/c/Connected/" + id + "/").getBytes(), address, port);
 			// No need to send last known position to only one player.
-			if(clients.size()<2) {
+			if (clients.size() < 2) {
 				return;
 			}
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
@@ -209,16 +205,17 @@ public class Server extends Thread {
 			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 				if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
 					String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
-					String disconnectIP= disconnectIParray[1];
+					String disconnectIP = disconnectIParray[1];
 					// Should host disconnect we remove everyone from multiplayer
-					if(c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost") || disconnectIP.equals("127.0.0.1")) {
-						sendToRelevant("/b/".getBytes(),port,address);
+					if (c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost")
+							|| disconnectIP.equals("127.0.0.1")) {
+						sendToRelevant("/b/".getBytes(), port, address);
 						close();
 						return;
 					}
 					// Otherwise we tell everyone who disconnected and remove them.
 					String idToRemove = c.getValue().getID();
-					String disconnectIT = "/d/" + idToRemove + "/";	
+					String disconnectIT = "/d/" + idToRemove + "/";
 					lastKnownPos.remove(c.getValue().getID());
 					clients.remove(c.getKey(), c.getValue());
 					byte[] disconnected = disconnectIT.getBytes();
@@ -227,8 +224,9 @@ public class Server extends Thread {
 				}
 			}
 		}
-		
-		// If we don't have enough players we just update the position of who is currently connected.
+
+		// If we don't have enough players we just update the position of who is
+		// currently connected.
 		if (clients.size() < 2) {
 			String currentPlayer = clients.get(port).getID();
 			updatePos(packet.getData(), currentPlayer);
@@ -240,11 +238,12 @@ public class Server extends Thread {
 			broadcastPlayers(packet);
 		}
 	}
-	
+
 	// Could be used by UI to show user what to enter.
 	public String getServerIP() {
 		return SERVER_IP;
 	}
+
 	// Update the players position
 	private void updatePos(byte[] b, String ID) {
 		if (!lastKnownPos.containsKey(ID)) {
@@ -254,27 +253,25 @@ public class Server extends Thread {
 			editObj(b, ID);
 		}
 	}
-	
+
 	public boolean isRunning() {
 		return listening;
 	}
-	
+
 	// Close the server.
 	public void close() {
 		try {
 			listening = false;
 			listenThread.interrupt();
-			//simulator.run = false;
-			//simulator.interrupt();
+			// simulator.run = false;
+			// simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 
 		} catch (SocketException e) {
 		}
 	}
-	
-	
-	
+
 	// Send the last known positions of any other player
 	// to the one who connected.
 
