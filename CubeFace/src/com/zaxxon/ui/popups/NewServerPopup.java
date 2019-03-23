@@ -25,7 +25,7 @@ import javafx.stage.StageStyle;
 
 
 public class NewServerPopup {
-
+	public static int proceed = 0;
 
     public static void display(Stage primaryStage, Scene renderedScene)
     {
@@ -54,6 +54,8 @@ public class NewServerPopup {
         GridPane.setConstraints(port, 0, 0);
         TextField portField = new TextField();
         GridPane.setConstraints(portField,1, 0);
+        
+        
 
         //make server button
 
@@ -61,11 +63,36 @@ public class NewServerPopup {
         makeServer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	int port = 0;
+        		String portStr = null;
+        		Server server;
+    
+        		portStr = portField.getText().trim();
 
+        		try {
+        			port = Integer.parseInt(portStr);
+        		}catch(NumberFormatException e) {
+        			return;
+        		}
+     
+            	if(port < 1000 || port > 65535) {
+            		System.out.println("Try a different port number ");
+            		return;
+            	}
+            	else {
                 //get info from text field and pass to networking
-            	
-            		Server server = new Server(Integer.parseInt(portField.getText()));
-            		server.start(); 
+            		server = new Server(port);
+            		server.start();
+            		
+            		try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+				}
+            		
+            		if(proceed == 1) {
+            			return;
+            		}
             	
             		
             		// Expect to fail if same port num
@@ -74,6 +101,7 @@ public class NewServerPopup {
                 //open server confirmation popup
 
                 ServerConfirmationPopup.display(primaryStage, renderedScene);
+            	}
             }
         });
 
