@@ -11,6 +11,8 @@ public class Weapon {
 	double bulletSpeed;
 	double bulletAngle;
 	double despawnDistance;
+	double maxAmmo;
+	double currentAmmo;
 	String weaponName;
 	public Boolean test = false;
 
@@ -27,6 +29,16 @@ public class Weapon {
 	public String getWeaponName() {
 		
 		return weaponName;
+	}
+	
+	public String getAmmo() {
+		
+		return Double.toString(currentAmmo);
+	}
+	
+	public void addAmmo (double amount) {
+		
+		currentAmmo = Math.min(maxAmmo, currentAmmo + amount);
 	}
 	
 }

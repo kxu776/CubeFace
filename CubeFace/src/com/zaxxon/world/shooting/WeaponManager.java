@@ -129,7 +129,7 @@ public class WeaponManager {
 	}
 
 	public String getCurrentWeaponName() {
-		return weapons.get(currentWeapon).getWeaponName();
+		return weapons.get(currentWeapon).getWeaponName() + ": " + weapons.get(currentWeapon).getAmmo();
 	}
 
 	public static void addBulletToList(Bullet b) {

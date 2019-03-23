@@ -13,6 +13,7 @@ public class Weapon_Shotgun extends Weapon {
 	
 	private final double damage = 8;
 	private final double despawnDistance = 200;
+	private final double maxAmmo = 40;
 
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/Gun_Shoot_1.wav");
 	private Boolean fired = false;
@@ -22,6 +23,9 @@ public class Weapon_Shotgun extends Weapon {
 		super.weaponName = "Shotgun";
 		super.bulletDamage = damage;
 		super.despawnDistance = despawnDistance;
+		super.maxAmmo = maxAmmo;
+		
+		addAmmo (maxAmmo);
 	}
 	
 	@Override
@@ -31,40 +35,46 @@ public class Weapon_Shotgun extends Weapon {
 			
 			if (!fired) {
 				
-				if (Math.abs(dir.y) > 0) {
+				if (currentAmmo >= 4) {
 					
-					Bullet b0 = new Bullet(new Vector2 (dir.x-0.2, dir.y), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b0);
+					if (Math.abs(dir.y) > 0) {
+						
+						Bullet b0 = new Bullet(new Vector2 (dir.x-0.2, dir.y), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b0);
+						
+						Bullet b1 = new Bullet(new Vector2 (dir.x-0.5, dir.y), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b1);
+						
+						Bullet b2 = new Bullet(new Vector2 (dir.x+0.2, dir.y), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b2);
+						
+						Bullet b3 = new Bullet(new Vector2 (dir.x+0.5, dir.y), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b3);
+					}
 					
-					Bullet b1 = new Bullet(new Vector2 (dir.x-0.5, dir.y), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b1);
+					else {
+
+						Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b0);
+						
+						Bullet b1 = new Bullet(new Vector2 (dir.x, dir.y-0.5), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b1);
+						
+						Bullet b2 = new Bullet(new Vector2 (dir.x, dir.y+0.2), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b2);
+						
+						Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage, despawnDistance,player);
+						WeaponManager.addBulletToList(b3);
+					}
+
+
+					sound.shoot();
 					
-					Bullet b2 = new Bullet(new Vector2 (dir.x+0.2, dir.y), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b2);
-					
-					Bullet b3 = new Bullet(new Vector2 (dir.x+0.5, dir.y), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b3);
+					currentAmmo -= 4;
+					fired = true;
 				}
 				
-				else {
-
-					Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b0);
-					
-					Bullet b1 = new Bullet(new Vector2 (dir.x, dir.y-0.5), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b1);
-					
-					Bullet b2 = new Bullet(new Vector2 (dir.x, dir.y+0.2), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b2);
-					
-					Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage, despawnDistance,player);
-					WeaponManager.addBulletToList(b3);
-				}
-
-
-				sound.shoot();
 				
-				fired = true;
 			}	
 		}
 		
@@ -72,40 +82,45 @@ public class Weapon_Shotgun extends Weapon {
 			
 			if (!fired) {
 
-				sound.shoot();
-				
-				if (Math.abs(dir.y) > 0) {
+				if (currentAmmo >= 4) {
 					
-					Bullet b0 = new Bullet(new Vector2 (dir.x-0.2, dir.y), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b0);
+					sound.shoot();
 					
-					Bullet b1 = new Bullet(new Vector2 (dir.x-0.5, dir.y), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b1);
+					if (Math.abs(dir.y) > 0) {
+						
+						Bullet b0 = new Bullet(new Vector2 (dir.x-0.2, dir.y), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b0);
+						
+						Bullet b1 = new Bullet(new Vector2 (dir.x-0.5, dir.y), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b1);
+						
+						Bullet b2 = new Bullet(new Vector2 (dir.x+0.2, dir.y), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b2);
+						
+						Bullet b3 = new Bullet(new Vector2 (dir.x+0.5, dir.y), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b3);
+					}
 					
-					Bullet b2 = new Bullet(new Vector2 (dir.x+0.2, dir.y), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b2);
+					else {
+						
+						Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b0);
+						
+						Bullet b1 = new Bullet(new Vector2 (dir.x, dir.y-0.5), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b1);
+						
+						Bullet b2 = new Bullet(new Vector2 (dir.x, dir.y+0.2), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b2);
+						
+						Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage, despawnDistance, player);
+						WeaponManager.addBulletToList(b3);
+					}
 					
-					Bullet b3 = new Bullet(new Vector2 (dir.x+0.5, dir.y), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b3);
+					currentAmmo -= 4;
+					fired = true;
 				}
 				
-				else {
-					
-					Bullet b0 = new Bullet(new Vector2 (dir.x, dir.y-0.2), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b0);
-					
-					Bullet b1 = new Bullet(new Vector2 (dir.x, dir.y-0.5), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b1);
-					
-					Bullet b2 = new Bullet(new Vector2 (dir.x, dir.y+0.2), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b2);
-					
-					Bullet b3 = new Bullet(new Vector2 (dir.x, dir.y+0.5), weaponPos, bulletDamage, despawnDistance, player);
-					WeaponManager.addBulletToList(b3);
-				}
 				
-				
-				fired = true;
 			}
 		}
 		
