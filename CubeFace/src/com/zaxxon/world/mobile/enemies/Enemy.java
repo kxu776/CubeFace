@@ -53,7 +53,7 @@ public abstract class Enemy extends MovableSprite {
 	final double pfOffset = 0.9;  //1.0
 	
 	private Boolean frozen = false;
-	private final long freezeTime = 800;
+	private final long freezeTime = 600;
 	private long lastFrozenTime = 0;
 
 	/**
@@ -291,14 +291,6 @@ public abstract class Enemy extends MovableSprite {
 	protected void damage(Player player) {
 		
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
-			
-			//do collision
-			
-			//do for enemy
-			/*Vector2 moveVector = EnemyPlayerCollision.DoCollision(this.getBoundsInLocal(), player.getBoundsInLocal(), this.velocity);
-			this.setX(this.getX()+moveVector.x);
-			this.setY(this.getY()+moveVector.y);*/
-			
 			
 			frozen = true;
 			lastFrozenTime = System.currentTimeMillis();
