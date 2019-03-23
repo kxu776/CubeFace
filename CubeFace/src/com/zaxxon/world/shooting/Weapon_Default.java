@@ -57,4 +57,10 @@ public class Weapon_Default extends Weapon {
 			fired = false;
 		}
 	}
+	
+	@Override
+	public String getAmmo() {
+		
+		return "Infinity";
+	}
 }

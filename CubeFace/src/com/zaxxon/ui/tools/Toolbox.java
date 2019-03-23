@@ -46,22 +46,7 @@ public class Toolbox {
         minimise.setGraphic(minView); //add the image to the button
         minimise.setId("toolbarbutton");
 
-        Button maximise = new Button();
-        //if window is not a popup window
-        if (type != 1) {
 
-            Rectangle rect = new Rectangle(popupwindow.getMinWidth(), popupwindow.getMinHeight());
-            //popupwindow.getScene().getRoot().getParent().setClip(rect);
-            maximise.setOnAction(e -> {
-            	popupwindow.setMaximized(true);
-            	MainGame.setGameFocus();
-            });
-        }
-        //load the icon
-        Image maximiseIcon = new Image(MainMenu.class.getResource("img/maximise.png").toString());
-        ImageView maxView = new ImageView(maximiseIcon); //make an imageview for the minimise icon
-        maximise.setGraphic(maxView); //add the image to the button
-        maximise.setId("toolbarbutton");
 
         Button close = new Button();
         if (type ==3) {
@@ -83,7 +68,7 @@ public class Toolbox {
         //make toolbar layout
         //hbox for icons
         HBox hbox = new HBox();
-        hbox.getChildren().addAll(minimise, maximise, close);
+        hbox.getChildren().addAll(minimise, close);
         hbox.setAlignment(Pos.BASELINE_RIGHT);
 
 
