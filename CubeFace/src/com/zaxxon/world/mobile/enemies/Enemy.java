@@ -149,7 +149,7 @@ public abstract class Enemy extends MovableSprite {
 		prevY = this.getY();
 		// System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" +
 		// String.valueOf(this.getY()));
-		// System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
+		System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
 
 	}
 
@@ -294,7 +294,7 @@ public abstract class Enemy extends MovableSprite {
 	public boolean lineOfSight() {
 		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
-		Line line = new Line(this.getX(), this.getY(), pX, pY);
+		Line line = new Line(this.getX(), this.getY(), pX+32, pY+32);
 		for (Bounds bounds : wallBounds) {
 			if (line.intersects(bounds)) {
 				return false;
