@@ -51,6 +51,10 @@ public abstract class Enemy extends MovableSprite {
 	double currentSpeed = 0;
 	private double damage = 0.1;
 	final double pfOffset = 0.9;  //1.0
+	
+	private Boolean frozen = false;
+	private final long freezeTime = 800;
+	private long lastFrozenTime = 0;
 
 	/**
 	 * Default Class constructor - spawns enemy at point (0,0)
@@ -141,10 +145,25 @@ public abstract class Enemy extends MovableSprite {
 		} else {
 			movement(pX, pY);
 		}
-		Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
-		this.translate(toMove);
-		collision();
-		rotate(pX, pY);
+		
+		if (frozen) {
+			
+			if (System.currentTimeMillis() - lastFrozenTime >= freezeTime) {
+				
+				frozen = false;
+			}
+		}
+		
+		if (!frozen) {
+		
+			Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
+			this.translate(toMove);
+			collision();
+			rotate(pX, pY);
+		}
+		
+		
+		
 		if (this.getX() > (closestNode.getX() - pfOffset) && this.getX() < (closestNode.getX() + pfOffset)
 				&& this.getY() > (closestNode.getY() - pfOffset) && this.getY() < (closestNode.getY() + pfOffset)) {
 			pathfinding = false;
@@ -273,11 +292,24 @@ public abstract class Enemy extends MovableSprite {
 		
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
 			
+			//do collision
+			
+			//do for enemy
+			/*Vector2 moveVector = EnemyPlayerCollision.DoCollision(this.getBoundsInLocal(), player.getBoundsInLocal(), this.velocity);
+			this.setX(this.getX()+moveVector.x);
+			this.setY(this.getY()+moveVector.y);*/
+			
+			
+			frozen = true;
+			lastFrozenTime = System.currentTimeMillis();
+			
 			if (!player.getHit()) {
 				
 				player.takeDamage(this.damage);
 				player.setHit(true);
 				// System.out.println("Health: " + String.valueOf(player.getHealth()));
+				
+				
 			}
 			
 		}

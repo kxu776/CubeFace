@@ -285,5 +285,10 @@ public class Player extends MovableSprite{
 		
 		return hit;
 	}
+	
+	public Vector2 getVelocity() {
+		
+		return velocity;
+	}
     
 }
