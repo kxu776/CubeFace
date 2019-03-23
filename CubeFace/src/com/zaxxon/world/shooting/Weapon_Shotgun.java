@@ -128,5 +128,6 @@ public class Weapon_Shotgun extends Weapon {
 			
 			fired = false;
 		}
+		player.weaponManager.updateWeaponReadout();
 	}
 }

@@ -59,5 +59,6 @@ public class Weapon_MG extends Weapon {
 			}
 
 		}
+		player.weaponManager.updateWeaponReadout();
 	}
 }

@@ -214,6 +214,7 @@ public class Player extends MovableSprite{
     		setImageFromSpriteSheet(0);
     		return;
     		
+
     	case down:
     		setImageFromSpriteSheet(4);
     		return;
