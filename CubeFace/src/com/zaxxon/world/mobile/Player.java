@@ -34,6 +34,10 @@ public class Player extends MovableSprite{
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
 	public int score = 0;
+	
+	private Boolean hit = false;
+	private long damageTime = 0;
+	private final long invincibilityTime = 400;
 
 	/**
 	 * Default class constructor - spawns player at (500, 500)
@@ -92,6 +96,18 @@ public class Player extends MovableSprite{
 		Vector2 playerPos = new Vector2 (this.getX(), this.getY()); 	//Creates vector of player position
 
 		weaponManager.update(deltaTime, playerPos, new Vector2 (this.getWidth(), this.getHeight()), facingDir);
+		
+		
+		//invincibility frames handling
+		
+		if (hit) {
+			
+			if (System.currentTimeMillis() - damageTime >= invincibilityTime) {
+				
+				setHit(false);
+				this.setOpacity(1);
+			}
+		}
 
 		StatsBox.updateScore(score);	//Updates on-screen score display.
 
@@ -251,6 +267,23 @@ public class Player extends MovableSprite{
 	public Vector2 getplayerDimensions() {
 		return new Vector2(this.getWidth(), this.getHeight());
 	}
+	
+	public void setHit (Boolean b) {
+		
+		hit = b;
+		
+		if (b) {
+		
+			damageTime = System.currentTimeMillis();
+			this.setOpacity(0.3);
+		}
+		
+		
+	}
     
+	public Boolean getHit () {
+		
+		return hit;
+	}
     
 }
