@@ -13,6 +13,7 @@ public class Weapon_MG extends Weapon {
 
 	private final double damage = 2;
 	private final double despawnDistance = 1000;
+	private final double maxAmmo = 160;
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/Gun_Shoot_2.wav");
 
 	public Weapon_MG(Player player) {
@@ -20,6 +21,9 @@ public class Weapon_MG extends Weapon {
 		super.weaponName = "Machine Gun";
 		super.bulletDamage = damage;
 		super.despawnDistance = despawnDistance;
+		super.maxAmmo = maxAmmo;
+		
+		addAmmo (maxAmmo);
 
 	}
 
@@ -29,21 +33,32 @@ public class Weapon_MG extends Weapon {
 
 		if (multiplayer) {
 
-			sound.shoot();
+			if (currentAmmo > 0) {
+				
+				sound.shoot();
+				currentAmmo--;
 
-			Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
-			WeaponManager.addBulletToList(bullet);
+				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
+				WeaponManager.addBulletToList(bullet);
+			}
+			
+			
 
 		}
 
 		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
 
 
-			sound.shoot();
+			if (currentAmmo > 0) {
+				
+				sound.shoot();
+				currentAmmo--;
 
-			Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
-			WeaponManager.addBulletToList(bullet);
+				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
+				WeaponManager.addBulletToList(bullet);
+			}
 
 		}
+		player.weaponManager.updateWeaponReadout();
 	}
 }
