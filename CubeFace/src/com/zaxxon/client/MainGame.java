@@ -32,6 +32,7 @@ import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
+import com.zaxxon.world.shooting.AmmoPickup;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -74,6 +75,7 @@ public class MainGame {
 	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
+	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	public static ClientSender client;
@@ -222,6 +224,8 @@ public class MainGame {
 		for (int i = 0; i < 5; i++) {
 			spawnRandomEnemy();
 		}
+		
+		spawnAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -234,6 +238,9 @@ public class MainGame {
 					getUpdatesFromQueue();
 				}
 				updateEnemies();
+				
+				//update pickups
+				
 				camera.update();
 				calculateFPS();
 			}
@@ -264,6 +271,11 @@ public class MainGame {
 			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
 		}
+	}
+	
+	private static void spawnAmmoPickup() {
+		
+		ammoPickupList.add(new AmmoPickup(0, new Vector2 (500, 500)));
 	}
 
 	/**
