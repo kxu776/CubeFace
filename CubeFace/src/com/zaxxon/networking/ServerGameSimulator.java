@@ -12,34 +12,41 @@ public class ServerGameSimulator extends Thread{
 	Server server;
 	InetAddress serverAddress = null;
 	int serverPort;
-	protected MainGame mg;
+    //ServerGame serverGame;
+    
 	boolean run = false;
 	public ServerGameSimulator(Server server,int serverPort,InetAddress serverAddress) {
 		this.server = server;
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		run = true;
-		mg = new MainGame();
-		mg.multiplayer = true;
-		mg.startMP();
+	//	serverGame = new ServerGame();
+		MainGame.reset();
+		MainGame.startMP();
+
 	}
 	int serverSize;
 	public void run(){
 		while(run) {
 			
-			for (ListIterator<Enemy> iter = mg.enemiesList.listIterator(); iter.hasNext();) {
+			if(server.clients.size()<2) {
+				continue;
+			}
+			for (ListIterator<Enemy> iter = MainGame.enemiesList.listIterator(); iter.hasNext();) {
 			    Enemy e = iter.next();
-				if(e.isAlive()&& e.getId() != null && run == true) {
+				if(e.isAlive() && run == true) {
 					sendZombies(e.getPosition(),e);
+					continue;
 				}
 				else if(e.isAlive() && run == true) {
 					String id = UUID.randomUUID().toString();
 					e.setId(id);
 					String spawn = "/s/"+e.getPosition().toString()+"/"+id+"/";
 					spawnZombies(spawn);
+					continue;
 				}
-				break;
 			}
+			continue;
 		}
 	}
 	
@@ -51,7 +58,6 @@ public class ServerGameSimulator extends Thread{
 		String ID = e.getId();
 		String x = ""+ vec.x;
 		String y = ""+ vec.y;
-		String amount = ""+serverSize;
 		String zombie = "/z/"+x+"/"+y+"/"+ID+"/";
 		server.sendToAll(zombie.getBytes());
 	}
@@ -59,10 +65,11 @@ public class ServerGameSimulator extends Thread{
 	
 	//TODO: implement a way of sending zombies to other players that is synchronised.
 		// Perhaps simulate game on server.
+		@SuppressWarnings("unused")
 		private void distrubuteZombies(int port,InetAddress address) {
-			while(mg.enemiesList.iterator().hasNext()){
-				Enemy e = mg.enemiesList.iterator().next();
-				sendZombies(e.getPosition(),e);
+			while(MainGame.enemiesList.iterator().hasNext()){
+			//	Enemy e = serverGame.enemiesList.iterator().next();
+			//	sendZombies(e.getPosition(),e);
 			}
 		}
 

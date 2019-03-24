@@ -19,7 +19,7 @@ public class Client extends Thread {
 	private int port;
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
-	private int MAX_PACKET_SIZE = 1024;
+	private int MAX_PACKET_SIZE = 512;
 	private String ID = null;
 
 	private byte[] data = new byte[MAX_PACKET_SIZE];
