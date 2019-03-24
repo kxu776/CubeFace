@@ -163,6 +163,7 @@ public class MainGame {
 		spriteList = new ConcurrentLinkedQueue<Sprite>();
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
+		ammoPickupList = new ArrayList<AmmoPickup>();
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
@@ -225,7 +226,7 @@ public class MainGame {
 			spawnRandomEnemy();
 		}
 		
-		spawnAmmoPickup();
+		spawnRandomAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -238,8 +239,8 @@ public class MainGame {
 					getUpdatesFromQueue();
 				}
 				updateEnemies();
+				updatePickups();
 				
-				//update pickups
 				
 				camera.update();
 				calculateFPS();
@@ -273,9 +274,15 @@ public class MainGame {
 		}
 	}
 	
-	private static void spawnAmmoPickup() {
+	private static void spawnRandomAmmoPickup() {
 		
-		ammoPickupList.add(new AmmoPickup(0, new Vector2 (500, 500)));
+		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 500));
+		ammoPickupList.add(a);
+		addSpriteToForeground(a);
+		
+		AmmoPickup b = new AmmoPickup(1, new Vector2 (500, 800));
+		ammoPickupList.add(b);
+		addSpriteToForeground(b);
 	}
 
 	/**
@@ -521,6 +528,15 @@ public class MainGame {
 			sprite.delete();
 		}
 	}
+	
+	private static void updatePickups() {
+		
+		for (int i = 0; i < ammoPickupList.size(); i++) {
+			
+			ammoPickupList.get(i).update();
+		}
+	}
+	
 
 	/**
 	 * Getter for the spriteList
