@@ -90,8 +90,8 @@ public class Player extends MovableSprite{
 		Vector2 toMove = new Vector2 (velocity.x * deltaTime, velocity.y * deltaTime);
 
 		this.translate(toMove);
-		
 		collision();		//Checks for wall collision
+		pickupsCollision();
 		
 		Vector2 playerPos = new Vector2 (this.getX(), this.getY()); 	//Creates vector of player position
 
@@ -203,6 +203,28 @@ public class Player extends MovableSprite{
     	
     	Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
     	this.translate(toMove);
+    }
+    
+    private void pickupsCollision() {
+    	
+    	for (int i = 0; i < MainGame.ammoPickupList.size(); i++) {
+    		
+    		if (this.getBoundsInLocal().intersects(MainGame.ammoPickupList.get(i).getBoundsInLocal())) {
+    			
+    			if (MainGame.ammoPickupList.get(i).type == 0) {
+    				
+    				//add MG ammo
+    				weaponManager.getWeaponFromList(1).addAmmo(200);
+    			}
+    			else {
+    				
+    				//add SG ammo
+    				weaponManager.getWeaponFromList(2).addAmmo(200);
+    			}
+    			
+    			MainGame.ammoPickupList.get(i).delete();
+    		}
+    	}
     }
     
     

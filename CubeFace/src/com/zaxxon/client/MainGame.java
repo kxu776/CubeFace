@@ -276,7 +276,7 @@ public class MainGame {
 	
 	private static void spawnRandomAmmoPickup() {
 		
-		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 500));
+		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 650));
 		ammoPickupList.add(a);
 		addSpriteToForeground(a);
 		
