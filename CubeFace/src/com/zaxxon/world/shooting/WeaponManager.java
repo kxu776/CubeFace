@@ -43,17 +43,17 @@ public class WeaponManager {
 
 		switch (facingDir) {
 
-		case up:
-			return new Vector2(playerPos.x + playerDimensions.x / 1.3, playerPos.y + playerDimensions.y / 3);
+			case up:
+				return new Vector2(playerPos.x + playerDimensions.x / 1.3, playerPos.y + playerDimensions.y / 3);
 
-		case down:
-			return new Vector2(playerPos.x + playerDimensions.x / 8, playerPos.y + playerDimensions.y / 1.5);
+			case down:
+				return new Vector2(playerPos.x + playerDimensions.x / 8, playerPos.y + playerDimensions.y / 1.5);
 
-		case left:
-			return new Vector2(playerPos.x + playerDimensions.x / 16, playerPos.y + playerDimensions.y / 2.8);
+			case left:
+				return new Vector2(playerPos.x + playerDimensions.x / 16, playerPos.y + playerDimensions.y / 2.8);
 
-		case right:
-			return new Vector2(playerPos.x + playerDimensions.x / 1.4, playerPos.y + playerDimensions.y / 1.8);
+			case right:
+				return new Vector2(playerPos.x + playerDimensions.x / 1.4, playerPos.y + playerDimensions.y / 1.8);
 
 		default:
 			return playerPos;
@@ -129,7 +129,7 @@ public class WeaponManager {
 	}
 
 	public String getCurrentWeaponName() {
-		return weapons.get(currentWeapon).getWeaponName();
+		return weapons.get(currentWeapon).getWeaponName() + ": " + weapons.get(currentWeapon).getAmmo();
 	}
 
 	public static void addBulletToList(Bullet b) {
@@ -146,6 +146,10 @@ public class WeaponManager {
 	
 	public void setCurrentWeapon(int wep) {
 		currentWeapon = wep;
+		StatsBox.updateWeapon(getCurrentWeaponName());
+	}
+
+	public void updateWeaponReadout(){
 		StatsBox.updateWeapon(getCurrentWeaponName());
 	}
 

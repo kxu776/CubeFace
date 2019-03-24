@@ -37,8 +37,6 @@ public abstract class Enemy extends MovableSprite {
 	protected static double pX, pY;
 	protected double prevX, prevY;
 	protected boolean pathfinding;
-	
-	long damageTime = 0;
 
 	public int killReward;
 
@@ -53,6 +51,10 @@ public abstract class Enemy extends MovableSprite {
 	double currentSpeed = 0;
 	private double damage = 0.1;
 	final double pfOffset = 0.9;  //1.0
+	
+	private Boolean frozen = false;
+	private final long freezeTime = 600;
+	private long lastFrozenTime = 0;
 
 	/**
 	 * Default Class constructor - spawns enemy at point (0,0)
@@ -143,10 +145,25 @@ public abstract class Enemy extends MovableSprite {
 		} else {
 			movement(pX, pY);
 		}
-		Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
-		this.translate(toMove);
-		collision();
-		rotate(pX, pY);
+		
+		if (frozen) {
+			
+			if (System.currentTimeMillis() - lastFrozenTime >= freezeTime) {
+				
+				frozen = false;
+			}
+		}
+		
+		if (!frozen) {
+		
+			Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
+			this.translate(toMove);
+			collision();
+			rotate(pX, pY);
+		}
+		
+		
+		
 		if (this.getX() > (closestNode.getX() - pfOffset) && this.getX() < (closestNode.getX() + pfOffset)
 				&& this.getY() > (closestNode.getY() - pfOffset) && this.getY() < (closestNode.getY() + pfOffset)) {
 			pathfinding = false;
@@ -157,8 +174,7 @@ public abstract class Enemy extends MovableSprite {
 		prevX = this.getX();
 		prevY = this.getY();
 		// System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" +
-		// String.valueOf(this.getY()));
-		// System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
+		//System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
 
 	}
 
@@ -274,16 +290,17 @@ public abstract class Enemy extends MovableSprite {
 	protected void damage(Player player) {
 		
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
-				
-			//invincibility frames
 			
-			if (System.currentTimeMillis() - damageTime >= 1000) {
+			frozen = true;
+			lastFrozenTime = System.currentTimeMillis();
+			
+			if (!player.getHit()) {
 				
-				// check
 				player.takeDamage(this.damage);
+				player.setHit(true);
 				// System.out.println("Health: " + String.valueOf(player.getHealth()));
 				
-				damageTime = System.currentTimeMillis();
+				
 			}
 			
 		}
@@ -313,7 +330,7 @@ public abstract class Enemy extends MovableSprite {
 	public boolean lineOfSight() {
 		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
-		Line line = new Line(this.getX(), this.getY(), pX, pY);
+		Line line = new Line(this.getX(), this.getY(), pX+32, pY+32);
 		for (Bounds bounds : wallBounds) {
 			if (line.intersects(bounds)) {
 				return false;

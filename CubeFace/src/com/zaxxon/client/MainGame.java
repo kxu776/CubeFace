@@ -68,6 +68,8 @@ public class MainGame {
 	private static Group foreground;
 	private static Group overlay;
 	private static Group collidables;
+	private static final int WIDTH = 1000;
+	private static final int HEIGHT = 500;
 	private static Camera camera;
 	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
@@ -78,6 +80,7 @@ public class MainGame {
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
 	static boolean fired = false;
+
 
 	private static Player player1;
 	public static ConcurrentHashMap<String, Player> play = new ConcurrentHashMap<>();
@@ -113,12 +116,12 @@ public class MainGame {
 		double[] yOffset = { 0 };
 
 		// make a rectangle
-		Rectangle gameRect = new Rectangle(998, 498);
+		Rectangle gameRect = new Rectangle(WIDTH-2, HEIGHT-2);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
-		grpGame.prefWidth(998);
-		grpGame.prefHeight(498);
+		grpGame.prefWidth(WIDTH);
+		grpGame.prefHeight(HEIGHT);
 		// clip the group
 		grpGame.setClip(gameRect);
 
@@ -127,7 +130,7 @@ public class MainGame {
 
 		// make a toolbox
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
-		toolbox.setPrefWidth(998.0);
+		toolbox.setPrefWidth(WIDTH-2);
 		toolbox.setId("toolbox");
 
 		// make an audio button
@@ -166,19 +169,16 @@ public class MainGame {
 
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		// sets the scene to the screen size
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
+		
 
 		// make a rectangle
-		Rectangle rect = new Rectangle(1000, 500);
+		Rectangle rect = new Rectangle(WIDTH, HEIGHT);
 		rect.setArcHeight(10.0);
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
 
 		// sets up the scene
-		renderedScene = new Scene(anchorPane, 1000, 500);
+		renderedScene = new Scene(anchorPane, WIDTH, HEIGHT);
 		renderedScene.setFill(Color.TRANSPARENT);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("css/maingame.css").toString());
 
