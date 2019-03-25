@@ -32,6 +32,8 @@ public class Levels {
 			{ 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 }, { 0, 0, 1, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
+	public static final int[][] MP_LEVEL = { {2,3,3,3,3,3,2}, {4,0,0,0,0,0,4}, {4,0,1,0,1,0,4},
+			{4,0,0,0,0,0,4},{4,0,1,0,1,0,4},{4,0,0,0,0,0,4},{1,3,3,3,3,3,1}};
 
 	/**
 	 * generates and populates the background for the world with the floor Tile
