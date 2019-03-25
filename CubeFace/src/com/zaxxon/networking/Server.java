@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.zaxxon.client.MainGame;
-import com.zaxxon.ui.popups.NewServerPopup;
 
 public class Server extends Thread {
 
@@ -34,7 +32,6 @@ public class Server extends Thread {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
-    private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -44,8 +41,6 @@ public class Server extends Thread {
 		try {
 			serverSocket = new DatagramSocket(SERVER_PORT);
 		} catch (BindException e) {
-			System.out.println("Couldnt start The server");
-			// System.exit(1);
 			return;
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -57,7 +52,7 @@ public class Server extends Thread {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
-			 simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
+			// simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
 		} catch (UnknownHostException e) {
 			System.out.println("Server can't be started, IP isnt known");
 			e.printStackTrace();
@@ -70,7 +65,7 @@ public class Server extends Thread {
 			}
 		});
 		listenThread.start();
-		simulator.start();
+		// simulator.start();
 	}
 
 	public void send(final byte[] data, InetAddress address, int port) {
@@ -259,8 +254,8 @@ public class Server extends Thread {
 		try {
 			listening = false;
 			listenThread.interrupt();
-			simulator.run = false;
-		    simulator.interrupt();
+		//	simulator.run = false;
+		//  simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 		} catch (SocketException e) {
