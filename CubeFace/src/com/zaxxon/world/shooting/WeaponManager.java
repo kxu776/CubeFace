@@ -67,7 +67,7 @@ public class WeaponManager {
 		this.dir = getFacingDirAsVector(facingDir);
 		this.facingDir = facingDir;
 
-		if (Input.isKeyPressed(KeyCode.SHIFT) && mp == false) {
+		if (mp == false) {
 			ChangeWeapon();
 			StatsBox.updateWeapon(getCurrentWeaponName());
 		}
@@ -85,17 +85,18 @@ public class WeaponManager {
 
 		if (Input.isKeyPressed(KeyCode.DIGIT1)) {
 
-			currentWeapon = 0;
+			if (currentWeapon != 0) currentWeapon = 0;
+			
 		}
 
 		else if (Input.isKeyPressed(KeyCode.DIGIT2)) {
 
-			currentWeapon = 1;
+			if (currentWeapon != 1) currentWeapon = 1;
 		}
 
 		else if (Input.isKeyPressed(KeyCode.DIGIT3)) {
 
-			currentWeapon = 2;
+			if (currentWeapon != 2) currentWeapon = 2;
 		}
 	}
 

@@ -82,6 +82,7 @@ public class MainGame {
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
 	static boolean fired = false;
+	public static boolean muted = true;
 
 
 	private static Player player1;
@@ -141,7 +142,10 @@ public class MainGame {
 		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
+		
 		audio.setOnAction(e -> {
+			
+			muted = (muted)? false : true;
 			music.stop();
 			MainGame.setGameFocus();
 		});
