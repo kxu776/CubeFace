@@ -202,7 +202,11 @@ public class MainGame {
 		});
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL2);
+		if(!multiplayer){
+			Levels.generateLevel(Levels.MP_LEVEL);
+		}else {
+			Levels.generateLevel(Levels.LEVEL2);
+		}
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
