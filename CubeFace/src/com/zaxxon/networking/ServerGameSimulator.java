@@ -1,18 +1,15 @@
 package com.zaxxon.networking;
 
 import java.net.InetAddress;
-import java.util.ListIterator;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import com.zaxxon.client.MainGame;
-import com.zaxxon.maths.Vector2;
-import com.zaxxon.world.mobile.enemies.Enemy;
+import com.zaxxon.world.mobile.Player;
 
 public class ServerGameSimulator extends Thread{
 	Server server;
 	InetAddress serverAddress = null;
 	int serverPort;
-    //ServerGame serverGame;
+    ServerGame serverGame;
     
 	boolean run = false;
 	public ServerGameSimulator(Server server,int serverPort,InetAddress serverAddress) {
@@ -20,57 +17,35 @@ public class ServerGameSimulator extends Thread{
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		run = true;
-	//	serverGame = new ServerGame();
-		MainGame.reset();
-		MainGame.startMP();
-
+		serverGame = new ServerGame();
+		serverGame.reset();
+		serverGame.startMP();
 	}
 	int serverSize;
 	public void run(){
 		while(run) {
-			
 			if(server.clients.size()<2) {
 				continue;
 			}
-			for (ListIterator<Enemy> iter = MainGame.enemiesList.listIterator(); iter.hasNext();) {
-			    Enemy e = iter.next();
-				if(e.isAlive() && run == true) {
-					sendZombies(e.getPosition(),e);
-					continue;
+			try {
+				System.out.println(serverGame.play.size());
+				for (ConcurrentHashMap.Entry<String, Player> players : serverGame.play.entrySet()) {
+					if(!players.getValue().isAlive()) {
+						String id = players.getKey();
+						server.sendToAll(("/s/"+id+"/").getBytes());
+					}
 				}
-				else if(e.isAlive() && run == true) {
-					String id = UUID.randomUUID().toString();
-					e.setId(id);
-					String spawn = "/s/"+e.getPosition().toString()+"/"+id+"/";
-					spawnZombies(spawn);
-					continue;
-				}
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			continue;
-		}
-	}
-	
-	private void spawnZombies(String spawn) {
-		server.sendToAll(spawn.getBytes());
-	}
-	
-	private void sendZombies(Vector2 vec,Enemy e) {
-		String ID = e.getId();
-		String x = ""+ vec.x;
-		String y = ""+ vec.y;
-		String zombie = "/z/"+x+"/"+y+"/"+ID+"/";
-		server.sendToAll(zombie.getBytes());
-	}
-	
-	
-	//TODO: implement a way of sending zombies to other players that is synchronised.
-		// Perhaps simulate game on server.
-		@SuppressWarnings("unused")
-		private void distrubuteZombies(int port,InetAddress address) {
-			while(MainGame.enemiesList.iterator().hasNext()){
-			//	Enemy e = serverGame.enemiesList.iterator().next();
-			//	sendZombies(e.getPosition(),e);
+			if(run == true) {
+				continue;
+			}
+			else {
+				return;
 			}
 		}
+	}
 
 }

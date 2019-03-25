@@ -264,6 +264,20 @@ public class Player extends MovableSprite{
 
 		}
 	}
+	
+	public int getDir() {
+		
+		if (facingDir == FacingDir.up) {
+			return 1;
+		} else if (facingDir == FacingDir.down) {
+			return 2;
+		} else if (facingDir == FacingDir.left) {
+			return 3;
+		} else {
+			return 4;
+		}
+		
+	}
 
 	public Vector2 getplayerDimensions() {
 		return new Vector2(this.getWidth(), this.getHeight());
@@ -282,8 +296,9 @@ public class Player extends MovableSprite{
 		
 	}
     
+	
+	
 	public Boolean getHit () {
-		
 		return hit;
 	}
 	

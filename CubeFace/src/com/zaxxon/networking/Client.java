@@ -81,13 +81,11 @@ public class Client extends Thread {
 		}
 		else if(message.startsWith("/s/")) {
 			message = message.substring(3, message.length());
-			MainGame.enemyUpdateQueue.add(message);
-			return;
 		}
 
 		else if (message.startsWith("/z/")) {
 			message = message.substring(3, message.length());
-			MainGame.enemyUpdateQueue.add(message);
+			MainGame.deathQueue.add(message);
 			return;
 		}
 		
@@ -157,13 +155,15 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			Thread.sleep(25);
-		
+			try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		} 
 		}	
 	}
 

@@ -32,6 +32,8 @@ public class Server extends Thread {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
+	private Thread gameThread;
+	private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -52,7 +54,7 @@ public class Server extends Thread {
 			SERVER_IP = ServerAddress.toString();
 			System.out.println(SERVER_IP);
 			listening = true;
-			// simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
+			simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
 		} catch (UnknownHostException e) {
 			System.out.println("Server can't be started, IP isnt known");
 			e.printStackTrace();
@@ -65,7 +67,20 @@ public class Server extends Thread {
 			}
 		});
 		listenThread.start();
-		// simulator.start();
+		simulator.start();
+	}
+	
+	public void gameState() {
+		gameThread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				
+			}
+			
+			
+		});
+		gameThread.start();
 	}
 
 	public void send(final byte[] data, InetAddress address, int port) {
@@ -105,6 +120,7 @@ public class Server extends Thread {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
+			simulator.serverGame.inputUpdateQueue.add(data);
 			bais.close();
 			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -254,8 +270,8 @@ public class Server extends Thread {
 		try {
 			listening = false;
 			listenThread.interrupt();
-		//	simulator.run = false;
-		//  simulator.interrupt();
+			simulator.run = false;
+			simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 		} catch (SocketException e) {
