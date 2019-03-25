@@ -110,6 +110,7 @@ public class MainGame {
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
 		
+		// set up new arrays and objects
 		grpGame.prefWidth(998);
 		grpGame.prefHeight(498);
 
@@ -129,25 +130,6 @@ public class MainGame {
 	}
 
 	public static void reset(Stage primaryStage, MusicPlayer music) {
-		// set up game groups
-//		grpGame = new Group();
-//		grpGame.setId("grpGame");
-//		world = new Group();
-//		world.setId("world");
-//		collidables = new Group();
-//		collidables.setId("collidables");
-//		background = new Group();
-//		background.setId("background");
-//		foreground = new Group();
-//		foreground.setId("foreground");
-//		overlay = new Group();
-//		overlay.setId("overlay");
-//		world.getChildren().add(background);
-//		world.getChildren().add(foreground);
-//		world.getChildren().add(collidables);
-//		grpGame.getChildren().add(world);
-//		grpGame.getChildren().add(overlay);
-		
 		reset();
 		
 		double[] xOffset = { 0 }; // array for making window movable
@@ -157,9 +139,7 @@ public class MainGame {
 		Rectangle gameRect = new Rectangle(998, 498);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
-
-//		grpGame.prefWidth(998);
-//		grpGame.prefHeight(498);
+		
 		// clip the group
 		grpGame.setClip(gameRect);
 
@@ -195,16 +175,6 @@ public class MainGame {
 		anchorPane.getChildren().addAll(grpGame, borderPane, toolbox, audio);
 		anchorPane.setId("anchorpane");
 
-		// set up new arrays and objects
-//		Wall.resetWalls();
-//		spriteList = new ConcurrentLinkedQueue<Sprite>();
-//		playerList = new ArrayList<Player>();
-//		enemiesList = new ArrayList<Enemy>();
-//		player1 = new Player();
-//		player1.setX(500);
-//		player1.setY(500);
-//		addSpriteToForeground(player1);
-
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
 		// sets the scene to the screen size
@@ -239,9 +209,7 @@ public class MainGame {
 				primaryStage.setY(event.getScreenY() - yOffset[0]);
 			}
 		});
-
-		// loads the level
-//		Levels.generateLevel(Levels.LEVEL2);
+		
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
