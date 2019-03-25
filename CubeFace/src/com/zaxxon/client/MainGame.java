@@ -82,7 +82,9 @@ public class MainGame {
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
 	static boolean fired = false;
-	public static boolean muted = true;
+	public static boolean muted = false;
+	
+	private static MusicPlayer music;
 
 
 	private static Player player1;
@@ -95,7 +97,7 @@ public class MainGame {
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset(Stage primaryStage, MusicPlayer music) {
+	public static void reset(Stage primaryStage, MusicPlayer m) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -143,10 +145,21 @@ public class MainGame {
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
 		
+		music = m;
 		audio.setOnAction(e -> {
 			
 			muted = (muted)? false : true;
-			music.stop();
+			
+			if (muted) {
+				
+				music.stop();
+			}
+			else {
+				
+				music.play();
+			}
+			
+			
 			MainGame.setGameFocus();
 		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
@@ -221,6 +234,11 @@ public class MainGame {
 		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
+		
+		if (!muted) {
+			
+			music.play();
+		}
 
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
