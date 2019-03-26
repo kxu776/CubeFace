@@ -80,7 +80,6 @@ public class Bullet extends MovableSprite {
 	 * When hit, deletes the bullet and updates respectively in the collided object
 	 */
 	private void collision() {
-		//System.out.println("Yes");
 
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
 		ArrayList<Enemy> enemies = new ArrayList<>(MainGame.enemiesList);
