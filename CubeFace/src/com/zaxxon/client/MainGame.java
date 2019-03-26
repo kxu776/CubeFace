@@ -264,7 +264,7 @@ public class MainGame {
 			}
 		}
 		
-		//spawnRandomAmmoPickup();
+		spawnRandomAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -316,11 +316,11 @@ public class MainGame {
 	private static void spawnRandomAmmoPickup() {
 		if(!multiplayer){
 
-			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650));
+			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650), null);
 			ammoPickupList.add(a);
 			addSpriteToForeground(a);
 
-			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800));
+			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800), null);
 			ammoPickupList.add(b);
 			addSpriteToForeground(b);
 		}

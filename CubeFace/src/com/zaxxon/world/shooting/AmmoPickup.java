@@ -12,28 +12,6 @@ public class AmmoPickup extends Sprite {
 	private long spawnedTime;
 	private final long existTime = 1000*16;
 	private PickupPoint pickupPoint;		//MP spawn location
-	
-	public AmmoPickup(int type, Vector2 pos) {
-		
-		this.setWidth(64);
-		this.setHeight(32);
-		this.setX(pos.x);
-		this.setY(pos.y);
-		
-		spawnedTime = System.currentTimeMillis();
-		this.type = type;
-		
-		
-		if (type == 0) {
-			
-			setImage(SpriteImages.MGAP_IMAGE);
-		}
-		
-		else {
-			
-			setImage(SpriteImages.SGAP_IMAGE);
-		}
-	}
 
 	public AmmoPickup(int type, Vector2 pos, PickupPoint pickupPoint) {
 
@@ -41,8 +19,12 @@ public class AmmoPickup extends Sprite {
 		this.setHeight(32);
 		this.setX(pos.x);
 		this.setY(pos.y);
-		this.pickupPoint = pickupPoint;
-
+		
+		if (MainGame.multiplayer) {
+			
+			this.pickupPoint = pickupPoint;
+		}
+		
 		spawnedTime = System.currentTimeMillis();
 		this.type = type;
 
