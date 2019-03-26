@@ -37,7 +37,9 @@ public class Client extends Thread {
 		this.port = port;
 		this.ipAddress = host;
 		this.player = player;
+		
 	}
+		
 
 	public void run() {
 		connect();
@@ -61,6 +63,12 @@ public class Client extends Thread {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
+		}
+		baos = new ByteArrayOutputStream();
+		try {
+			out = new ObjectOutputStream(baos);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		sendConnectionPacket();
 	}
@@ -155,12 +163,6 @@ public class Client extends Thread {
 			out.close();
 			baos.close();
 			
-			try {
-				Thread.sleep(30);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -196,7 +198,10 @@ public class Client extends Thread {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
 			socket.send(packet);
+			sleep(20);
 		} catch (IOException e) {
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} 
 	}
 }

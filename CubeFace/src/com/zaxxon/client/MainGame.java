@@ -1,6 +1,5 @@
 package com.zaxxon.client;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 import com.zaxxon.networking.Client;

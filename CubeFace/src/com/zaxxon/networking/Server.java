@@ -91,7 +91,7 @@ public class Server extends Thread {
 				try {
 					if (listening == true) {
 						serverSocket.send(packet);
-						Thread.sleep(15);
+						sleep(15);
 					}
 				} catch (IOException e) {
 				} catch (InterruptedException e) {
