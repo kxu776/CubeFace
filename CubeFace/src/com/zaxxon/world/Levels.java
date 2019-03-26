@@ -35,6 +35,12 @@ public class Levels {
 	public static final int[][] MP_LEVEL = { {2,3,3,3,3,3,2}, {4,0,0,0,0,0,4}, {4,0,1,0,1,0,4},
 			{4,0,0,0,0,0,4},{4,0,1,0,1,0,4},{4,0,0,0,0,0,4},{1,3,3,3,3,3,1}};
 
+
+	public static final Point2D.Double[] MP_AMMO_SPAWNS = { new Point2D.Double(880,864)/*Centre*/, new Point2D.Double(607,852)/*CentreLeft*/,
+			new Point2D.Double(1128,852)/*CentreRight*/, new Point2D.Double(865,1139)/*CentreTop*/, new Point2D.Double(865,589)/*CentreBottom*/};
+	public static final Point2D.Double[] MP_HEALTH_SPAWNS = { new Point2D.Double(323,1384)/*BottomLeft*/, new Point2D.Double(1405,1398)/*BottomRight*/,
+			new Point2D.Double(1405,304)/*TopRight*/, new Point2D.Double(285,304)/*TopLeft*/};
+
 	/**
 	 * generates and populates the background for the world with the floor Tile
 	 * objects and Wall objects, and also populates the collidables with

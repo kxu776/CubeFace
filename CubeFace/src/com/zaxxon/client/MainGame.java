@@ -1,9 +1,8 @@
 package com.zaxxon.client;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.geom.Point2D;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,6 +31,7 @@ import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
+import com.zaxxon.world.pickups.PickupPoint;
 import com.zaxxon.world.shooting.AmmoPickup;
 
 import javafx.animation.AnimationTimer;
@@ -76,6 +76,7 @@ public class MainGame {
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
+	public static ArrayList<PickupPoint> ammoPickupPoints;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	public static ClientSender client;
@@ -164,6 +165,13 @@ public class MainGame {
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
 		ammoPickupList = new ArrayList<AmmoPickup>();
+		ammoPickupPoints = new ArrayList<>();
+		if(true){ //SHould say multiplayer
+			for(Point2D.Double pickupPointcoords : Levels.MP_AMMO_SPAWNS){				// Creates MP ammo spawnpoints on map
+				ammoPickupPoints.add(new PickupPoint(pickupPointcoords));
+				spawnAmmoPickup(ammoPickupPoints.get(ammoPickupPoints.size()-1));		//Spawns pickup at newly created spawn point
+			}
+		}
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
@@ -230,7 +238,7 @@ public class MainGame {
 			spawnRandomEnemy();
 		}
 		
-		spawnRandomAmmoPickup();
+		//spawnRandomAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -279,14 +287,22 @@ public class MainGame {
 	}
 	
 	private static void spawnRandomAmmoPickup() {
-		
-		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 650));
-		ammoPickupList.add(a);
-		addSpriteToForeground(a);
-		
-		AmmoPickup b = new AmmoPickup(1, new Vector2 (500, 800));
-		ammoPickupList.add(b);
-		addSpriteToForeground(b);
+		if(!multiplayer){
+
+			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650));
+			ammoPickupList.add(a);
+			addSpriteToForeground(a);
+
+			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800));
+			ammoPickupList.add(b);
+			addSpriteToForeground(b);
+		}
+	}
+
+	private static void	spawnAmmoPickup(PickupPoint pickupPoint){
+		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1), pickupPoint.getPosVector(), pickupPoint); //spawn random ammo pickup at location
+		ammoPickupList.add(ammoPickup);
+		addSpriteToForeground(ammoPickup);
 	}
 
 	/**
@@ -534,10 +550,16 @@ public class MainGame {
 	}
 	
 	private static void updatePickups() {
-		
+
+		/*
 		for (int i = 0; i < ammoPickupList.size(); i++) {
 			
 			ammoPickupList.get(i).update();
+		}*/
+		for(PickupPoint pickupPoint: ammoPickupPoints){
+			if(pickupPoint.update()){
+				spawnAmmoPickup(pickupPoint);
+			}
 		}
 	}
 	
