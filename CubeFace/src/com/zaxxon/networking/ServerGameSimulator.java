@@ -20,8 +20,6 @@ public class ServerGameSimulator extends Thread {
 		this.serverPort = serverPort;
 		run = true;
 		MainGame.multiplayer = true;
-		MainGame.reset();
-		MainGame.startMP();
 	}
 
 	int serverSize;
