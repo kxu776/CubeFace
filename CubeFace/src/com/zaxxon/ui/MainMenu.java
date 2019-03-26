@@ -86,7 +86,7 @@ public class MainMenu {
         help = new Button("HELP");
         help.setOnAction(e->
 
-                primaryStage.setScene(HelpScreen.makeHelpScreen()));
+                primaryStage.setScene(HelpScreen.makeHelpScreen(primaryStage)));
         grid1.setConstraints(help, 0, 5);
 
 

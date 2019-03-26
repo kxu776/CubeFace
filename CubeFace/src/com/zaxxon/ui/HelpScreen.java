@@ -1,5 +1,6 @@
 package com.zaxxon.ui;
 
+import com.zaxxon.ui.tools.Toolbox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,13 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 
 public class HelpScreen {
 
     public static Scene HelpScreen;
 
-    public static Scene makeHelpScreen() {
+    public static Scene makeHelpScreen(Stage primaryStage) {
 
 
         //load font
@@ -23,7 +25,7 @@ public class HelpScreen {
 
 
         //make a title for the screen
-        Label title = new Label("HELP");
+        Label title = new Label("GAME CONTROLS");
         title.setPadding(new Insets(20, 0, 0, 0));
 
 
@@ -110,11 +112,19 @@ public class HelpScreen {
         content.setAlignment(Pos.CENTER);
         content.setHgap(35);
 
+
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 2, "Help");
+
+
         //borderpane for everything
         BorderPane everything = new BorderPane();
-        everything.setTop(title);
-        everything.setCenter(content);
+        everything.setTop(toolbox);
+        everything.setCenter(title);
+        everything.setBottom(content);
         everything.setAlignment(title, Pos.CENTER);
+
+
 
 
         Scene helpScreen = new Scene(everything, 1000, 500);
