@@ -14,6 +14,7 @@ public class ClientSender implements Serializable{
 	public double health;
 	public InetAddress ipAddress;
 	public boolean shoot = false;
+	public boolean alive = true;
 	private String ID;
 	
 	

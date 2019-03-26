@@ -50,7 +50,7 @@ public class QuitPopup {
             @Override
             public void handle(ActionEvent event) {
             	if(MainGame.multiplayer) {
-            		MainGame.networkingClient.disconnect();
+            		MainGame.getNetworkingClient().disconnect();
             	}
                 popupwindow.close();
 

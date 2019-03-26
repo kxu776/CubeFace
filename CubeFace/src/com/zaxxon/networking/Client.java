@@ -19,16 +19,14 @@ public class Client extends Thread {
 	private int port;
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
-	private int MAX_PACKET_SIZE = 512;
+	private int MAX_PACKET_SIZE = 1024;
 	private String ID = null;
-
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 	private ObjectOutputStream out = null;
 	private ObjectInputStream in = null;
 	private ByteArrayOutputStream baos;
 	private ByteArrayInputStream bais;
 	private boolean running = false;
-	protected boolean runningServer = false;
 	private String player;
 	
 
@@ -64,12 +62,6 @@ public class Client extends Thread {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
 		}
-		baos = new ByteArrayOutputStream();
-		try {
-			out = new ObjectOutputStream(baos);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		sendConnectionPacket();
 	}
 
@@ -84,16 +76,12 @@ public class Client extends Thread {
 		if (message.startsWith("/c/")) {
 			message = message.substring(3);
 			String[] messID = message.split("/");
-			setID(messID[1]);			
+			ID = messID[1];			
 			return;
 		}
 		else if(message.startsWith("/s/")) {
 			message = message.substring(3, message.length());
-		}
-
-		else if (message.startsWith("/z/")) {
-			message = message.substring(3, message.length());
-			MainGame.deathQueue.add(message);
+			MainGame.weaponQueue.add(message);
 			return;
 		}
 		
@@ -126,20 +114,22 @@ public class Client extends Thread {
 		if
 		(message.startsWith("/C/") || message.startsWith("/b/") 
 		||
-		message.startsWith("/z/")  || message.startsWith("/d/")
-		||
-		message.startsWith("/s/")) {
+		message.startsWith("/z/")  || message.startsWith("/s/")) {
 			return;
 		}
 
 		else	
 			try {
-
 				// Here is where we should update the client about other players.
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
-				ClientSender data = (ClientSender) in.readObject();		
-				MainGame.inputUpdateQueue.add(data);
+				ClientSender data = (ClientSender) in.readObject();	
+				if(data.alive) {
+					MainGame.inputUpdateQueue.add(data);
+				}
+				else {
+					MainGame.deathQueue.add(data);
+				}
 
 			} catch (Exception e) {
 				System.out.println(packet.getData().toString());
@@ -151,13 +141,13 @@ public class Client extends Thread {
 	public void sendPlayerObj(ClientSender c) {
 		if(ID!=null) {
 		c.name = player;
-		baos = new ByteArrayOutputStream();
 		try {
+			baos = new ByteArrayOutputStream();
 			out = new ObjectOutputStream(baos);
+		
 			out.writeObject(c);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-			
 			send(playerinfo);
 			
 			out.close();
@@ -189,16 +179,11 @@ public class Client extends Thread {
 		}
 	}
 	
-	protected void setID(String s) {
-		ID = s;
-	}
-	
-
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
 			socket.send(packet);
-			sleep(20);
+			sleep(25);
 		} catch (IOException e) {
 		} catch (InterruptedException e) {
 			e.printStackTrace();

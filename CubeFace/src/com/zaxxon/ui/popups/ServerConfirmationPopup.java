@@ -22,7 +22,7 @@ import javafx.stage.StageStyle;
 
 
 public class ServerConfirmationPopup {
-
+	private static String ip;
 
     public static void display(Stage primaryStage, Scene renderedScene)
     {
@@ -40,10 +40,13 @@ public class ServerConfirmationPopup {
 
         Label label= new Label("Your server has been successfully made!");
         GridPane.setConstraints(label, 0, 0);
+        
+        Label IPlabel= new Label("IP: " + ip);
+        GridPane.setConstraints(label, 0, 2);
 
         //join game
         Button joinGame = new Button("Join Game");
-        GridPane.setConstraints(joinGame, 1, 1);
+        GridPane.setConstraints(joinGame, 3,3);
         joinGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -55,7 +58,7 @@ public class ServerConfirmationPopup {
 
         //exit button
         Button exit = new Button("Exit");
-        GridPane.setConstraints(exit, 0, 1);
+        GridPane.setConstraints(exit, 0, 3);
         exit.setOnAction(e->popupwindow.close());
 
 
@@ -63,7 +66,7 @@ public class ServerConfirmationPopup {
         //LAYOUT
         //gridpane for actual content
         GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(label, exit, joinGame);
+        gridPane.getChildren().addAll(label,IPlabel, exit, joinGame);
         gridPane.setAlignment(Pos.CENTER);
 
         //make a toolbox
@@ -75,7 +78,7 @@ public class ServerConfirmationPopup {
         borderPane.setCenter(gridPane);
 
         //make a rectangle and set clip
-        Rectangle rect = new Rectangle(400,150);
+        Rectangle rect = new Rectangle(450,175);
         rect.setArcHeight(10.0);
         rect.setArcWidth(10.0);
         borderPane.setClip(rect);
@@ -84,7 +87,7 @@ public class ServerConfirmationPopup {
 
 
         //make a scene
-        Scene scene1= new Scene(borderPane, 400, 150);
+        Scene scene1= new Scene(borderPane, 450, 175);
         popupwindow.setScene(scene1);
         scene1.setFill(Color.TRANSPARENT);
         scene1.getStylesheets().add(MainMenu.class.getResource("css/popup.css").toString());
@@ -109,6 +112,9 @@ public class ServerConfirmationPopup {
 
         popupwindow.showAndWait();
 
+    }
+    public static void setIP(String IP) {
+    		ip = IP;
     }
 
 
