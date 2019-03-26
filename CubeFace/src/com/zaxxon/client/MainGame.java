@@ -168,7 +168,7 @@ public class MainGame {
 
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 
-		
+
 
 		// make a rectangle
 		Rectangle rect = new Rectangle(WIDTH, HEIGHT);

@@ -54,8 +54,6 @@ public class MainMenu {
         grid1.setVgap(12); //set the gap between cells vertically and horizontally
         grid1.setHgap(20);
 
-        grid1.setLayoutX(50);
-
         //add column contraints to ensure buttons are in the middle of the cell
         ColumnConstraints colConstraints = new ColumnConstraints();
         colConstraints.setHalignment(HPos.CENTER); //set alignment to center
@@ -86,7 +84,9 @@ public class MainMenu {
         //HELP BUTTON
 
         help = new Button("HELP");
-        help.setOnAction(e-> System.out.println("Opening help screen..."));
+        help.setOnAction(e->
+
+                primaryStage.setScene(HelpScreen.makeHelpScreen()));
         grid1.setConstraints(help, 0, 5);
 
 
@@ -95,8 +95,6 @@ public class MainMenu {
         //**************************LOGO****************************
         //load the logo image
         Image logo = new Image(getClass().getResource("img/cubefacelogo.png").toString());
-
-        //set the imageview
         ImageView logoView = new ImageView(logo);
 
         //set the position of the image
@@ -104,10 +102,7 @@ public class MainMenu {
         logoView.setY(25);
 
         //set height/width of image
-        //logoView.setFitHeight(455);
         logoView.setFitWidth(450);
-
-        //preseve ratio of image
         logoView.setPreserveRatio(true);
 
         //****************************GRIDPANES AND SCENE************************************
@@ -169,7 +164,6 @@ public class MainMenu {
 
         //make a toolbox
         AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 2, "CubeFace");
-        //toolbox.setPadding(new Insets(0, 0, 0, 0));
         toolbox.setId("toolbox");
 
 
@@ -194,7 +188,7 @@ public class MainMenu {
         mainmenu.setFill(Color.TRANSPARENT);
 
 
-        //make it movable
+        //make the stage movable
         mainmenu.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -210,6 +204,8 @@ public class MainMenu {
                 primaryStage.setY(event.getScreenY() - yOffset[0]);
             }
         });
+
+        //add the css file
         mainmenu.getStylesheets().add(getClass().getResource("css/mainmenu.css").toString()); //add the stylesheet
 
 
