@@ -8,8 +8,12 @@ import com.zaxxon.sound.MusicPlayer;
 import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
-//Written by Dan
 
+/**
+ * @author Dan
+ *	
+ * Class for updating and firing the machine gun
+ */
 public class Weapon_MG extends Weapon {
 
 	private final double damage = 2;
@@ -17,6 +21,10 @@ public class Weapon_MG extends Weapon {
 	private final double maxAmmo = 160;
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/Gun_Shoot_2.wav");
 
+	/**
+	 * Create and initialise a new machine gun
+	 * @param player - player the gun belongs to
+	 */
 	public Weapon_MG(Player player) {
 		super(player);
 		super.weaponName = "Machine Gun";

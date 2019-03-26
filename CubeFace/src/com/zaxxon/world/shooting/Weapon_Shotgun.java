@@ -8,8 +8,12 @@ import com.zaxxon.sound.MusicPlayer;
 import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
-//Written by Dan
 
+/**
+ * @author Dan
+ *
+ * Class for updating and firing the shotgun
+ */
 public class Weapon_Shotgun extends Weapon {
 	
 	private final double damage = 8;
@@ -19,6 +23,10 @@ public class Weapon_Shotgun extends Weapon {
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/Gun_Shoot_1.wav");
 	private Boolean fired = false;
 	
+	/**
+	 * Create an initialise a new shotgun
+	 * @param player - player the gun belongs to
+	 */
 	public Weapon_Shotgun(Player player) {
 		super(player);
 		super.weaponName = "Shotgun";
