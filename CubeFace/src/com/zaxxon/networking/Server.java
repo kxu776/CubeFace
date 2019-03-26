@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +20,7 @@ public class Server extends Thread {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
-	private Thread sendThread;
+	private Thread sendThread, weaponThread;
 	private boolean listening = false;
 	private final int SERVER_PORT;
 	private String SERVER_IP;
@@ -86,6 +87,22 @@ public class Server extends Thread {
 			}
 		});
 		sendThread.start();
+	}
+	
+	
+	public void weapons() {
+		weaponThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (Iterator<PickupPoint> it = MainGame.ammoPickupPoints.iterator(); it.hasNext();) {
+					PickupPoint p = it.next();
+					if(!p.update()){
+						MainGame.spawnAmmoPickup(p);
+					}	
+				}
+			}
+		});
+		weaponThread.start();
 	}
 
 	private void listen() {
@@ -210,6 +227,7 @@ public class Server extends Thread {
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
 			}
+			weapons();
 			return;
 		}
 

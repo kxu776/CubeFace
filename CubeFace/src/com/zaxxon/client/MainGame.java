@@ -331,12 +331,11 @@ public class MainGame {
 	 *
 	 * @param pickupPoint Multiplayer spawn point object for item pickups
 	 */
-	private static void	spawnAmmoPickup(PickupPoint pickupPoint){
+	public static void	spawnAmmoPickup(PickupPoint pickupPoint){
 		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1), pickupPoint.getPosVector(), pickupPoint); //spawn random ammo pickup at location
 		ammoPickupList.add(ammoPickup);
 		addSpriteToForeground(ammoPickup);
 		if(host) {
-			
 			String s = "/s/"+ammoPickup.type+"/"+pickupPoint.getPosVector().x+"/"+pickupPoint.getPosVector().y+"/";
 			networkingClient.send(s.getBytes());
 		}
