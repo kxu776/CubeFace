@@ -112,6 +112,7 @@ public class Player extends MovableSprite{
 		StatsBox.updateScore(score);	//Updates on-screen score display.
 
 		draw();
+		//System.out.println("X: " + getX() + " Y: " + getY() + "\n");
 	}
     
    
