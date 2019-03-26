@@ -8,8 +8,12 @@ import com.zaxxon.sound.MusicPlayer;
 import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
-//Written by Dan
 
+/**
+ * @author Dan
+ *
+ * Class for updating and firing the pistol
+ */
 public class Weapon_Default extends Weapon {
 
 	private final double damage = 10;
@@ -17,6 +21,10 @@ public class Weapon_Default extends Weapon {
 	public static MusicPlayer sound = new MusicPlayer("/mainmenu/LaserShoot_2.wav");
 	private Boolean fired = false;
 
+	/**
+	 * Create and initialise a new pistol
+	 * @param player - player the gun belongs to
+	 */
 	public Weapon_Default(Player player) {
 		super(player);
 		super.weaponName = "Pistol";
