@@ -20,8 +20,9 @@ public class HelpScreen {
     public static Scene makeHelpScreen(Stage primaryStage, Scene mainmenu) {
 
 
-        //load font
+        //load fonts
         Font.loadFont(HelpScreen.class.getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
+        Font.loadFont(HelpScreen.class.getResourceAsStream("Cube.ttf"), 9);
 
 
 
@@ -124,7 +125,14 @@ public class HelpScreen {
         toolbox.setId("toolbox");
 
         //add a back button to the corner
-        Button back = new Button("BACK");
+        Button back = new Button();
+        back.setPadding(new Insets(10));
+        Image backImg = new Image(HelpScreen.class.getResource("img/back.png").toString()); //load back image
+        ImageView backview = new ImageView(backImg);
+        backview.setFitWidth(20);
+        backview.setPreserveRatio(true);
+        back.setGraphic(backview);
+        back.setId("back");
         back.setOnAction(e-> primaryStage.setScene(mainmenu));
 
         //borderpane for all content
@@ -135,7 +143,7 @@ public class HelpScreen {
         everything.setBottom(content);
         everything.setAlignment(title, Pos.CENTER);
 
-        
+
 
 
 

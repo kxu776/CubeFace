@@ -29,10 +29,18 @@
 }
 
 #title {
-    -fx-font-size: 30px;
+    -fx-font-size: 20px;
+    -fx-font-family: "Cube";
+    -fx-text-fill:#06abb1;
     }
 
 #heading {
 -fx-font-size:15px;
+}
+
+#back {
+    -fx-background-color: none;
+    -fx-text-fill: white;
+
 }
 
