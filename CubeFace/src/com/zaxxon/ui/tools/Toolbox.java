@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class Toolbox {
+	public static boolean runningServer = false;
 
     public AnchorPane toolbar(Stage popupwindow, int type, String title) {
 
@@ -55,6 +56,7 @@ public class Toolbox {
             });
         } else {
             close.setOnAction(e -> popupwindow.close());
+            
         }
 
         //load the icon
@@ -93,6 +95,5 @@ public class Toolbox {
 
         return anchorPane;
     }
-
 
 }

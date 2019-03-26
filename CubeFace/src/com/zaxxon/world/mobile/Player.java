@@ -8,11 +8,11 @@ import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.shooting.WeaponManager;
 import javafx.scene.input.KeyCode;
 
-
-//Written by Dan
-
 /**
- * Represents the player controlled sprite in this game.
+ * @author Dan
+ * 
+ * Class to contain all behaviour relating to the player character
+ *
  */
 public class Player extends MovableSprite{
 	
@@ -112,10 +112,14 @@ public class Player extends MovableSprite{
 		StatsBox.updateScore(score);	//Updates on-screen score display.
 
 		draw();
+		//System.out.println("X: " + getX() + " Y: " + getY() + "\n");
 	}
     
    
     
+    /**
+     * Calculate current speed using acceleration and deceleration basd on input, and turn it into a velocity vector
+     */
     private void movement() {
     	
     	inputDir = new Vector2();
@@ -152,6 +156,9 @@ public class Player extends MovableSprite{
     	velocity = new Vector2 (moveDir.x * currentSpeed, moveDir.y * currentSpeed);
     }
     
+    /**
+     * Get horizontal input and set facing direction
+     */
     private void moveX() {
     	
     	if (Input.isKeyPressed(KeyCode.A) && Input.isKeyPressed(KeyCode.D) && mp == false) {
@@ -176,6 +183,9 @@ public class Player extends MovableSprite{
     	else inputDir.x = 0;
     }
     
+    /**
+     * Get vertical input and set facing direction
+     */
     private void moveY() {
     	
     	if (Input.isKeyPressed(KeyCode.S) && Input.isKeyPressed(KeyCode.W) && mp == false) {
@@ -199,12 +209,18 @@ public class Player extends MovableSprite{
     	else inputDir.y = 0;
     }
     
+    /**
+     * Calculate collision and update with new pushed-out position
+     */
     private void collision() {
     	
     	Vector2 toMove = WallCollision.doCollision(this.getBoundsInLocal(), velocity);
     	this.translate(toMove);
     }
     
+    /**
+     * Checks if the player collides with a pickup object and sets variables based on type accordingly 
+     */
     private void pickupsCollision() {
     	
     	for (int i = 0; i < MainGame.ammoPickupList.size(); i++) {
@@ -216,10 +232,15 @@ public class Player extends MovableSprite{
     				//add MG ammo
     				weaponManager.getWeaponFromList(1).addAmmo(200);
     			}
-    			else {
+    			else if (MainGame.ammoPickupList.get(i).type == 1) {
     				
     				//add SG ammo
     				weaponManager.getWeaponFromList(2).addAmmo(200);
+    			}
+    			
+    			else {
+    				
+    				//health
     			}
     			
     			MainGame.ammoPickupList.get(i).delete();
@@ -228,6 +249,9 @@ public class Player extends MovableSprite{
     }
     
     
+    /**
+     * Updates the graphics image corresponding to facing direction
+     */
     public void draw() {
     	
     	switch (facingDir) {
@@ -254,6 +278,9 @@ public class Player extends MovableSprite{
     	}
     }
 
+    /**
+     * @return facing direction
+     */
     public FacingDir getdir() {
 		return facingDir;
     }
@@ -264,14 +291,24 @@ public class Player extends MovableSprite{
 	}	
 	
 	
+	/**
+	 * @return current held weapon ID
+	 */
 	public int getCurrentWeaponNum() {
 		return weaponManager.getCurrentWeaponNum();
 	}
+	/**
+	 * @return current held weapon name
+	 */
 	public String getCurrentWeaponName () {
 		return weaponManager.getCurrentWeaponName();
 	}
 	
 
+	/**
+	 * Set ID direction as an IEnumerable
+	 * @param i
+	 */
 	public void setDir(int i) {
 		if (i == 1) {
 			facingDir = FacingDir.up;
@@ -286,11 +323,35 @@ public class Player extends MovableSprite{
 
 		}
 	}
+	
+	/**
+	 * @return IEnumerable direction as an ID
+	 */
+	public int getDir() {
+		
+		if (facingDir == FacingDir.up) {
+			return 1;
+		} else if (facingDir == FacingDir.down) {
+			return 2;
+		} else if (facingDir == FacingDir.left) {
+			return 3;
+		} else {
+			return 4;
+		}
+		
+	}
 
+	/**
+	 * @return player's width and height
+	 */
 	public Vector2 getplayerDimensions() {
 		return new Vector2(this.getWidth(), this.getHeight());
 	}
 	
+	/**
+	 * Set the hit boolean and damage time
+	 * @param b - value to set
+	 */
 	public void setHit (Boolean b) {
 		
 		hit = b;
@@ -304,11 +365,18 @@ public class Player extends MovableSprite{
 		
 	}
     
+	
+	
+	/**
+	 * @return whether the player is in a state of damage
+	 */
 	public Boolean getHit () {
-		
 		return hit;
 	}
 	
+	/**
+	 * @return velocity
+	 */
 	public Vector2 getVelocity() {
 		
 		return velocity;

@@ -10,8 +10,12 @@ import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.mobile.Player;
 import javafx.scene.input.KeyCode;
 
-//Written by Dan
 
+/**
+ * @author Dan
+ *
+ *	Class that holds each individual weapon and updates them and their associated bullets
+ */
 public class WeaponManager {
 
 	private FacingDir facingDir;
@@ -28,6 +32,10 @@ public class WeaponManager {
 
 	public WeaponManager(){};
 	
+	/**
+	 * Creates a new weapon manager object and creates a new weapon of each type to store
+	 * @param player - player the weapons belong to
+	 */
 	public WeaponManager (Player player) {
 		
 		weapons = new ArrayList<Weapon>();
@@ -39,6 +47,13 @@ public class WeaponManager {
 		allBullets = new ArrayList<Bullet>();
 	}
 
+	/**
+	 * Calculates the position the player graphic holds the gun in
+	 * @param playerPos - player's position
+	 * @param playerDimensions - player's size
+	 * @param dir - direction the player is facing
+	 * @return calculated position
+	 */
 	public Vector2 getWeaponPos(Vector2 playerPos, Vector2 playerDimensions, Vector2 dir) {
 
 		switch (facingDir) {
@@ -100,6 +115,11 @@ public class WeaponManager {
 		}
 	}
 
+	/**
+	 *  Converts IEnumerable to Vector2
+	 * @param facingDir
+	 * @return Vector2 position
+	 */
 	public Vector2 getFacingDirAsVector(FacingDir facingDir) {
 
 		switch (facingDir) {
@@ -121,39 +141,70 @@ public class WeaponManager {
 		}
 	}
 
+	/**
+	 * @return player position
+	 */
 	public Vector2 getPlayerPos() {
 		return playerPos;
 	}
 	
+	/**
+	 * @return current weapon ID
+	 */
 	public int getCurrentWeaponNum() {
 		return currentWeapon;
 	}
 
+	/**
+	 * @return current weapon name
+	 */
 	public String getCurrentWeaponName() {
 		return weapons.get(currentWeapon).getWeaponName() + ": " + weapons.get(currentWeapon).getAmmo();
 	}
 
+	/**
+	 * Add a new bullet to the update list
+	 * @param b - bullet to add
+	 */
 	public static void addBulletToList(Bullet b) {
 		allBullets.add(b);
 	}
 
+	/**
+	 *  Remove a bullet from the update list
+	 * @param b - bullet to remove
+	 */
 	public static void removeBulletFromList(Bullet b) {
 		allBullets.remove(b);
 	}
 	
+	/**
+	 * @param i - weapon ID
+	 * @return weapon object
+	 */
 	public Weapon getWeaponFromList(int i) {
 		return weapons.get(i);
 	}
 
+	/**
+	 * @return current weapon object
+	 */
 	public Weapon getCurrentWeapon() {
 		return weapons.get(currentWeapon);
 	}
 	
+	/**
+	 * Set current weapon via ID and update the UI
+	 * @param wep - weapon ID to set
+	 */
 	public void setCurrentWeapon(int wep) {
 		currentWeapon = wep;
 		StatsBox.updateWeapon(getCurrentWeaponName());
 	}
 
+	/**
+	 * Update the weapon readout in the UI
+	 */
 	public void updateWeaponReadout(){
 		StatsBox.updateWeapon(getCurrentWeaponName());
 	}

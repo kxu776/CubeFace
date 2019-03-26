@@ -1,6 +1,6 @@
 package com.zaxxon.client;
 
-import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,6 +32,7 @@ import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
+import com.zaxxon.world.pickups.PickupPoint;
 import com.zaxxon.world.shooting.AmmoPickup;
 
 import javafx.animation.AnimationTimer;
@@ -76,6 +77,7 @@ public class MainGame {
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
+	public static ArrayList<PickupPoint> ammoPickupPoints;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	public static ClientSender client;
@@ -96,6 +98,7 @@ public class MainGame {
 	private static long gameStartTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
+	public static LinkedBlockingQueue<String> deathQueue = new LinkedBlockingQueue<String>();
 
 	public static void reset(Stage primaryStage, MusicPlayer m) {
 		// set up game groups
@@ -181,13 +184,18 @@ public class MainGame {
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
 		ammoPickupList = new ArrayList<AmmoPickup>();
+		ammoPickupPoints = new ArrayList<>();
+		if(multiplayer){
+			for(Point2D.Double pickupPointcoords : Levels.MP_AMMO_SPAWNS){				// Creates MP ammo spawnpoints on map
+				ammoPickupPoints.add(new PickupPoint(pickupPointcoords));
+				spawnAmmoPickup(ammoPickupPoints.get(ammoPickupPoints.size()-1));		//Spawns pickup at newly created spawn point
+			}
+		}
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
-
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-
 
 
 		// make a rectangle
@@ -219,7 +227,11 @@ public class MainGame {
 		});
 
 		// loads the level
-		Levels.generateLevel(Levels.LEVEL2);
+		if(multiplayer){
+			Levels.generateLevel(Levels.MP_LEVEL);
+		}else {
+			Levels.generateLevel(Levels.LEVEL2);
+		}
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
 	}
@@ -244,8 +256,12 @@ public class MainGame {
 		normalisedFPS = 1;
 		gameStartTime = System.currentTimeMillis();
 
-		for (int i = 0; i < 5; i++) {
-			spawnRandomEnemy();
+
+		if (!multiplayer) {
+			
+			for (int i = 0; i < 5; i++) {
+				spawnRandomEnemy();
+			}
 		}
 		
 		spawnRandomAmmoPickup();
@@ -257,13 +273,14 @@ public class MainGame {
 					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
+					updatePickups();
 					sendNetworkUpdate();
-					getUpdatesFromQueue();
+					getPlayerUpdatesFromQueue();
+					killPlayer();
+
+				}else {
+					updateEnemies();
 				}
-				updateEnemies();
-				updatePickups();
-				
-				
 				camera.update();
 				calculateFPS();
 			}
@@ -297,14 +314,27 @@ public class MainGame {
 	}
 	
 	private static void spawnRandomAmmoPickup() {
-		
-		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 650));
-		ammoPickupList.add(a);
-		addSpriteToForeground(a);
-		
-		AmmoPickup b = new AmmoPickup(1, new Vector2 (500, 800));
-		ammoPickupList.add(b);
-		addSpriteToForeground(b);
+		if(!multiplayer){
+
+			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650), null);
+			ammoPickupList.add(a);
+			addSpriteToForeground(a);
+
+			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800), null);
+			ammoPickupList.add(b);
+			addSpriteToForeground(b);
+		}
+	}
+
+	/**
+	 * Spawns a randomised ammo pickup at the designated spawnpoint object passed to it.
+	 *
+	 * @param pickupPoint Multiplayer spawn point object for item pickups
+	 */
+	private static void	spawnAmmoPickup(PickupPoint pickupPoint){
+		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1), pickupPoint.getPosVector(), pickupPoint); //spawn random ammo pickup at location
+		ammoPickupList.add(ammoPickup);
+		addSpriteToForeground(ammoPickup);
 	}
 
 	/**
@@ -415,115 +445,101 @@ public class MainGame {
 	public static void addCollidable(CollidableRectangle c) {
 		collidables.getChildren().add(c);
 	}
+	
 
 	private static void sendNetworkUpdate() {
+		if (!Input.isKeyPressed(KeyCode.SPACE)) {
+			fired = false;
+		}
 		client.currWep = player1.getCurrentWeaponNum();
-
+		client.pos = player1.getDir();
+		double x = player1.getX();
+		double y = player1.getY();
+		
 		if (spawn == false) {
-			client.setX(player1.getX());
-			client.setY(player1.getY());
+			client.setX(x);
+			client.setY(y);
 			client.setHealth(player1.getHealth());
 			networkingClient.sendPlayerObj(client);
 			spawn = true;
+			return;
 		}
-
-		if (player1.getdir() == (FacingDir.up)) {
-			client.pos = 1;
-		} else if (player1.getdir() == (FacingDir.down)) {
-			client.pos = 2;
-		} else if (player1.getdir() == (FacingDir.left)) {
-			client.pos = 3;
-		} else if (player1.getdir() == (FacingDir.right)) {
-			client.pos = 4;
-		}
-
+		
 		// Standing still and shooting
-		if (Input.isKeyPressed(KeyCode.SPACE) && ((player1.getX() - client.getX()) == 0.0)
-				&& ((player1.getY() - client.getY()) == 0.0)) {
+		if (Input.isKeyPressed(KeyCode.SPACE) &&
+			((x - client.getX()) == 0.0) &&
+			((y - client.getY()) == 0.0)) {
 			if (fired == false) {
-				client.setX(player1.getX());
-				client.setY(player1.getY());
+				if(player1.getCurrentWeaponNum() != 1) {
+					fired = true;
+				}
+				client.setX(x);
+				client.setY(y);
 				client.setHealth(player1.getHealth());
 				client.shoot = true;
 				networkingClient.sendPlayerObj(client);
 				client.shoot = false;
-				fired = true;
+				return;
 			}
 		}
 		// Standing still
-		if (((player1.getX() - client.getX()) == 0.0) && ((player1.getY() - client.getY()) == 0.0)) {
+		else if (((player1.getX() - client.getX()) == 0.0) && ((player1.getY() - client.getY()) == 0.0)) {
 			return;
 		}
 
-		if (Input.isKeyPressed(KeyCode.SPACE)) {
-			if (!fired) {
-				fired = true;
+		else if (Input.isKeyPressed(KeyCode.SPACE)) {
+			if (fired == false) {
+				if(player1.getCurrentWeaponNum() != 1) {
+					fired = true;
+				}
 				client.shoot = true;
 			}
 		}
-		// Moving
-		client.setX(player1.getX());
-		client.setY(player1.getY());
-		client.setHealth(player1.getHealth());
-		networkingClient.sendPlayerObj(client);
-		client.shoot = false;
-		fired = false;
+			// Moving
+			client.setX(x);
+			client.setY(y);
+			client.setHealth(player1.getHealth());
+			networkingClient.sendPlayerObj(client);
+			client.shoot = false;
 	}
 
-	private static void getUpdatesFromQueue() {
+	private static void getPlayerUpdatesFromQueue() {
 
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
 			String id = data.getID().trim();
-			if (!play.containsKey(id)) {
-
-				play.put(id, new Player());
-				play.get(id).setX(900);
-				play.get(id).setY(900);
-				play.get(id).setId(id);
-				play.get(id).mp = true;
-				play.get(id).weaponManager.getCurrentWeapon().test = true;
-				play.get(id).weaponManager.mp = true;
-
-				addSpriteToForeground(play.get(id));
-			}
+			newPlayer(data);
 
 			Iterator<Sprite> iterator = spriteList.iterator();
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
-
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
-
 					if (sprite instanceof MovableSprite) {
 						((MovableSprite) sprite).setHealth(data.getHealth());
 					}
-
 					if ((play.get(id).weaponManager.getCurrentWeaponNum() != data.currWep)) {
-						Vector2 pos = play.get(id).getplayerDimensions();
-						FacingDir m = play.get(id).getdir();
-
 						play.get(id).weaponManager.setCurrentWeapon(data.getCurrWep());
 						play.get(id).weaponManager.getCurrentWeapon().test = true;
-
-						play.get(id).weaponManager.update(normalisedFPS, pos, play.get(id).getplayerDimensions(), m);
-
 					}
-
 					if ((data.shoot == true)) {
 						FacingDir m = play.get(id).getdir();
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
-						Vector2 pos = play.get(id).getplayerDimensions();
-						play.get(id).weaponManager.getCurrentWeapon().fire(vect, pos, true);
-
+						Vector2 pos = play.get(id).weaponManager.playerPos;
+						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos, play.get(id).getplayerDimensions(), vect);
+						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Updates each ai controlled enemy in game - handles movement, damage and pathfinding for each enemy.
+	 * Removes dead enemies from the game.
+	 */
 	private static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
@@ -550,15 +566,33 @@ public class MainGame {
 			sprite.delete();
 		}
 	}
-	
+
+	/**
+	 *  Updates item pick-up spawn points in multiplayer mode.
+	 *  Checks for spawns/despawns on each designated point, and implements a respawn cooldown for pickup items.
+	 */
 	private static void updatePickups() {
-		
+
+		/*
 		for (int i = 0; i < ammoPickupList.size(); i++) {
 			
 			ammoPickupList.get(i).update();
+		}*/
+		for(PickupPoint pickupPoint: ammoPickupPoints){
+			if(pickupPoint.update()){				//If an item is due to spawn at this point, spawn the item.
+				spawnAmmoPickup(pickupPoint);
+			}
 		}
 	}
 	
+
+	public static void removeAllMp() {
+		for (ConcurrentHashMap.Entry<String, Player> players : play.entrySet()) {
+			getSprite(players.getKey()).delete();
+			removeFromGame(getSprite(players.getKey()));
+		}
+		play.clear();
+	}
 
 	/**
 	 * Getter for the spriteList
@@ -568,7 +602,31 @@ public class MainGame {
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
+	
+	
+	private static void killPlayer() {
+		while(!deathQueue.isEmpty()){
+			String playerToKill = deathQueue.poll();
+			String messageArr[] = playerToKill.split("/");
+			play.get(messageArr[0]).delete();
+		}
+	}
 
+	public static void newPlayer(ClientSender data) {
+		String id = data.getID();
+		if(!play.containsKey(data.getID())) {
+				play.put(id, new Player());
+				Player player = play.get(id);
+				player.setX(data.getX());
+				player.setY(data.getY());
+				player.setId(id);
+				player.mp = true;
+				player.weaponManager.getCurrentWeapon().test = true;
+				player.weaponManager.mp = true;
+				addSpriteToForeground(player);
+		}
+	}
+	
 	/**
 	 * returns a Sprite based off its unique ID
 	 * 
@@ -583,5 +641,18 @@ public class MainGame {
 		}
 		return null;
 	}
+	public static void addZombie() {
+		Zombie zombie = new Zombie(500,500);
+		addSpriteToForeground(zombie);
+	}
+	
+	public static void setUpClientThread(String host, int port, String name) {
+		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
+		networkingClient = new Client(host,port,name);
+		networkingClient.start();
+	}
 
+	public static Client getNetworkingClient() {
+		return networkingClient;
+	}
 }

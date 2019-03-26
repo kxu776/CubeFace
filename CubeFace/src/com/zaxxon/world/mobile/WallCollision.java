@@ -8,10 +8,20 @@ import com.zaxxon.world.Wall;
 import javafx.geometry.Bounds;
 import javafx.util.Pair;
 
-//Written by Dan
 
+/**
+ * @author Dan
+ *
+ *  Class to handle resolving collisions between a moving object and a wall
+ */
 public class WallCollision {
 
+	/** Firstly calculate the intersections with the walls 
+	 *  Secondly push the object out to correct its position with the correct distance and direction
+	 * @param movingObject 
+	 * @param velocity - velocity of the moving object
+	 * @return the position to update it with
+	 */
 	public static Vector2 doCollision(Bounds movingObject, Vector2 velocity) {
 		
 		ArrayList<Pair<Integer, Bounds>> walls = Wall.getAllWallBoundsWithType();
@@ -163,6 +173,13 @@ public class WallCollision {
     	return toMove;
 	}
 	
+	/**
+	 * calculates how far into a wall the object has penetrated
+	 * 
+	 * @param wall
+	 * @param movingObject
+	 * @return Vector2 for x and y penetration amounts
+	 */
 	private static Vector2 calcIntersection(Bounds wall, Bounds movingObject) {
 	    	
 		double wallBuffer = 0.5;
