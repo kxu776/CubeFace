@@ -13,9 +13,11 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 
 
-
-//Written by Dan
-
+/**
+ * @author Dan
+ * 
+ * Class to handle behaviour for bullets that have been shot
+ */
 public class Bullet extends MovableSprite {
 	
 	private Vector2 startPos;
@@ -26,6 +28,14 @@ public class Bullet extends MovableSprite {
 
 	private double despawnDistance;
 	
+	/**
+	 * Creates a new bullet and initialises it
+	 * @param dir direction to move in
+	 * @param pos position to spawn at
+	 * @param damage own damage value
+	 * @param dsd despawn distance
+	 * @param player player that shot it
+	 */
 	public Bullet (Vector2 dir, Vector2 pos, double damage, double dsd, Player player) {
 		MainGame.addSpriteToForeground(this);
 		
@@ -53,8 +63,10 @@ public class Bullet extends MovableSprite {
 
 	}
 	
-	private void checkDespawn() {
-		
+	/**
+	 * Despawns the bullet after the specified distance travelled
+	 */
+	private void checkDespawn() { 
 		double distanceTravelled = Math.sqrt(Math.pow(this.getX()-startPos.x, 2) + Math.pow(this.getY()-startPos.y, 2));
 		
 		if (distanceTravelled >= despawnDistance) {
@@ -63,6 +75,10 @@ public class Bullet extends MovableSprite {
 		}
 	}
 	
+	/**
+	 * Checks for collision between walls, enemies, and players
+	 * When hit, deletes the bullet and updates respectively in the collided object
+	 */
 	private void collision() {
 		//System.out.println("Yes");
 
