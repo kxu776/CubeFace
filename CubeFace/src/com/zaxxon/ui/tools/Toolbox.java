@@ -24,8 +24,7 @@ public class Toolbox {
 
 
         //types of toolbar:
-        //1 = popup, 2= mainmenu, 3= game
-
+        //1 = popup, 2= mainmenu, 3= game, 4= helpscreen
 
         //make a toolbar (for the top)
         Label tbTitle = new Label(title);
@@ -84,11 +83,13 @@ public class Toolbox {
 
 
         if(type == 1) {
-            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/popup-toolbox.css").toString());
+            anchorPane.getStylesheets().add(Toolbox.class.getResource("../css/popup-toolbox.css").toString());
         } else if(type == 2) {
-            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/mainmenu-toolbox.css").toString());
-        } else if(type ==3) {
-            anchorPane.getStylesheets().add(MainMenu.class.getResource("css/game-toolbox.css").toString());
+            anchorPane.getStylesheets().add(Toolbox.class.getResource("../css/mainmenu-toolbox.css").toString());
+        } else if(type == 3) {
+            anchorPane.getStylesheets().add(Toolbox.class.getResource("../css/game-toolbox.css").toString());
+        } else if(type == 4) {
+            anchorPane.getStylesheets().add(Toolbox.class.getResource("../css/help-toolbox.css").toString());
         }
 
 

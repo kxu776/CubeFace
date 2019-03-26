@@ -54,7 +54,7 @@ public class MainMenu {
         grid1.setVgap(12); //set the gap between cells vertically and horizontally
         grid1.setHgap(20);
 
-        //add column contraints to ensure buttons are in the middle of the cell
+        //add column contraints
         ColumnConstraints colConstraints = new ColumnConstraints();
         colConstraints.setHalignment(HPos.CENTER); //set alignment to center
         grid1.getColumnConstraints().add(colConstraints);
@@ -86,7 +86,7 @@ public class MainMenu {
         help = new Button("HELP");
         help.setOnAction(e->
 
-                primaryStage.setScene(HelpScreen.makeHelpScreen(primaryStage)));
+                primaryStage.setScene(HelpScreen.makeHelpScreen(primaryStage, mainmenu)));
         grid1.setConstraints(help, 0, 5);
 
 
@@ -211,11 +211,4 @@ public class MainMenu {
 
         return mainmenu;
     }
-
-
-
-
-
-
-
 }
