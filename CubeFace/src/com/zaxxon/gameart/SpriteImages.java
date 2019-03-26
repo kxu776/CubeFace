@@ -46,6 +46,14 @@ public class SpriteImages {
 	 * String URL for the background tile spritesheet
 	 */
 	public static final String BACKGROUND_TILE_URL = "CubeFace/src/com/zaxxon/ui/img/ground.png";
+	/**
+	 * String URL for machine gun ammo pickup
+	 */
+	public static final String MGAP_URL = "CubeFace/src/com/zaxxon/gameart/machinegun.png";
+	/**
+	 * String URL for shotgun ammo pickup
+	 */
+	public static final String SGAP_URL = "CubeFace/src/com/zaxxon/gameart/shotgun.png";
 
 	/**
 	 * BufferedImage from the brute zombie URL
@@ -82,6 +90,14 @@ public class SpriteImages {
 	 * BufferedImage from the background tile URL
 	 */
 	public static final BufferedImage BACKGROUND_TILE_IMAGE = getBufferedImageFromURL(BACKGROUND_TILE_URL);
+	/**
+	 * BufferedImage from the MGAP URL
+	 */
+	public static final BufferedImage MGAP_IMAGE = getBufferedImageFromURL(MGAP_URL);
+	/**
+	 * BufferedImage from the SGAP URL
+	 */
+	public static final BufferedImage SGAP_IMAGE = getBufferedImageFromURL(SGAP_URL);
 
 	/**
 	 * @param url a String of the file to read as an image

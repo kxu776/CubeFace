@@ -32,6 +32,7 @@ import com.zaxxon.world.mobile.Player;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
+import com.zaxxon.world.shooting.AmmoPickup;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -74,12 +75,16 @@ public class MainGame {
 	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
+	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static Client networkingClient;
 	private static Scene renderedScene;
 	public static ClientSender client;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
 	static boolean fired = false;
+	public static boolean muted = false;
+	
+	private static MusicPlayer music;
 
 
 	private static Player player1;
@@ -92,7 +97,7 @@ public class MainGame {
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 
-	public static void reset(Stage primaryStage, MusicPlayer music) {
+	public static void reset(Stage primaryStage, MusicPlayer m) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -139,8 +144,22 @@ public class MainGame {
 		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
+		
+		music = m;
 		audio.setOnAction(e -> {
-			music.stop();
+			
+			muted = (muted)? false : true;
+			
+			if (muted) {
+				
+				music.stop();
+			}
+			else {
+				
+				music.play();
+			}
+			
+			
 			MainGame.setGameFocus();
 		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
@@ -161,6 +180,7 @@ public class MainGame {
 		spriteList = new ConcurrentLinkedQueue<Sprite>();
 		playerList = new ArrayList<Player>();
 		enemiesList = new ArrayList<Enemy>();
+		ammoPickupList = new ArrayList<AmmoPickup>();
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
@@ -214,6 +234,11 @@ public class MainGame {
 		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
+		
+		if (!muted) {
+			
+			music.play();
+		}
 
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
@@ -222,6 +247,8 @@ public class MainGame {
 		for (int i = 0; i < 5; i++) {
 			spawnRandomEnemy();
 		}
+		
+		spawnRandomAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -234,6 +261,9 @@ public class MainGame {
 					getUpdatesFromQueue();
 				}
 				updateEnemies();
+				updatePickups();
+				
+				
 				camera.update();
 				calculateFPS();
 			}
@@ -264,6 +294,17 @@ public class MainGame {
 			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
 		}
+	}
+	
+	private static void spawnRandomAmmoPickup() {
+		
+		AmmoPickup a = new AmmoPickup(0, new Vector2 (500, 650));
+		ammoPickupList.add(a);
+		addSpriteToForeground(a);
+		
+		AmmoPickup b = new AmmoPickup(1, new Vector2 (500, 800));
+		ammoPickupList.add(b);
+		addSpriteToForeground(b);
 	}
 
 	/**
@@ -509,6 +550,15 @@ public class MainGame {
 			sprite.delete();
 		}
 	}
+	
+	private static void updatePickups() {
+		
+		for (int i = 0; i < ammoPickupList.size(); i++) {
+			
+			ammoPickupList.get(i).update();
+		}
+	}
+	
 
 	/**
 	 * Getter for the spriteList
