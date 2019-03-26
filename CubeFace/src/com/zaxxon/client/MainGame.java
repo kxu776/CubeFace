@@ -602,26 +602,4 @@ public class MainGame {
 		addSpriteToForeground(zombie);
 	}
 
-	public static void startMP() {
-		fpsLong = System.currentTimeMillis();
-		normalisedFPS = 1;
-		gameStartTime = System.currentTimeMillis();
-
-		for (int i = 0; i < 5; i++) {
-			spawnRandomEnemy();
-		}
-
-		AnimationTimer mainGameLoop = new AnimationTimer() {
-			public void handle(long currentNanoTime) {
-				for (Player player : playerList) {
-					player.update(normalisedFPS);
-				}
-				getPlayerUpdatesFromQueue();
-				updateEnemies();
-				calculateFPS();
-			}
-		};
-		mainGameLoop.start();
-	}
-
 }
