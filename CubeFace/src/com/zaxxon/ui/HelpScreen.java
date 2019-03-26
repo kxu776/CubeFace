@@ -4,6 +4,7 @@ import com.zaxxon.ui.tools.Toolbox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,7 +17,7 @@ public class HelpScreen {
 
     public static Scene HelpScreen;
 
-    public static Scene makeHelpScreen(Stage primaryStage) {
+    public static Scene makeHelpScreen(Stage primaryStage, Scene mainmenu) {
 
 
         //load font
@@ -27,6 +28,7 @@ public class HelpScreen {
         //make a title for the screen
         Label title = new Label("GAME CONTROLS");
         title.setPadding(new Insets(20, 0, 0, 0));
+        title.setId("title");
 
 
 
@@ -34,6 +36,7 @@ public class HelpScreen {
         //make a movement label
         Label movement = new Label("MOVEMENT:");
         movement.setPadding(new Insets(0, 0, 15, 0));
+        movement.setId("heading");
 
         //load the wasd image
         Image wasd = new Image(HelpScreen.class.getResource("img/wasd.png").toString());
@@ -43,6 +46,7 @@ public class HelpScreen {
         //make a shooting label
         Label shoot = new Label("SHOOT:");
         shoot.setPadding(new Insets(0, 0, 15, 0));
+        shoot.setId("heading");
 
         //load the spacebar view
         Image space = new Image(HelpScreen.class.getResource("img/space.png").toString());
@@ -64,6 +68,7 @@ public class HelpScreen {
         //make a change weapon label
         Label changeWeapon = new Label("CHANGE WEAPON:");
         changeWeapon.setPadding(new Insets(20, 0, 15, 0));
+        changeWeapon.setId("heading");
 
         //load the shift image
         Image shift = new Image(HelpScreen.class.getResource("img/shift.png").toString());
@@ -111,18 +116,26 @@ public class HelpScreen {
         content.getChildren().addAll(left,changeWeaponLayout);
         content.setAlignment(Pos.CENTER);
         content.setHgap(35);
+        content.setPadding(new Insets(0, 0, 90, 0));
 
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 2, "Help");
+        AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 4, "Help");
+        toolbox.setId("toolbox");
 
+        //add a back button to the corner
+        Button back = new Button("BACK");
+        back.setOnAction(e-> primaryStage.setScene(mainmenu));
 
-        //borderpane for everything
+        //borderpane for all content
         BorderPane everything = new BorderPane();
+        everything.setLeft(back);
         everything.setTop(toolbox);
         everything.setCenter(title);
         everything.setBottom(content);
         everything.setAlignment(title, Pos.CENTER);
+
+        
 
 
 
