@@ -6,13 +6,26 @@ import com.zaxxon.maths.Vector2;
 import com.zaxxon.world.Sprite;
 import com.zaxxon.world.pickups.PickupPoint;
 
+/**
+ * @author Dan
+ * 
+ * Class to create and update pickups
+ * Type 0,1,2 corresponds to MG ammo, SG ammo, and health respectively
+ *
+ */
 public class AmmoPickup extends Sprite {
 
-	public int type; //0 is MG, 1 is SG
+	public int type; //0 is MG, 1 is SG, 2 is health
 	private long spawnedTime;
 	private final long existTime = 1000*16;
 	private PickupPoint pickupPoint;		//MP spawn location
 
+	/**
+	 * Create and initialise a new pickup
+	 * @param type - type of pick up 
+	 * @param pos - position to spawn at
+	 * @param pickupPoint - multiplayer position
+	 */
 	public AmmoPickup(int type, Vector2 pos, PickupPoint pickupPoint) {
 
 		this.setWidth(64);
@@ -34,9 +47,14 @@ public class AmmoPickup extends Sprite {
 			setImage(SpriteImages.MGAP_IMAGE);
 		}
 
-		else {
+		else if (type == 1) {
 
 			setImage(SpriteImages.SGAP_IMAGE);
+		}
+		
+		else {
+			
+			//setImage(SpriteImages.health);
 		}
 	}
 	
@@ -58,6 +76,10 @@ public class AmmoPickup extends Sprite {
 		return null;
 	}
 	
+	/**
+	 * Update the pickup so it despawns after a certain amount of time
+	 * It flashes (via opacity setting) prior to despawning
+	 */
 	public void update() {
 		
 		long elapsedTime = System.currentTimeMillis() - spawnedTime;
