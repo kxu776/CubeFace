@@ -1,5 +1,6 @@
 package com.zaxxon.world.shooting;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
 
@@ -28,25 +29,15 @@ public class Weapon_Default extends Weapon {
 	@Override
 	public void fire(Vector2 dir, Vector2 weaponPos, Boolean multiplayer) {
 
-		if (multiplayer) {
-			if (!fired) {
-
-
-				sound.shoot();
-
-
-				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
-				WeaponManager.addBulletToList(bullet);
-				fired = true;
-			}
-		}
-
-		else if (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false)) {
+		if (multiplayer || (Input.isKeyPressed(KeyCode.SPACE) && (super.test == false))) {
 
 			if (!fired) {
 
-				sound.shoot();
-
+				if (!MainGame.muted) {
+					
+					sound.shoot();
+				}
+				
 				Bullet bullet = new Bullet(dir, weaponPos, bulletDamage, despawnDistance, player);
 				WeaponManager.addBulletToList(bullet);
 				fired = true;
@@ -62,6 +53,6 @@ public class Weapon_Default extends Weapon {
 	@Override
 	public String getAmmo() {
 		
-		return "Infinity";
+		return "Unlimited";
 	}
 }

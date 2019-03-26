@@ -1,0 +1,23 @@
+
+.root {
+    -fx-background-image: url(../img/gui-prototypes.png);
+    -fx-background-repeat: repeat;
+    -fx-overflow: hidden;
+    -fx-font-family: "VCR OSD Mono";
+    -fx-border-style: solid;
+    -fx-border-color:#05abb1;
+    -fx-border-radius:4px;
+    -fx-text-fill:white;
+    }
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    }
+
+#plus {
+    -fx-text-fill: white;
+    -fx-font-size:30px;
+    -fx-padding: 8 15 0 15;
+    }
+

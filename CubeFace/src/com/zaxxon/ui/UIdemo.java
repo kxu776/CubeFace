@@ -33,216 +33,115 @@ public class UIdemo extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        window = new Stage();
+
         //load font
         Font.loadFont(getClass().getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
 
 
 
-        Label label1= new Label("game will b here");
-        GridPane tempgrid = new GridPane();
-        tempgrid.getChildren().addAll(label1);
-        tempgrid.setAlignment(Pos.CENTER);
-        Scene scene1= new Scene(tempgrid, 600, 575);
+        //make a title for the screen
+        Label title = new Label("HELP");
+        title.setPadding(new Insets(20, 0, 0, 0));
 
 
 
-        //set primary stage = window to make code more readable
-        window = primaryStage;
 
-        //set title of window to be cubeface
-        window.setTitle("CubeFace");
+        //make a movement label
+        Label movement = new Label("MOVEMENT:");
+        movement.setPadding(new Insets(0, 0, 15, 0));
 
-        //******************************GRIDPANE 1***********************************
+        //load the wasd image
+        Image wasd = new Image(HelpScreen.class.getResource("img/wasd.png").toString());
+        ImageView wasdView = new ImageView(wasd);
 
-        //make a gridpane for the bg, buttons and logo
-        GridPane grid1 = new GridPane();
-        grid1.setPadding(new Insets(20, 20, 20, 20));
-        grid1.setVgap(12); //set the gap between cells vertically and horizontally
-        grid1.setHgap(20);
 
-        //add column contraints to ensure buttons are in the middle of the cell
-        ColumnConstraints colConstraints = new ColumnConstraints();
-        colConstraints.setHalignment(HPos.CENTER); //set alignment to center
-        grid1.getColumnConstraints().add(colConstraints);
+        //make a shooting label
+        Label shoot = new Label("SHOOT:");
+        shoot.setPadding(new Insets(0, 0, 15, 0));
 
+        //load the spacebar view
+        Image space = new Image(HelpScreen.class.getResource("img/space.png").toString());
+        ImageView spaceView = new ImageView(space);
+        spaceView.setPreserveRatio(true);
+        spaceView.setFitHeight(50);
 
-        //******************************BUTTONS**********************************
+        //make a blank label to add padding between movement and shoot
+        Label padding = new Label("");
+        padding.setPadding(new Insets(20, 0, 0, 0));
 
-        //START BUTTON
+        //make a vbox for the above
+        VBox left = new VBox(movement, wasdView, padding, shoot, spaceView);
+        left.setAlignment(Pos.CENTER);
 
-        start = new Button("start");
-        start.setOnAction(e -> ArityPopup.display(primaryStage, scene1));
-        GridPane.setConstraints(start, 0, 3);
-        //load the start button text
-        //Image startText = new Image(getClass().getResource("img\\start.png").toString());
-        //ImageView startView = new ImageView(startText); //make an imageview for the start button's text
-        //start.setGraphic(startView); //add the image to the button
 
 
-        //**************************LOGO****************************
-        //load the logo image
-        Image logo = new Image(getClass().getResource("img/cubefacelogo.png").toString());
 
-        //set the imageview
-        ImageView logoView = new ImageView(logo);
+        //make a change weapon label
+        Label changeWeapon = new Label("CHANGE WEAPON:");
+        changeWeapon.setPadding(new Insets(20, 0, 15, 0));
 
-        //set the position of the image
-        logoView.setX(50);
-        logoView.setY(25);
+        //load the shift image
+        Image shift = new Image(HelpScreen.class.getResource("img/shift.png").toString());
+        ImageView shiftView = new ImageView(shift);
+        shiftView.setPreserveRatio(true);
+        shiftView.setFitHeight(50);
 
-        //set height/width of image
-        //logoView.setFitHeight(455);
-        logoView.setFitWidth(450);
+        //make a + label
+        Label plus = new Label(("+"));
+        plus.setId("plus");
 
-        //preseve ratio of image
-        logoView.setPreserveRatio(true);
+        //load the 1, 2, 3 buttons images
+        Image one = new Image(HelpScreen.class.getResource("img/1.png").toString());
+        ImageView oneView = new ImageView(one);
+        oneView.setPreserveRatio(true);
+        oneView.setFitHeight(50);
 
+        Image two = new Image(HelpScreen.class.getResource("img/2.png").toString());
+        ImageView twoView = new ImageView(two);
+        twoView.setPreserveRatio(true);
+        twoView.setFitHeight(50);
 
-        //*******************************************MAKE A TEST STATS GROUP
+        Image three = new Image(HelpScreen.class.getResource("img/3.png").toString());
+        ImageView threeView = new ImageView(three);
+        threeView.setPreserveRatio(true);
+        threeView.setFitHeight(50);
 
-        //make a backgroud label
-        Label bg = new Label(" ");
-        GridPane.setConstraints(bg, 0, 0);
-        bg.setPadding(new Insets(60, 100, 60, 100));
-        bg.setStyle("-fx-background-color: grey;");
+        //add the 1, 2, 3 buttons to a vbox
+        VBox numbers = new VBox(oneView, twoView, threeView);
+        numbers.setSpacing(10);
 
-        //make a new group
-        GridPane stats = new GridPane();
-        stats.getChildren().add(bg);
+        //add the graphics to a hbox
+        HBox changeWeaponContent = new HBox(shiftView, plus, numbers);
 
+        //make a borderpane to hold the weapon change info
+        BorderPane changeWeaponLayout = new BorderPane();
+        changeWeaponLayout.setCenter(changeWeaponContent);
+        changeWeaponLayout.setTop(changeWeapon);
+        changeWeaponLayout.setAlignment(changeWeapon, Pos.CENTER);
 
-        //***********************************************************************************
-        //***********************************************************************************
+        //make a gridpane for all the content
+        GridPane content = new GridPane();
+        content.setConstraints(left, 0, 0);
+        content.setConstraints(changeWeaponLayout, 1, 0);
+        content.getChildren().addAll(left,changeWeaponLayout);
+        content.setAlignment(Pos.CENTER);
+        content.setHgap(35);
 
-        //******CENTER
+        //borderpane for everything
+        BorderPane everything = new BorderPane();
+        everything.setTop(title);
+        everything.setCenter(content);
+        everything.setAlignment(title, Pos.CENTER);
 
-        //health label
-        Label health = new Label("HEALTH:");
-        health.setId("health");
 
-        //health bar
-        //temporary have a label here until i know how to implememnt a "bar" hahah
-        Label bar = new Label("\"health bar\"");
-
-
-        //opponent health label
-        Label opHealth = new Label("OPPONENT HEALTH:");
-        opHealth.setId("health");
-
-        //opponent health bar
-        //temporary have a label here until i know how to implememnt a "bar" hahah
-        Label opBar = new Label("\"oponent health bar\"");
-
-        //vbox for health
-        VBox center = new VBox(5);
-        center.getChildren().addAll(health, bar, opHealth, opBar);
-
-
-        //*******RIGHT
-
-        //score label
-        Label scoreLbl = new Label("SCORE:");
-        scoreLbl.setId("scoreLbl");
-        scoreLbl.setMaxWidth(80);
-        scoreLbl.setMinWidth(80);
-        scoreLbl.setTextAlignment(TextAlignment.CENTER);
-
-        //score
-        Label score = new Label("*");
-        score.setId("score");
-        score.setMaxWidth(80);
-        score.setMinWidth(80);
-        score.setTextAlignment(TextAlignment.CENTER);
-
-        //vbox for score
-        VBox right = new VBox();
-        right.getChildren().addAll(scoreLbl, score);
-
-
-        //*******BOTTOM
-
-        //current weapon label
-        Label weaponLbl = new Label("CURRENT WEAPON:");
-        weaponLbl.setId("weaponLbl");
-        weaponLbl.setPadding(new Insets(17, 0, 5, 0));
-
-        //weapon
-        Label weapon = new Label("*WEAPON");
-        weapon.setId("weapon");
-        weapon.setPadding(new Insets(17, 0, 5, 0));
-
-        //Hbox for weapon
-        HBox bottom = new HBox();
-        bottom.getChildren().addAll(weaponLbl, weapon);
-
-
-
-        //BORDER PANE for it all
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(center);
-        borderPane.setRight(right);
-        borderPane.setBottom(bottom);
-        borderPane.setId("pane");
-        
-
-        //borderPane.setMaxHeight(300);
-        borderPane.setMaxSize(270, 125);
-
-
-
-
-
-
-        //***********************************************************************************
-        //***********************************************************************************
-
-
-        //healthbar
-        //make a new.... HBox ?
-        AnchorPane healthbar = new AnchorPane();
-
-        //make a new rectangle for background
-        Rectangle red = new Rectangle(100, 10);
-        red.setFill(Color.RED);
-
-        //make a new rectangle for foreground
-        Rectangle green = new Rectangle(70, 10);
-        green.setFill(Color.LIME);
-
-        //add rectangles to HBox
-        healthbar.getChildren().addAll(red, green);
-
-
-        //****************************GRIDPANES AND SCENE************************************
-
-        //add all buttons to gridpane
-        grid1.getChildren().add(start);
-        grid1.getChildren().add(logoView);
-
-
-
-        //make a scene (haha)
-        GridPane rootPane = new GridPane();
-        rootPane.setAlignment(Pos.CENTER);
-        rootPane.getChildren().addAll(grid1, borderPane);
-
-        //trying an anchor pane instead
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setBottomAnchor(borderPane, 0.0);
-        anchorPane.setRightAnchor(borderPane, 0.0);
-        anchorPane.setLeftAnchor(healthbar,10.0);
-        anchorPane.getChildren().addAll(borderPane, healthbar);
-
-
-        Scene mainmenu = new Scene(anchorPane, 600, 575);
-        mainmenu.getStylesheets().add(getClass().getResource("statsbox.css").toString()); //add the stylesheet
+        Scene scene = new Scene(everything, 800, 500);
+        //scene.getStylesheets().add(getClass().getResource("css/statsbox.css").toString()); //add the stylesheet
 
         //set the scene to be the one displayed on the window
-        window.setScene(mainmenu);
+        window.setScene(scene);
 
         //load the window
         window.show();
-//        System.out.println(getClass().getResource("cubefacelogo.png").toString());
     }
 }
