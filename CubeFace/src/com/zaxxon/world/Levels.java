@@ -32,14 +32,15 @@ public class Levels {
 			{ 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0 }, { 0, 0, 1, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 } };
 	public static final Point2D.Double[] L2_WAYPOINTS = generateCornerPoints(LEVEL2);
-	public static final int[][] MP_LEVEL = { {2,3,3,3,3,3,2}, {4,0,0,0,0,0,4}, {4,0,1,0,1,0,4},
-			{4,0,0,0,0,0,4},{4,0,1,0,1,0,4},{4,0,0,0,0,0,4},{1,3,3,3,3,3,1}};
+	public static final int[][] MP_LEVEL = { { 2, 3, 3, 3, 3, 3, 2 }, { 4, 0, 0, 0, 0, 0, 4 }, { 4, 0, 1, 0, 1, 0, 4 },
+			{ 4, 0, 0, 0, 0, 0, 4 }, { 4, 0, 1, 0, 1, 0, 4 }, { 4, 0, 0, 0, 0, 0, 4 }, { 1, 3, 3, 3, 3, 3, 1 } };
 
-
-	public static final Point2D.Double[] MP_AMMO_SPAWNS = { new Point2D.Double(880,864)/*Centre*/, new Point2D.Double(607,852)/*CentreLeft*/,
-			new Point2D.Double(1128,852)/*CentreRight*/, new Point2D.Double(865,1139)/*CentreTop*/, new Point2D.Double(865,589)/*CentreBottom*/};
-	public static final Point2D.Double[] MP_HEALTH_SPAWNS = { new Point2D.Double(323,1384)/*BottomLeft*/, new Point2D.Double(1405,1398)/*BottomRight*/,
-			new Point2D.Double(1405,304)/*TopRight*/, new Point2D.Double(285,304)/*TopLeft*/};
+	public static final Point2D.Double[] MP_AMMO_SPAWNS = { new Point2D.Double(880, 864)/* Centre */,
+			new Point2D.Double(607, 852)/* CentreLeft */, new Point2D.Double(1128, 852)/* CentreRight */,
+			new Point2D.Double(865, 1139)/* CentreTop */, new Point2D.Double(865, 589)/* CentreBottom */ };
+	public static final Point2D.Double[] MP_HEALTH_SPAWNS = { new Point2D.Double(323, 1384)/* BottomLeft */,
+			new Point2D.Double(1405, 1398)/* BottomRight */, new Point2D.Double(1405, 304)/* TopRight */,
+			new Point2D.Double(285, 304)/* TopLeft */ };
 
 	/**
 	 * generates and populates the background for the world with the floor Tile
@@ -64,6 +65,12 @@ public class Levels {
 		}
 	}
 
+	/**
+	 * generates an array of Walls for a given int[][] level
+	 * 
+	 * @param level the level to generate the Walls from
+	 * @return all Wall objects in an array
+	 */
 	private static Wall[] generateBackgroundWalls(int[][] level) {
 		Wall[] allWalls = new Wall[level.length * level[0].length];
 		for (int i = 0; i < level.length; i++) {
@@ -78,6 +85,12 @@ public class Levels {
 		return allWalls;
 	}
 
+	/**
+	 * generates an array of Tiles for a given int[][] level
+	 * 
+	 * @param level the level to generate the Tiles from
+	 * @return all Tile objects in an array
+	 */
 	private static Tile[] generateBackgroundTiles(int[][] level) {
 		LinkedList<Tile> allTiles = new LinkedList<Tile>();
 		level = removeRedundantLines(level);
@@ -152,6 +165,12 @@ public class Levels {
 		return w;
 	}
 
+	/**
+	 * generates the corner points inside the level used by the zombie pathfinding
+	 * 
+	 * @param level the level to process
+	 * @return an array of points corresponding to the corners within the level
+	 */
 	private static Point2D.Double[] generateCornerPoints(int[][] level) {
 		LinkedList<Point2D.Double> knownObtuseCorners = new LinkedList<Point2D.Double>();
 		for (int centreY = 0; centreY < level.length; centreY++) {
@@ -186,6 +205,13 @@ public class Levels {
 		return knownObtuseCorners.toArray(new Point2D.Double[0]);
 	}
 
+	/**
+	 * returns a boolean array of length 4 stating whether corners are free or not
+	 * 
+	 * @param sides  the sides adjacent to the central point
+	 * @param centre the central point
+	 * @return true for corner, false for not
+	 */
 	private static boolean[] getCorners(int[] sides, int centre) {
 		// sides: 0 top, 1 right, 2 bottom, 3 left
 		boolean[] knownCorners = new boolean[4];
@@ -201,6 +227,14 @@ public class Levels {
 		return knownCorners;
 	}
 
+	/**
+	 * returns whether the diagonals to the central point are occupied or not
+	 * 
+	 * @param level   the level being loaded in
+	 * @param centreX x position of the central point
+	 * @param centreY y position of the central point
+	 * @return true if occupied, false if not
+	 */
 	private static boolean[] getDiagonals(int[][] level, int centreX, int centreY) {
 		// tr, br, bl, tl
 		boolean[] knownDiagonals = new boolean[4];
@@ -216,6 +250,16 @@ public class Levels {
 		return knownDiagonals;
 	}
 
+	/**
+	 * performs not (array1[i] implies array2[i]) for all elements of arrays.
+	 * <p>
+	 * Throws an Exception if array lengths do not match.
+	 * 
+	 * @param array1 the first array to be the left hand side of the equation
+	 * @param array2 the second array to be the right hand side of the equation
+	 * @return true if !(a->b), else false
+	 * @throws Exception thrown when array lengths do not match
+	 */
 	private static boolean[] booleanArraysNotImplied(boolean[] array1, boolean[] array2) throws Exception {
 		if (array1.length == array2.length) {
 			boolean[] c = new boolean[array1.length];
@@ -228,6 +272,14 @@ public class Levels {
 		}
 	}
 
+	/**
+	 * removes points that are not within the bounds of a polygon
+	 * 
+	 * @param knownObtuseCorners a list of Point2D.Doubles known to be obtuse
+	 *                           corners
+	 * @param level              the level being processed
+	 * @return the trimmed list
+	 */
 	private static LinkedList<Point2D.Double> trimOutsideBounds(LinkedList<Point2D.Double> knownObtuseCorners,
 			int[][] level) {
 		level = removeRedundantLines(level);
@@ -240,6 +292,14 @@ public class Levels {
 		return knownObtuseCorners;
 	}
 
+	/**
+	 * an efficient way of calculating whether points are within a polygon
+	 * 
+	 * @param point   the point to test
+	 * @param polygon the polygon to test against
+	 * @return the sum of the number of quadrants passed through (+1 for clockwise
+	 *         pass, -1 for anticlockwise)
+	 */
 	private static int windingAlgorithm(Point2D.Double point, LinkedList<Point2D.Double> polygon) {
 		int prevQuad = -1;
 		int currentQuad;
@@ -273,6 +333,12 @@ public class Levels {
 		return sumClockwise;
 	}
 
+	/**
+	 * converts a Point from int form to expanded doubles
+	 * 
+	 * @param point the point to transform
+	 * @return normalised point
+	 */
 	private static Point2D.Double normalisePoint(Point2D.Double point) {
 		double newX = point.getX() * SIZE + SIZE / 2;
 		double newY = point.getY() * SIZE + SIZE / 2;
@@ -280,6 +346,12 @@ public class Levels {
 		return normalised;
 	}
 
+	/**
+	 * removes lines that are not connected at 2 ends by backtracking
+	 * 
+	 * @param level the level to remove lines from
+	 * @return the processed level
+	 */
 	public static int[][] removeRedundantLines(int[][] level) {
 		// removes lines that aren't connected at both ends
 		LinkedList<Pair<Integer, Integer>> pointsRemoved = new LinkedList<Pair<Integer, Integer>>();
@@ -341,6 +413,14 @@ public class Levels {
 		return reducedLevel;
 	}
 
+	/**
+	 * gets all wall states adjacent to the central point
+	 * 
+	 * @param level   the level to process
+	 * @param centreX the central x position
+	 * @param centreY the central y position
+	 * @return an int[] length 4 for the adjacents in order top, right, bottom, left
+	 */
 	private static int[] getAdjacents(int[][] level, int centreX, int centreY) {
 		int[] sides = new int[4];
 		// top
@@ -355,6 +435,9 @@ public class Levels {
 	}
 
 	/**
+	 * gets all Wall states adjacent to the central point without throwing an
+	 * exception if no point exists (i.e. no indexing issues)
+	 * 
 	 * @param level          the level where adjacents are being found
 	 * @param centreX        the central x position
 	 * @param centreY        the central y position
@@ -390,6 +473,14 @@ public class Levels {
 		return sides;
 	}
 
+	/**
+	 * returns a list of the adjacent positions to a point
+	 * 
+	 * @param level   the level being processed
+	 * @param centreX the central x position
+	 * @param centreY the central y position
+	 * @return a linked list of the adjacent points
+	 */
 	private static LinkedList<Pair<Integer, Integer>> getAdjacentPositions(int[][] level, int centreX, int centreY) {
 		LinkedList<Pair<Integer, Integer>> sides = new LinkedList<Pair<Integer, Integer>>();
 		// top
@@ -403,6 +494,12 @@ public class Levels {
 		return sides;
 	}
 
+	/**
+	 * converts a 2D array to a LinkedList
+	 * 
+	 * @param levelArray the level to be processed
+	 * @return a list of points
+	 */
 	private static LinkedList<Point2D.Double> LevelArrayToLinkedList(int[][] levelArray) {
 		// create linkedlist for values
 		LinkedList<Point2D.Double> linkedList = new LinkedList<Point2D.Double>();
