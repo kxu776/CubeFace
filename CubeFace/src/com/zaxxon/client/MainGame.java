@@ -166,7 +166,7 @@ public class MainGame {
 		enemiesList = new ArrayList<Enemy>();
 		ammoPickupList = new ArrayList<AmmoPickup>();
 		ammoPickupPoints = new ArrayList<>();
-		if(true){ //SHould say multiplayer
+		if(multiplayer){
 			for(Point2D.Double pickupPointcoords : Levels.MP_AMMO_SPAWNS){				// Creates MP ammo spawnpoints on map
 				ammoPickupPoints.add(new PickupPoint(pickupPointcoords));
 				spawnAmmoPickup(ammoPickupPoints.get(ammoPickupPoints.size()-1));		//Spawns pickup at newly created spawn point
@@ -210,7 +210,7 @@ public class MainGame {
 		});
 
 		// loads the level
-		if(!multiplayer){
+		if(multiplayer){
 			Levels.generateLevel(Levels.MP_LEVEL);
 		}else {
 			Levels.generateLevel(Levels.LEVEL2);
@@ -247,11 +247,12 @@ public class MainGame {
 					player.update(normalisedFPS);
 				}
 				if (multiplayer) {
+					updatePickups();
 					sendNetworkUpdate();
 					getUpdatesFromQueue();
+				}else {
+					updateEnemies();
 				}
-				updateEnemies();
-				updatePickups();
 				
 				
 				camera.update();
@@ -299,6 +300,11 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * Spawns a randomised ammo pickup at the designated spawnpoint object passed to it.
+	 *
+	 * @param pickupPoint Multiplayer spawn point object for item pickups
+	 */
 	private static void	spawnAmmoPickup(PickupPoint pickupPoint){
 		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1), pickupPoint.getPosVector(), pickupPoint); //spawn random ammo pickup at location
 		ammoPickupList.add(ammoPickup);
@@ -522,6 +528,10 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * Updates each ai controlled enemy in game - handles movement, damage and pathfinding for each enemy.
+	 * Removes dead enemies from the game.
+	 */
 	private static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
@@ -548,7 +558,11 @@ public class MainGame {
 			sprite.delete();
 		}
 	}
-	
+
+	/**
+	 *  Updates item pick-up spawn points in multiplayer mode.
+	 *  Checks for spawns/despawns on each designated point, and implements a respawn cooldown for pickup items.
+	 */
 	private static void updatePickups() {
 
 		/*
@@ -557,7 +571,7 @@ public class MainGame {
 			ammoPickupList.get(i).update();
 		}*/
 		for(PickupPoint pickupPoint: ammoPickupPoints){
-			if(pickupPoint.update()){
+			if(pickupPoint.update()){				//If an item is due to spawn at this point, spawn the item.
 				spawnAmmoPickup(pickupPoint);
 			}
 		}
