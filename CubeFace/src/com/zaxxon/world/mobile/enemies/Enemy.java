@@ -49,7 +49,7 @@ public abstract class Enemy extends MovableSprite {
 	protected final double acceleration = 1.2;
 	protected final double deceleration = -0.6;
 	protected double currentSpeed = 0;
-	protected double damage = 1.0;
+	protected double damage = 10.0;
 	protected final double pfOffset = 0.9; // 1.0
 
 	private Boolean frozen = false;
