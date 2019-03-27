@@ -52,8 +52,8 @@ public class Weapon {
 	 * @return ammo
 	 */
 	public String getAmmo() {
-		
-		return Double.toString(currentAmmo);
+
+		return Integer.toString(((int) currentAmmo));
 	}
 	
 	/**

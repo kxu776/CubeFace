@@ -27,9 +27,12 @@ public class StatsBox {
 
         //******CENTER
 
+
+
         //health label
         Label health = new Label("HEALTH:");
         health.setId("health");
+        health.setMinWidth(120);
 
         //health bar
         healthBar = new HealthBar();
@@ -40,6 +43,7 @@ public class StatsBox {
         //opponent health label
         Label opHealth = new Label("OPPONENT HEALTH:");
         opHealth.setId("health");
+        opHealth.setMinWidth(120);
 
         //opponent health bar
         opHealthBar = new HealthBar();
@@ -143,7 +147,12 @@ public class StatsBox {
     }
 
     public static void updateWeapon(String newWeapon) {
-        weapon.setText(newWeapon.toUpperCase() );
+        int colon = newWeapon.indexOf(":");
+        String sWeapon = newWeapon.substring(0, colon);
+        String sAmmo = newWeapon.substring(colon+1, newWeapon.length());
+        updateAmmo(sAmmo);
+
+        weapon.setText(sWeapon.toUpperCase() );
     }
 
     public static void updateAmmo(String newAmmo) {

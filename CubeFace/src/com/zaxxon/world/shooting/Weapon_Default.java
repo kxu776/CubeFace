@@ -60,7 +60,6 @@ public class Weapon_Default extends Weapon {
 	
 	@Override
 	public String getAmmo() {
-		
 		return "Unlimited";
 	}
 }
