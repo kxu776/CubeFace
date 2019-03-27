@@ -282,7 +282,7 @@ public class MainGame {
 	}
 
 	/**
-	 * checks whether or not to spawn a new zombie, and if necessary spawns it 
+	 * checks whether or not to spawn a new zombie, and if necessary spawns it
 	 */
 	private static void spawnZombieCheck() {
 		if (System.currentTimeMillis() >= nextEnemySpawnTime) {
@@ -300,7 +300,14 @@ public class MainGame {
 			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
 			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
 			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
-			if (Levels.LEVEL2[baseTileY][baseTileX] == 0) {
+			// checks the tile isn't a wall
+			if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
+				continue;
+			}
+			int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
+			int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
+			// ensures zombie is at least 3 tiles away from the player so doesn't spawn too close
+			if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
 				break;
 			}
 		} while (true);
