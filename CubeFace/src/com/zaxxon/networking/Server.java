@@ -20,10 +20,11 @@ public class Server extends Thread {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
-	private Thread sendThread, weaponThread;
+	private Thread sendThread, weaponThread, stillActive;
 	private boolean listening = false;
 	private final int SERVER_PORT;
 	private String SERVER_IP;
+	private PlayerActivity activity;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
@@ -62,19 +63,22 @@ public class Server extends Thread {
 		}
 
 		// Make sure we can continue the program.
+		activity = new PlayerActivity(this);
 		listenThread = new Thread(new Runnable() {
 			public void run() {
 				listen();
 			}
 		});
-		listenThread.start();
 		MainGame.host = true;
+		listenThread.start();
+		activity.start();
 	}
 
 	public void send(final byte[] data, InetAddress address, int port) {
 		sendThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				
 				DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 				try {
 					if (listening == true) {
@@ -89,6 +93,28 @@ public class Server extends Thread {
 		sendThread.start();
 	}
 	
+	private void activity() {
+		stillActive = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					sleep(15000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+					if(c.getValue().getInactive() == 5 ) {
+						disconnect(c.getKey(), c.getValue().getAddress());
+					}
+					else {
+						send(("/p/").getBytes(),c.getValue().getAddress(),c.getKey());
+						c.getValue().increaceInactive();
+					}
+				}
+			}
+		});
+		stillActive.start();
+	}
 	
 	public void weapons() {
 		weaponThread = new Thread(new Runnable() {
@@ -114,6 +140,7 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 			process(packet);
+			// activity();	
 		}
 	}
 
@@ -240,6 +267,15 @@ public class Server extends Thread {
 				return;
 		}
 		
+		else if(action.startsWith("/p/")) {
+			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+				if((c.getKey() == port) && (address.equals(c.getValue().getAddress()))){
+					c.getValue().resetActivity();
+				}
+			}
+			return;
+		}
+		
 
 		// If we don't have enough players we just update the position of who is
 		// currently connected.
@@ -290,7 +326,7 @@ public class Server extends Thread {
 		}
 	}
 	
-	private void disconnect(int port,InetAddress address) {
+	protected void disconnect(int port,InetAddress address) {
 		// Find who specifically disconnected
 		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
 			if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
@@ -300,6 +336,7 @@ public class Server extends Thread {
 				if (c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost")
 					|| disconnectIP.equals("127.0.0.1")) {
 					sendToRelevant("/b/".getBytes(), port, address);
+					
 					close();
 					return;
 				}
@@ -308,6 +345,7 @@ public class Server extends Thread {
 				String disconnectIT = "/d/" + idToRemove + "/";
 				lastKnownPos.remove(c.getValue().getID());
 				clients.remove(c.getKey(), c.getValue());
+				System.out.println(c.getKey() +" "+c.getValue().getAddress());
 				byte[] disconnected = disconnectIT.getBytes();
 				sendToRelevant(disconnected, port, address);
 			}

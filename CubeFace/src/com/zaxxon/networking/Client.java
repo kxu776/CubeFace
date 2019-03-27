@@ -61,6 +61,7 @@ public class Client extends Thread {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
+			e.printStackTrace();
 		}
 		sendConnectionPacket();
 	}
@@ -110,11 +111,13 @@ public class Client extends Thread {
 				}
 				return;
 		}
+		else if(message.startsWith("/p/")) {
+			send("/p/".getBytes());
+			return;
+		}
 		
 		if
-		(message.startsWith("/C/") || message.startsWith("/b/") 
-		||
-		message.startsWith("/z/")  || message.startsWith("/s/")) {
+		(message.startsWith("/C/")){
 			return;
 		}
 
