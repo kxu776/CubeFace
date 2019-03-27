@@ -78,6 +78,7 @@ public class MainGame {
 	private static boolean spawn = false;
 	private static boolean fired = false;
 	public static boolean muted = false;
+	private static AnimationTimer mainGameLoop;
 
 	private static MusicPlayer music;
 
@@ -265,7 +266,7 @@ public class MainGame {
 
 		spawnRandomAmmoPickup();
 
-		AnimationTimer mainGameLoop = new AnimationTimer() {
+		mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				for (Player player : playerList) {
 					player.update(normalisedFPS);
@@ -275,7 +276,6 @@ public class MainGame {
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
 					weaponSpawnQueue();
-					killPlayer();
 				} else {
 					spawnZombieCheck();
 					updateEnemies();
@@ -285,6 +285,11 @@ public class MainGame {
 			}
 		};
 		mainGameLoop.start();
+	}
+	
+	public static void stop() {
+		mainGameLoop.stop();
+		camera.setSpriteToFollow(null);
 	}
 
 	/**
@@ -354,13 +359,24 @@ public class MainGame {
 	 */
 	public static void spawnAmmoPickup(PickupPoint pickupPoint) {
 		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1),
-				pickupPoint.getPosVector(), pickupPoint); // spawn random ammo pickup at location
-		ammoPickupList.add(ammoPickup);
-		addSpriteToForeground(ammoPickup);
+													pickupPoint.getPosVector(), pickupPoint); // spawn random ammo pickup at location
 		if (host) {
 			String s = "/s/" + ammoPickup.type + "/" + pickupPoint.getPosVector().x + "/" + pickupPoint.getPosVector().y
 					+ "/";
 			networkingClient.send(s.getBytes());
+		}
+		if(!ammoPickupList.contains(ammoPickup)) {
+			ammoPickupList.add(ammoPickup);
+			addSpriteToForeground(ammoPickup);
+		}
+	}
+	
+	public static void displayAllGuns(PickupPoint pickupPoint) {
+		for (int i = 0; i < ammoPickupList.size(); i++) {
+			ammoPickupList.get(i);
+		String s = "/s/" + ammoPickupList.get(i).type + "/" + pickupPoint.getPosVector().x + "/" + pickupPoint.getPosVector().y
+				+ "/";
+		networkingClient.send(s.getBytes());
 		}
 	}
 
@@ -487,9 +503,18 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
+			player1.setX(700);
+			player1.setY(700);
+			player1.reset();
+			client.pos =2;
 			client.alive = false;
+			client.setX(700);
+			client.setY(700);
 			networkingClient.sendPlayerObj(client);
+			client.alive = true;
+
 		}
+		client.alive = true;
 		if (!Input.isKeyPressed(KeyCode.SPACE)) {
 			fired = false;
 		}
@@ -547,6 +572,9 @@ public class MainGame {
 
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
+			if(data.getID() == null) {
+				return;
+			}
 			String id = data.getID().trim();
 			newPlayer(data);
 
@@ -554,6 +582,13 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
+					
+					if(data.alive == false) {
+						play.remove(id);
+						removeFromGame(data.getID());
+						newPlayer(data);
+						continue;
+					}
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
@@ -671,6 +706,8 @@ public class MainGame {
 		while (!deathQueue.isEmpty()) {
 			ClientSender playerToKill = deathQueue.poll();
 			play.get(playerToKill.getID()).setHealth(0);
+			play.get(playerToKill.getID()).reset();
+			play.get(playerToKill.getID()).relocate(playerToKill.x, playerToKill.y);
 		}
 	}
 

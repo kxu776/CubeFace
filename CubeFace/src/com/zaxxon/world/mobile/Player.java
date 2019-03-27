@@ -82,6 +82,7 @@ public class Player extends MovableSprite{
     }
     
     public void update(double time) {
+
     	
     	deltaTime = time;
     	
