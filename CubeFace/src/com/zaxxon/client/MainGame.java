@@ -281,12 +281,18 @@ public class MainGame {
 		mainGameLoop.start();
 	}
 
+	/**
+	 * checks whether or not to spawn a new zombie, and if necessary spawns it 
+	 */
 	private static void spawnZombieCheck() {
 		if (System.currentTimeMillis() >= nextEnemySpawnTime) {
 			spawnRandomEnemy();
 		}
 	}
 
+	/**
+	 * spawns a random enemy in the world
+	 */
 	private static void spawnRandomEnemy() {
 		double randomPercentage = Math.random();
 		Tile randomTile;
