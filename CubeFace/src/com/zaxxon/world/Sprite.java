@@ -14,10 +14,7 @@ import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 
 /**
- * An abstract representation of a Sprite to be rendered in a JavaFX Scene
- * 
- * @author Philip Eagles
- *
+ * an abstract representation of a Sprite to be rendered in a JavaFX Scene
  */
 public abstract class Sprite extends Rectangle {
 
@@ -112,26 +109,56 @@ public abstract class Sprite extends Rectangle {
 		}
 	}
 
+	/**
+	 * sets the image
+	 * 
+	 * @param i the image to set
+	 */
 	public void setImage(BufferedImage i) {
 		setImage(SwingFXUtils.toFXImage(i, null));
 	}
 
+	/**
+	 * sets the Sprite's spritesheet image and separates it using rows and columns
+	 * 
+	 * @param imageFile the image to use
+	 * @param rows      the number of rows to split the spritesheet into
+	 * @param columns   the number of columns to split the spritesheet into
+	 */
 	public void setImageSpriteSheet(Image imageFile, int rows, int columns) {
 		BufferedImage image = (BufferedImage) imageFile;
 		setImageSpriteSheet(image, rows, columns);
 	}
 
+	/**
+	 * sets the Sprite's spritesheet image and separates it using rows and columns
+	 * 
+	 * @param imageURL the URL of the image
+	 * @param rows     the number of rows to split the spritesheet into
+	 * @param columns  the number of columns to split the spritesheet into
+	 * @throws IOException thrown if the file doesn't exist
+	 */
 	public void setImageSpriteSheet(String imageURL, int rows, int columns) throws IOException {
 		File imageFile = new File(imageURL);
 		setImageSpriteSheet(ImageIO.read(imageFile), rows, columns);
 	}
 
+	/**
+	 * sets the image to a JavaFX Image
+	 * 
+	 * @param i the Image to set
+	 */
 	public void setImage(javafx.scene.image.Image i) {
 		image = i;
 		ImagePattern imgPat = new ImagePattern(i);
 		this.setFill(imgPat);
 	}
 
+	/**
+	 * sets the image to a file at a given URL
+	 * 
+	 * @param the String for the URL
+	 */
 	public void setImage(String filename) {
 		javafx.scene.image.Image i = new javafx.scene.image.Image(filename);
 		setImage(i);
