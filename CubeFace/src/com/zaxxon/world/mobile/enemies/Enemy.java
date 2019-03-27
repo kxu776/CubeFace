@@ -18,7 +18,6 @@ import java.util.*;
 import static com.zaxxon.world.Levels.L2_WAYPOINTS;
 import static java.lang.Math.abs;
 
-
 /**
  * Abstract representation of an AI controlled enemy sprite
  *
@@ -46,13 +45,13 @@ public abstract class Enemy extends MovableSprite {
 	Vector2 inputDir = new Vector2();
 	Vector2 moveDir = new Vector2();
 	Vector2 velocity = new Vector2();
-	double maxSpeed = 1.5;
+	protected double maxSpeed = 1.5;
 	final double acceleration = 1.2;
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
-	private double damage = 0.1;
-	final double pfOffset = 0.9;  //1.0
-	
+	protected double damage = 0.1;
+	final double pfOffset = 0.9; // 1.0
+
 	private Boolean frozen = false;
 	private final long freezeTime = 600;
 	private long lastFrozenTime = 0;
@@ -68,13 +67,15 @@ public abstract class Enemy extends MovableSprite {
 		isAlive = true;
 		pathfinding = false;
 		MainGame.enemiesList.add(this);
-		setDifficultyScaling(MainGame.getGameStartTime() - System.currentTimeMillis());
 	}
-	
-	public void setDifficultyScaling(long timeSinceStart) {
-		maxSpeed *= (1.0 + timeSinceStart / 60000.0);
-		health *= (1.0 + timeSinceStart / 40000.0);
-		damage *= (1.0 + timeSinceStart / 80000.0);
+
+	/**makes the zombies tougher based off how long the game has run for
+	 * @param timeSinceStart the number of milliseconds since the start of the game
+	 */
+	protected void setDifficultyScaling(long timeSinceStart) {
+		maxSpeed *= 1 + Math.log(1.0 + timeSinceStart / 120000.0);
+		health *= 1 + Math.log(1.0 + timeSinceStart / 80000.0);
+		damage *= 1 + Math.log(1.0 + timeSinceStart / 160000.0);
 	}
 
 	/**
@@ -100,9 +101,9 @@ public abstract class Enemy extends MovableSprite {
 	/**
 	 * Class constructor specifying spawn location and texture file-path of enemy
 	 *
-	 * @param spawnX	x-coordinate of spawn location
-	 * @param spawnY	Y-coordinate of spawn location
-	 * @param spritesheet	filepath to texture spritesheet.
+	 * @param spawnX      x-coordinate of spawn location
+	 * @param spawnY      Y-coordinate of spawn location
+	 * @param spritesheet filepath to texture spritesheet.
 	 */
 	public Enemy(double spawnX, double spawnY, BufferedImage spritesheet) {
 		controllable = false;
@@ -118,18 +119,25 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * getter for the target width
+	 * @return target width
+	 */
 	public static double getTargetWidth() {
 		return TARGET_WIDTH;
 	}
-
+	/**
+	 * getter for the target height
+	 * @return target height
+	 */
 	public static double getTargetHeight() {
 		return TARGET_HEIGHT;
 	}
 
 	/**
-	 * 	Updates all movement, ai and damage functions at each game loop
+	 * Updates all movement, ai and damage functions at each game loop
 	 *
-	 * @param time number of seconds which have elapsed since last update call
+	 * @param time   number of seconds which have elapsed since last update call
 	 * @param player closest player object to enemy
 	 */
 	public void update(double time, Player player) {
@@ -140,31 +148,31 @@ public abstract class Enemy extends MovableSprite {
 		// collision();
 		deltaTime = time;
 		// movement(pX, pY);
-		if(lineOfSight()){ pathfinding = false;}
+		if (lineOfSight()) {
+			pathfinding = false;
+		}
 		if (pathfinding) {
 			movement(closestNode.x, closestNode.y);
 		} else {
 			movement(pX, pY);
 		}
-		
+
 		if (frozen) {
-			
+
 			if (System.currentTimeMillis() - lastFrozenTime >= freezeTime) {
-				
+
 				frozen = false;
 			}
 		}
-		
+
 		if (!frozen) {
-		
+
 			Vector2 toMove = new Vector2(velocity.x * deltaTime, velocity.y * deltaTime);
 			this.translate(toMove);
 			collision();
 			rotate(pX, pY);
 		}
-		
-		
-		
+
 		if (this.getX() > (closestNode.getX() - pfOffset) && this.getX() < (closestNode.getX() + pfOffset)
 				&& this.getY() > (closestNode.getY() - pfOffset) && this.getY() < (closestNode.getY() + pfOffset)) {
 			pathfinding = false;
@@ -175,7 +183,7 @@ public abstract class Enemy extends MovableSprite {
 		prevX = this.getX();
 		prevY = this.getY();
 		// System.out.println("\nx:" + String.valueOf(this.getX()) + " y:" +
-		//System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
+		// System.out.print("\nPathfinding: " + String.valueOf(pathfinding));
 
 	}
 
@@ -209,7 +217,9 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
-	 * Calculates the cardinal direction of the target point relative to the enemy in the horizontal plain
+	 * Calculates the cardinal direction of the target point relative to the enemy
+	 * in the horizontal plain
+	 * 
 	 * @param pX target x-coordinate
 	 */
 	protected void moveX(double pX) {
@@ -222,7 +232,8 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
-	 *	Calculates the cardinal direction of the target point relative to the enemy in the vertical plain
+	 * Calculates the cardinal direction of the target point relative to the enemy
+	 * in the vertical plain
 	 *
 	 * @param pY target x-coordinate
 	 */
@@ -236,7 +247,9 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
-	 *	Calculates the cardinal direction of target coordinates in relation to this enemy. This corresponding texture of this will be set, based upon which way it should be facing.
+	 * Calculates the cardinal direction of target coordinates in relation to this
+	 * enemy. This corresponding texture of this will be set, based upon which way
+	 * it should be facing.
 	 *
 	 * @param pX target x-coordinate
 	 * @param pY target y-coordinate
@@ -289,23 +302,22 @@ public abstract class Enemy extends MovableSprite {
 	 * @param player player object
 	 */
 	protected void damage(Player player) {
-		
+
 		if (this.getBoundsInLocal().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) { // collision
-			
+
 			frozen = true;
 			lastFrozenTime = System.currentTimeMillis();
-			
+
 			if (!player.getHit()) {
-				
+
 				player.takeDamage(this.damage);
 				player.setHit(true);
-                //StatsBox.updateHealthBar((int) Math.round(player.getHealth()));
+				// StatsBox.updateHealthBar((int) Math.round(player.getHealth()));
 
 				// System.out.println("Health: " + String.valueOf(player.getHealth()));
-				
-				
+
 			}
-			
+
 		}
 	}
 
@@ -333,7 +345,7 @@ public abstract class Enemy extends MovableSprite {
 	public boolean lineOfSight() {
 		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
-		Line line = new Line(this.getX(), this.getY(), pX+32, pY+32);
+		Line line = new Line(this.getX(), this.getY(), pX + 32, pY + 32);
 		for (Bounds bounds : wallBounds) {
 			if (line.intersects(bounds)) {
 				return false;
@@ -343,7 +355,7 @@ public abstract class Enemy extends MovableSprite {
 	}
 
 	/**
-	 *	Returns a collection of all attribute vales for network transmission
+	 * Returns a collection of all attribute vales for network transmission
 	 *
 	 * @return Hashmap of attributes and their titles
 	 */

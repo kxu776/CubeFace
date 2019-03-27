@@ -1,6 +1,7 @@
 package com.zaxxon.world.mobile;
 
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Sprite;
 
 import java.util.LinkedHashMap;
@@ -9,10 +10,10 @@ import java.util.LinkedHashMap;
  * Abstract representation of a mobile sprite.
  */
 public abstract class MovableSprite extends Sprite {
-	private double velocityX;
-	private double velocityY;
-	private double movementSpeed;
-	protected double health;
+	private double velocityX = 0;
+	private double velocityY = 0;
+	private double movementSpeed = 0;
+	protected double health = 0;
 
 	public Player lastHitReceived;
 
@@ -27,14 +28,9 @@ public abstract class MovableSprite extends Sprite {
 	 * Default class constructor
 	 */
 	public MovableSprite() {
-		velocityX = 0.0;
-		velocityY = 0.0;
-		movementSpeed = 0.0;
-		health = 0.0;
-
 	}
-	
-	//methods for player
+
+	// methods for player
 
 	/**
 	 * Sets the position coordinates of this sprite within the game map
@@ -42,7 +38,7 @@ public abstract class MovableSprite extends Sprite {
 	 * @param pos vector2 object containing a set of positional coordinates
 	 */
 	public void setPosition(Vector2 pos) {
-		
+
 		this.setX(pos.x);
 		this.setY(pos.y);
 	}
@@ -62,8 +58,8 @@ public abstract class MovableSprite extends Sprite {
 	 * @return the position of this object
 	 */
 	public Vector2 getPosition() {
-		
-		return new Vector2 (this.getX(), this.getY());
+
+		return new Vector2(this.getX(), this.getY());
 	}
 
 	/**
@@ -72,12 +68,10 @@ public abstract class MovableSprite extends Sprite {
 	 * @param v delta vector for movement
 	 */
 	public void translate(Vector2 v) {
-		
+
 		this.setX(this.getX() + v.x);
 		this.setY(this.getY() + v.y);
 	}
-
-
 
 	public void update(double time) {
 		this.setX(this.getX() + velocityX * time);
@@ -85,26 +79,27 @@ public abstract class MovableSprite extends Sprite {
 	}
 
 	/**
-	 * Decrements the health of this object, representing damage being inflicted upon this object.
+	 * Decrements the health of this object, representing damage being inflicted
+	 * upon this object.
 	 *
-	 * If the health falls to 0, the object is declared dead (to be removed from the game).
-	 * The health of this object should never be negative.
+	 * If the health falls to 0, the object is declared dead (to be removed from the
+	 * game). The health of this object should never be negative.
 	 *
 	 * @param damage the amount of damage to be taken by this object
 	 */
 	public void takeDamage(double damage) {
-		if(health-damage>0.0){
+		if (health - damage > 0.0) {
 			health -= damage;
-		}else{
+		} else {
 			health = 0.0;
 			isAlive = false;
 		}
-		assert health>=0.0;
+		assert health >= 0.0;
 	}
 
 	/**
-	 * Decrements the health of this object while recording which player inflicted said damage.
-	 * Represents damage being inflicted upon this object by a bullet
+	 * Decrements the health of this object while recording which player inflicted
+	 * said damage. Represents damage being inflicted upon this object by a bullet
 	 *
 	 * @param damage the amount of damage to be taken by this object
 	 * @param player the player from which the damaging bullet originated
@@ -121,7 +116,7 @@ public abstract class MovableSprite extends Sprite {
 	 */
 	public void heal(double healing) {
 
-		health += healing;
+		health = Math.min(100, health + healing);
 	}
 
 	/**
@@ -138,10 +133,9 @@ public abstract class MovableSprite extends Sprite {
 	 *
 	 * @return true if the enemy is still alive, otherwise false
 	 */
-	public Boolean isAlive(){
+	public Boolean isAlive() {
 		return isAlive;
 	}
-
 
 	/**
 	 * Returns a String containing the concatenation of this object's attributes
@@ -152,15 +146,15 @@ public abstract class MovableSprite extends Sprite {
 		return super.toString() + ", Velocity: [" + velocityX + "," + velocityY + "]";
 	}
 
-
 	/**
-	 * Returns a collection of key-value pairs containing this object's attributes and their associated field names as values and keys respectively
+	 * Returns a collection of key-value pairs containing this object's attributes
+	 * and their associated field names as values and keys respectively
 	 *
-	 * @return  LinkedHashMap<String, Object> of this object's attributes.
+	 * @return LinkedHashMap<String, Object> of this object's attributes.
 	 */
 	@Override
 	public LinkedHashMap<String, Object> getAttributes() {
-		LinkedHashMap<String,Object> attributes =  super.getAttributes();
+		LinkedHashMap<String, Object> attributes = super.getAttributes();
 		attributes.put("velocityX", velocityX);
 		attributes.put("velocityY", velocityY);
 		attributes.put("Health", health);

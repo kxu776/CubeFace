@@ -7,6 +7,7 @@ public class ServerClient {
 	public String name;
 	public InetAddress address;
 	public int port;
+	private int inactive;
 	private final String ID;
 	public ServerClient(String user,InetAddress address, int port,String ID) {
 		this.name = user;
@@ -14,7 +15,6 @@ public class ServerClient {
 		this.port = port;
 		this.ID = ID;
 	}
-
 
 	public InetAddress getAddress() {
 		return address;
@@ -26,5 +26,15 @@ public class ServerClient {
 
 	public String getID() {
 		return ID;
+	}
+	
+	public void resetActivity() {
+		inactive = 0;
+	}
+	public void increaceInactive() {
+		inactive +=1;
+	}
+	public int getInactive() {
+		return inactive;
 	}
 }

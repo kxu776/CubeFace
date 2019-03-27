@@ -23,7 +23,7 @@ public class HealthBar {
         //initialise
         healthbar = new AnchorPane();
         red = new Rectangle(100, 10); //rectangles to make healthbar
-        Rectangle green = new Rectangle(100, 10); //health is initially
+        green = new Rectangle(100, 10); //health is initially
 
         //set background rectangle to be red
         red.setFill(Color.RED);

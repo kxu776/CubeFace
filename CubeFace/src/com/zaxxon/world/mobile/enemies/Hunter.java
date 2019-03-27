@@ -4,15 +4,17 @@ import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 
 /**
- *  A special enemy type - A Hunter possess less health, but faster movement than a base zombie enemy. Furthermore, the reward for killing a hunter is greater than that of a base zombie.
+ * A special enemy type - A Hunter possesses less health, but faster movement
+ * than a base zombie enemy. Furthermore, the reward for killing a hunter is
+ * greater than that of a base zombie.
  */
 public class Hunter extends Enemy {
 
 	/**
 	 * Class constructor - specifies spawn coordinates
 	 *
-	 * @param spawnX	x-coordinate of spawn location
-	 * @param spawnY	y-coordinated of spawn location
+	 * @param spawnX x-coordinate of spawn location
+	 * @param spawnY y-coordinated of spawn location
 	 */
 	public Hunter(double spawnX, double spawnY) {
 		controllable = false;
@@ -26,11 +28,15 @@ public class Hunter extends Enemy {
 		isAlive = true;
 		pathfinding = false;
 		health = 30.0;
+		damage *= 0.8;
+		maxSpeed *= 1.4;
 		killReward = 750;
+		setDifficultyScaling(System.currentTimeMillis() - MainGame.getGameStartTime());
 	}
 
 	/**
-	 * Class destructor - removes all references to object instance in order to un-instantiate object.
+	 * Class destructor - removes all references to object instance in order to
+	 * un-instantiate object.
 	 */
 	@Override
 	public void delete() {

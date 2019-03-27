@@ -61,7 +61,7 @@ public class JoinGamePopup {
         Label serverIP = new Label("Server IP:");
         GridPane.setConstraints(serverIP, 0, 1);
 
-        TextField ipField = new TextField();
+        TextField ipField = new TextField(null);
         ipField.setPromptText("127.0.0.1");
         GridPane.setConstraints(ipField,1,1);
 
@@ -80,8 +80,9 @@ public class JoinGamePopup {
         Button startGame = new Button("Go");
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
-
-        	 	MainGame.setUpClientThread(ipField.getText(),PortNumber.number,nameField.getText());
+        		String ip = ipField.getText();
+        		System.out.println(ipField.getText());
+        	 	MainGame.setUpClientThread(ip,PortNumber.number,nameField.getText());
     			MainGame.multiplayer = true;
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());

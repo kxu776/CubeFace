@@ -240,7 +240,7 @@ public class Player extends MovableSprite{
     			
     			else {
     				
-    				//health
+    				this.heal(100);
     			}
     			
     			MainGame.ammoPickupList.get(i).delete();
@@ -357,7 +357,7 @@ public class Player extends MovableSprite{
 		hit = b;
 		
 		if (b) {
-		
+			StatsBox.updateHealthBar((int) health);
 			damageTime = System.currentTimeMillis();
 			this.setOpacity(0.3);
 		}

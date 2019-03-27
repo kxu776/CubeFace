@@ -1,6 +1,6 @@
-
 .root {
-    -fx-background-image: url(../img/gui-prototypes.png), url(../img/wallbg.png);
+	-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #e2f4b3, #05abb1);
+    -fx-background-image: url(../img/wallbg.png);
     -fx-background-repeat: repeat;
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";
@@ -8,7 +8,7 @@
     -fx-border-color:#05abb1;
     -fx-border-radius:4px;
     -fx-text-fill:white;
-    }
+}
 
 .button {
     -fx-font-family: "VCR OSD Mono";
@@ -31,5 +31,6 @@
 #toolbox {
     -fx-font-family: "VCR OSD Mono";
     -fx-background-color: #c1e9b3;
-    -fx-border-width: 0 0 1 0; -fx-border-color: white;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
 }

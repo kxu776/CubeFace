@@ -98,6 +98,20 @@ public class Bullet extends MovableSprite {
 				return;
 			}
 		}
+		
+		for (Player p : MainGame.playerList) {
+			
+			if (p.equals(player)) {
+				
+				continue;
+			}
+			
+			if(getBoundsInLocal().intersects(p.getBoundsInLocal())){
+				p.takeDamage(damage, player);
+				delete();
+				return;
+			}
+		}
 
 	}
 

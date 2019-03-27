@@ -29,6 +29,7 @@ import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.mobile.Player;
+import com.zaxxon.world.mobile.enemies.Brute;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
@@ -96,6 +97,7 @@ public class MainGame {
 	private static long fpsLong;
 	private static double normalisedFPS;
 	private static long gameStartTime;
+	private static long nextEnemySpawnTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
@@ -156,17 +158,12 @@ public class MainGame {
 
 		music = m;
 		audio.setOnAction(e -> {
-
 			muted = (muted) ? false : true;
-
 			if (muted) {
-
 				music.stop();
 			} else {
-
 				music.play();
 			}
-
 			MainGame.setGameFocus();
 		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
@@ -259,7 +256,6 @@ public class MainGame {
 		gameStartTime = System.currentTimeMillis();
 
 		if (!multiplayer) {
-
 			for (int i = 0; i < 5; i++) {
 				spawnRandomEnemy();
 			}
@@ -280,6 +276,7 @@ public class MainGame {
 					weaponSpawnQueue();
 					killPlayer();
 				} else {
+					spawnZombieCheck();
 					updateEnemies();
 				}
 				camera.update();
@@ -289,29 +286,49 @@ public class MainGame {
 		mainGameLoop.start();
 	}
 
+	/**
+	 * checks whether or not to spawn a new zombie, and if necessary spawns it
+	 */
+	private static void spawnZombieCheck() {
+		if (System.currentTimeMillis() >= nextEnemySpawnTime) {
+			spawnRandomEnemy();
+		}
+	}
+
+	/**
+	 * spawns a random enemy in the world
+	 */
 	private static void spawnRandomEnemy() {
 		double randomPercentage = Math.random();
 		Tile randomTile;
-		boolean escapeFlag = true;
 		do {
 			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
 			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
 			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
-			int sum = 0;
-			for (int i = 0; i < 4; i++) {
-				sum += Levels.LEVEL2[baseTileY + (i / 2) % 2][baseTileX + i % 2];
+			// checks the tile isn't a wall
+			if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
+				continue;
 			}
-			if (sum == 0) {
-				escapeFlag = false;
+			int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
+			int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
+			// ensures zombie is at least 3 tiles away from the player so doesn't spawn too close
+			if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
+				break;
 			}
-		} while (escapeFlag);
-		if (randomPercentage < 0.7) {
+		} while (true);
+		if (randomPercentage < 0.6) {
 			Zombie enemy = new Zombie(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
-		} else {
+		} else if (randomPercentage < 0.9) {
 			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
+		} else {
+			Brute enemy = new Brute(randomTile.getX(), randomTile.getY());
+			addSpriteToForeground(enemy);
 		}
+		nextEnemySpawnTime = System.currentTimeMillis();
+		nextEnemySpawnTime += 1500 + ThreadLocalRandom.current().nextInt(2000, 20000)
+				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
 
 	private static void spawnRandomAmmoPickup() {
@@ -321,7 +338,7 @@ public class MainGame {
 			ammoPickupList.add(a);
 			addSpriteToForeground(a);
 
-			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800), null);
+			AmmoPickup b = new AmmoPickup(2, new Vector2(500, 800), null);
 			ammoPickupList.add(b);
 			addSpriteToForeground(b);
 		}
