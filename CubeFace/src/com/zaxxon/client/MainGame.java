@@ -29,6 +29,7 @@ import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.MovableSprite.FacingDir;
 import com.zaxxon.world.mobile.Player;
+import com.zaxxon.world.mobile.enemies.Brute;
 import com.zaxxon.world.mobile.enemies.Enemy;
 import com.zaxxon.world.mobile.enemies.Hunter;
 import com.zaxxon.world.mobile.enemies.Zombie;
@@ -297,11 +298,14 @@ public class MainGame {
 				break;
 			}
 		} while (true);
-		if (randomPercentage < 0.7) {
+		if (randomPercentage < 0.6) {
 			Zombie enemy = new Zombie(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
-		} else {
+		} else if (randomPercentage < 0.9) {
 			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
+			addSpriteToForeground(enemy);
+		} else {
+			Brute enemy = new Brute(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
 		}
 		nextEnemySpawnTime = System.currentTimeMillis();

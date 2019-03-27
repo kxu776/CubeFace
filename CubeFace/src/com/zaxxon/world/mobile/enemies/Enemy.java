@@ -3,7 +3,6 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
@@ -45,11 +44,11 @@ public abstract class Enemy extends MovableSprite {
 	Vector2 inputDir = new Vector2();
 	Vector2 moveDir = new Vector2();
 	Vector2 velocity = new Vector2();
-	double maxSpeed = 1.5;
+	protected double maxSpeed = 1.5;
 	final double acceleration = 1.2;
 	final double deceleration = -0.6;
 	double currentSpeed = 0;
-	private double damage = 0.1;
+	protected double damage = 0.1;
 	final double pfOffset = 0.9; // 1.0
 
 	private Boolean frozen = false;
@@ -67,9 +66,11 @@ public abstract class Enemy extends MovableSprite {
 		isAlive = true;
 		pathfinding = false;
 		MainGame.enemiesList.add(this);
-//		setDifficultyScaling(System.currentTimeMillis() - MainGame.getGameStartTime());
 	}
 
+	/**makes the zombies tougher based off how long the game has run for
+	 * @param timeSinceStart the number of milliseconds since the start of the game
+	 */
 	protected void setDifficultyScaling(long timeSinceStart) {
 		maxSpeed *= 1 + Math.log(1.0 + timeSinceStart / 120000.0);
 		health *= 1 + Math.log(1.0 + timeSinceStart / 80000.0);
@@ -117,10 +118,17 @@ public abstract class Enemy extends MovableSprite {
 		MainGame.enemiesList.add(this);
 	}
 
+	/**
+	 * getter for the target width
+	 * @return target width
+	 */
 	public static double getTargetWidth() {
 		return TARGET_WIDTH;
 	}
-
+	/**
+	 * getter for the target height
+	 * @return target height
+	 */
 	public static double getTargetHeight() {
 		return TARGET_HEIGHT;
 	}
