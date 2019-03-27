@@ -584,9 +584,10 @@ public class MainGame {
 				if (sprite.getId().equals(id)) {
 					
 					if(data.alive == false) {
-						play.remove(id);
-						removeFromGame(data.getID());
-						newPlayer(data);
+						play.get(id).reset();
+						sprite.setX(data.getX());
+						sprite.setY(data.getY());
+						((Player) sprite).setDir(data.pos);
 						continue;
 					}
 					sprite.setX(data.getX());
@@ -604,7 +605,7 @@ public class MainGame {
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
 						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos,
-								play.get(id).getplayerDimensions(), vect);
+						play.get(id).getplayerDimensions(), vect);
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
@@ -719,6 +720,7 @@ public class MainGame {
 			player.setX(data.getX());
 			player.setY(data.getY());
 			player.setId(id);
+			player.setDir(data.pos);
 			player.mp = true;
 			player.weaponManager.getCurrentWeapon().test = true;
 			player.weaponManager.mp = true;
