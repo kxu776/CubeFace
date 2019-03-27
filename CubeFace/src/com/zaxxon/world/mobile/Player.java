@@ -378,7 +378,6 @@ public class Player extends MovableSprite{
 		heal(100.0);
         isAlive = true;
         facingDir = FacingDir.up;
-        weaponManager = new WeaponManager(this);
 	}
 	/**
 	 * @return velocity

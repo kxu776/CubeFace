@@ -24,7 +24,7 @@ public class Server extends Thread {
 	private boolean listening = false;
 	private final int SERVER_PORT;
 	private String SERVER_IP;
-	private PlayerActivity activity;
+	// private PlayerActivity activity;
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
@@ -63,7 +63,7 @@ public class Server extends Thread {
 		}
 
 		// Make sure we can continue the program.
-		activity = new PlayerActivity(this);
+		// activity = new PlayerActivity(this);
 		listenThread = new Thread(new Runnable() {
 			public void run() {
 				listen();
@@ -71,7 +71,7 @@ public class Server extends Thread {
 		});
 		MainGame.host = true;
 		listenThread.start();
-		activity.start();
+		// activity.start();
 	}
 
 	public void send(final byte[] data, InetAddress address, int port) {
@@ -123,13 +123,14 @@ public class Server extends Thread {
 				for (Iterator<PickupPoint> it = MainGame.ammoPickupPoints.iterator(); it.hasNext();) {
 					PickupPoint p = it.next();
 					if(!p.update()){
-						MainGame.spawnAmmoPickup(p);
+						MainGame.displayAllGuns(p);
 					}	
 				}
 			}
 		});
 		weaponThread.start();
 	}
+
 
 	private void listen() {
 		while (listening) {
@@ -267,14 +268,14 @@ public class Server extends Thread {
 				return;
 		}
 		
-		else if(action.startsWith("/p/")) {
-			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-				if((c.getKey() == port) && (address.equals(c.getValue().getAddress()))){
-					c.getValue().resetActivity();
-				}
-			}
-			return;
-		}
+//		else if(action.startsWith("/p/")) {
+//			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+//				if((c.getKey() == port) && (address.equals(c.getValue().getAddress()))){
+//					c.getValue().resetActivity();
+//				}
+//			}
+//			return;
+//		}
 		
 
 		// If we don't have enough players we just update the position of who is
