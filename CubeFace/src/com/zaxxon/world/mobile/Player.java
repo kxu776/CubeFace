@@ -98,7 +98,7 @@ public class Player extends MovableSprite {
 		if (!isAlive) {
 			this.setOpacity(0.6);
 			this.setEffect(lighting);
-			//return;
+			return;
 		}
 
 		deltaTime = time;
