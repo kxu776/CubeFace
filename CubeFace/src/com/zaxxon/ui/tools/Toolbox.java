@@ -50,20 +50,22 @@ public class Toolbox {
 
         Button close = new Button();
         close.setOnAction(e->{
-                if(type ==3) {
-                    QuitPopup.display(popupwindow);
-                    MainGame.setGameFocus();
-                } else {
-                    popupwindow.close();
-                }
+            if(type ==3) {
+                QuitPopup.display(popupwindow);
+                MainGame.setGameFocus();
+            } else {
+            	if(type == 2) {
+                 popupwindow.close();
+            		System.exit(1);
+            		}
+                popupwindow.close();
+            }
         });
-
         //load the icon
         Image closeIcon = new Image(MainMenu.class.getResource("img/close.png").toString());
         ImageView closeView = new ImageView(closeIcon); //make an imageview for the minimise icon
         close.setGraphic(closeView); //add the image to the button
         close.setId("toolbarbutton");
-
 
         //make toolbar layout
         //hbox for icons
