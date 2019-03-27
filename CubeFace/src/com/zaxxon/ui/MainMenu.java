@@ -26,7 +26,7 @@ import javafx.stage.StageStyle;
 public class MainMenu {
 
 	public static final int WIDTH = 1000;
-	public static final int HEIGHT = 500;
+	public static final int HEIGHT = 600;
 	public static MusicPlayer music = new MusicPlayer("/mainmenu/mm.wav");
 	public static Scene mainmenu;
 	
@@ -194,7 +194,7 @@ public class MainMenu {
         borderPane.setCenter(rootPane);
 
         //make a rectangle and set clipping
-        Rectangle rect = new Rectangle(1000,500);
+        Rectangle rect = new Rectangle(WIDTH, HEIGHT);
         rect.setArcHeight(9.0);
         rect.setArcWidth(9.0);
         borderPane.setClip(rect);
