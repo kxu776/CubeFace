@@ -53,6 +53,7 @@ public class Toolbox {
             if(type ==3) {
                 QuitPopup.display(popupwindow);
                 MainGame.setGameFocus();
+
             } else {
             	if(type == 2) {
                  popupwindow.close();

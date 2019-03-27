@@ -117,7 +117,7 @@ public class HelpScreen {
         content.getChildren().addAll(left,changeWeaponLayout);
         content.setAlignment(Pos.CENTER);
         content.setHgap(35);
-        content.setPadding(new Insets(0, 0, 90, 0));
+        content.setPadding(new Insets(0, 0, 120, 0));
 
 
         //make a toolbox
