@@ -15,6 +15,7 @@ import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.popups.GameOverPopup;
 import com.zaxxon.ui.tools.Toolbox;
 import com.zaxxon.sound.MusicPlayer;
 
@@ -270,7 +271,7 @@ public class MainGame {
 		mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				for (Player player : playerList) {
-					player.update(normalisedFPS);
+					player.update(normalisedFPS, primaryStage);
 				}
 				if (multiplayer) {
 					updatePickups();
@@ -785,4 +786,12 @@ public class MainGame {
 	public static Point2D.Double pick(double x, double y) {
 		return new Point2D.Double(x, y);
 	}
+
+
+
+
+
+
 }
+
+

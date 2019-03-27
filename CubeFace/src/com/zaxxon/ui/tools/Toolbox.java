@@ -26,7 +26,7 @@ public class Toolbox {
 
 
         //types of toolbar:
-        //1 = popup, 2= mainmenu, 3= game, 4= helpscreen
+        //1 = popup, 2= mainmenu, 3= game, 4= helpscreen 5=gameover
 
         //make a toolbar (for the top)
         Label tbTitle = new Label(title);
@@ -65,6 +65,9 @@ public class Toolbox {
                 popupwindow.close();
             }
         });
+
+
+
         //load the icon
         Image closeIcon = new Image(MainMenu.class.getResource("img/close.png").toString());
         ImageView closeView = new ImageView(closeIcon); //make an imageview for the minimise icon
@@ -74,8 +77,11 @@ public class Toolbox {
         //make toolbar layout
         //hbox for icons
         HBox hbox = new HBox();
-        hbox.getChildren().addAll(minimise, close);
-        hbox.setAlignment(Pos.BASELINE_RIGHT);
+        if (type != 5) {
+            hbox.getChildren().addAll(minimise, close);
+            hbox.setAlignment(Pos.BASELINE_RIGHT);
+        }
+
 
 
 

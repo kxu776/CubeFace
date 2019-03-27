@@ -54,3 +54,7 @@
 #startgame {
     -fx-padding: 5 15 5 15;
 }
+
+#gameover {
+    -fx-font-size: 20px;
+    }

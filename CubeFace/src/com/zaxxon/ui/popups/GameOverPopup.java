@@ -11,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -25,7 +22,7 @@ import javafx.stage.StageStyle;
 public class GameOverPopup {
 
 
-    public static void display(Stage primaryStage, String score)
+    public static void display(Stage primaryStage, String score, Scene mainmenu)
     {
         double[] xOffset = {0};
         double[] yOffset = {0};
@@ -41,27 +38,39 @@ public class GameOverPopup {
         //****************************CONTENTS
         //game over label
         Label gameOver = new Label("GAME OVER!");
+        gameOver.setId("gameover");
 
         Label scoreLbl = new Label("SCORE:");
 
         Label scoreNum = new Label(score);
 
+        //Hbox for score labels
+        HBox scoreLayout = new HBox(scoreLbl, scoreNum);
+        scoreLayout.setAlignment(Pos.CENTER);
+
         Button finish = new Button("FINISH");
-        //finish.setOnAction(e-> primaryStage.setScene());
+        finish.setOnAction(e-> {
+            primaryStage.setScene(mainmenu);
+            popupwindow.close();
+        });
+
+        //vbox to hold it all
+        VBox content = new VBox(gameOver, scoreLayout, finish);
+        content.setAlignment(Pos.CENTER);
+        content.setSpacing(15);
 
 
 
 
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Game Mode");
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 5, "Game Mode");
 
 
         //borderPane for it all
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(toolbox);
-        borderPane.setCenter(middle);
-        borderPane.setBottom(bottom);
+        borderPane.setCenter(content);
 
         //make a rectangle and set clip
         Rectangle rect = new Rectangle(400,150);
@@ -93,7 +102,7 @@ public class GameOverPopup {
 
 
         popupwindow.setScene(scene1);
-        popupwindow.showAndWait();
+        popupwindow.show();
 
     }
 

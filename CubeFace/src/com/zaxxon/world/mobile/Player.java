@@ -4,6 +4,8 @@ import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.input.Input;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.MainMenu;
+import com.zaxxon.ui.popups.GameOverPopup;
 import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.shooting.WeaponManager;
 
@@ -11,6 +13,7 @@ import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * @author Dan
@@ -93,10 +96,19 @@ public class Player extends MovableSprite {
 		lighting.setLight(new Light.Distant(45, 45, Color.RED));
 	}
 
-	public void update(double time) {
+	protected boolean oneTimeOnly = true;
+
+	public void update(double time, Stage primaryStage) {
+		if(!oneTimeOnly){
+			return;
+		}
 		if (!isAlive) {
 			this.setOpacity(0.6);
 			this.setEffect(lighting);
+			oneTimeOnly = false;
+			primaryStage.setMaxWidth(1000);
+			primaryStage.setMaxHeight(600);
+			GameOverPopup.display(primaryStage, String.valueOf(score), MainMenu.mainmenu);
 			return;
 		}
 

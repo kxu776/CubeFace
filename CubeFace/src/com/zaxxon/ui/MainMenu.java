@@ -38,6 +38,10 @@ public class MainMenu {
     //a method that makes the main menu scene
     public Scene makeMainMenu(Stage primaryStage) {
 
+        //make sure stage is not resizeable
+        primaryStage.setMaxWidth(1000);
+        primaryStage.setMaxHeight(600);
+
         double[] xOffset = {0};
         double[] yOffset = {0};
 
