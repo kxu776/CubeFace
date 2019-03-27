@@ -135,8 +135,13 @@ public class MainGame {
 		// clip the group
 		grpGame.setClip(gameRect);
 
+		BorderPane borderPane;
 		// make a statsbox
-		BorderPane borderPane = StatsBox.statsBox();
+		if(multiplayer) {
+			borderPane = StatsBox.statsBox(2);
+		} else {
+			borderPane = StatsBox.statsBox(1);
+		}
 
 		// make a toolbox
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");

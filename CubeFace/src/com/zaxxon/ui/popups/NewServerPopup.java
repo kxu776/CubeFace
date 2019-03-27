@@ -39,16 +39,14 @@ public class NewServerPopup {
 
 		// ****************************CONTENTS
 
-		Label label = new Label("Server Menu");
 
 		// ***********ENTER DETAILS
 
 		// server port
 
-		Label port = new Label("Create a game");
+		Label port = new Label("Please click below to create a new server\nand you will be informed of the IP address:");
 		GridPane.setConstraints(port, 0, 0);
-		 // TextField portField = new TextField();
-		 // GridPane.setConstraints(portField, 1, 0);
+
 
 		// make server button
 
@@ -82,7 +80,7 @@ public class NewServerPopup {
 
 		// vbox for title
 		VBox top = new VBox();
-		top.getChildren().add(label);
+		//top.getChildren().add(label);
 		top.setAlignment(Pos.CENTER);
 		top.setPadding(new Insets(20, 20, 0, 20));
 
