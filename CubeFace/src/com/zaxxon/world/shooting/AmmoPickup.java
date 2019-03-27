@@ -28,8 +28,18 @@ public class AmmoPickup extends Sprite {
 	 */
 	public AmmoPickup(int type, Vector2 pos, PickupPoint pickupPoint) {
 
-		this.setWidth(64);
-		this.setHeight(32);
+		if (type == 2) {
+			
+			this.setWidth(26);
+			this.setHeight(23);
+		}
+			
+		else {
+			
+			this.setWidth(64);
+			this.setHeight(32);
+		}
+		
 		this.setX(pos.x);
 		this.setY(pos.y);
 		
@@ -54,7 +64,7 @@ public class AmmoPickup extends Sprite {
 		
 		else {
 			
-			//setImage(SpriteImages.health);
+			setImage(SpriteImages.HEART_IMAGE);
 		}
 	}
 	

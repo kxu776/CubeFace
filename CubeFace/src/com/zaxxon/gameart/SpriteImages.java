@@ -54,6 +54,10 @@ public class SpriteImages {
 	 * String URL for shotgun ammo pickup
 	 */
 	public static final String SGAP_URL = "CubeFace/src/com/zaxxon/gameart/shotgun.png";
+	/**
+	 * String URL for health pickup
+	 */
+	public static final String HEART_URL = "CubeFace/src/com/zaxxon/gameart/heart.png";
 
 	/**
 	 * BufferedImage from the brute zombie URL
@@ -98,6 +102,10 @@ public class SpriteImages {
 	 * BufferedImage from the SGAP URL
 	 */
 	public static final BufferedImage SGAP_IMAGE = getBufferedImageFromURL(SGAP_URL);
+	/**
+	 * BufferedImage from the SGAP URL
+	 */
+	public static final BufferedImage HEART_IMAGE = getBufferedImageFromURL(HEART_URL);
 
 	/**
 	 * @param url a String of the file to read as an image
