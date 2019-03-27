@@ -256,6 +256,7 @@ public class Player extends MovableSprite {
 				else {
 
 					this.heal(100);
+					StatsBox.updateHealthBar((int)health);
 				}
 
 				MainGame.ammoPickupList.get(i).delete();
