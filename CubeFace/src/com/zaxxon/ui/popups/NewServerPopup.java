@@ -72,15 +72,9 @@ public class NewServerPopup {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-
 					popupwindow.close();
 					// open server confirmation popup
-				// 	System.out.println(server.getServerIP());
-					ServerConfirmationPopup.display(primaryStage, renderedScene);
-					
-				//  	System.out.println(server.getServerIP());
-					
-
+					ServerConfirmationPopup.display(primaryStage, renderedScene);					
 			}
 		});
 

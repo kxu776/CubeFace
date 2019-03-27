@@ -79,7 +79,6 @@ public class MainGame {
 	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static ArrayList<PickupPoint> ammoPickupPoints;
 	private static Client networkingClient;
-	private static Thread hostDistribution;
 	private static Scene renderedScene;
 	private static ClientSender client;
 	public static boolean host = false;

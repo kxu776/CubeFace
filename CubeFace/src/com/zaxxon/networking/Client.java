@@ -34,8 +34,7 @@ public class Client extends Thread {
 		// port refers to port of the server
 		this.port = port;
 		this.ipAddress = host;
-		this.player = player;
-		
+		this.player = player;		
 	}
 		
 
@@ -49,6 +48,7 @@ public class Client extends Thread {
 			}
 			process(packet);
 		}
+		MainGame.multiplayer = false;
 	}
 		
 
@@ -56,7 +56,7 @@ public class Client extends Thread {
 		try {
 			serverAddress = InetAddress.getByName(ipAddress);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			return;
 		}
 		try {
 			socket = new DatagramSocket();
