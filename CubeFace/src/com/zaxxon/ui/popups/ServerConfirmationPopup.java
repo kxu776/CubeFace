@@ -31,7 +31,6 @@ public class ServerConfirmationPopup {
         Stage popupwindow=new Stage();
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
-        popupwindow.setTitle("Success!");
         popupwindow.setResizable(false);
         popupwindow.initStyle(StageStyle.TRANSPARENT);
 
