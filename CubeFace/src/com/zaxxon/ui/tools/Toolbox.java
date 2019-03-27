@@ -56,7 +56,7 @@ public class Toolbox {
             } else {
             	if(type == 2) {
                  popupwindow.close();
-            		System.exit(1);
+            		System.exit(0);
             		}
                 popupwindow.close();
             }

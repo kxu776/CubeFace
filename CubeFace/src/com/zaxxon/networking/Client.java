@@ -111,10 +111,10 @@ public class Client extends Thread {
 				}
 				return;
 		}
-		else if(message.startsWith("/p/")) {
-			send("/p/".getBytes());
-			return;
-		}
+//		else if(message.startsWith("/p/")) {
+//			send("/p/".getBytes());
+//			return;
+//		}
 		
 		if
 		(message.startsWith("/C/")){
@@ -127,12 +127,8 @@ public class Client extends Thread {
 				bais = new ByteArrayInputStream(packet.getData());
 				in = new ObjectInputStream(bais);
 				ClientSender data = (ClientSender) in.readObject();	
-				if(data.alive) {
-					MainGame.inputUpdateQueue.add(data);
-				}
-				else {
-					MainGame.deathQueue.add(data);
-				}
+				MainGame.inputUpdateQueue.add(data);
+				
 
 			} catch (Exception e) {
 				System.out.println(packet.getData().toString());
