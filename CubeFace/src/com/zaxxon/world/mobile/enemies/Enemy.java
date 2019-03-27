@@ -74,7 +74,6 @@ public abstract class Enemy extends MovableSprite {
 		maxSpeed *= 1 + Math.log(1.0 + timeSinceStart / 120000.0);
 		health *= 1 + Math.log(1.0 + timeSinceStart / 80000.0);
 		damage *= 1 + Math.log(1.0 + timeSinceStart / 160000.0);
-		System.out.println("maxSpeed: " + maxSpeed + ", health: " + health + ", damage: " + damage);
 	}
 
 	/**
