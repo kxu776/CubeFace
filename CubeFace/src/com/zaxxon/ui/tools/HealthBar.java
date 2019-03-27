@@ -15,8 +15,8 @@ public class HealthBar {
 
     //make an anchorpane to hold the healthbar
     public AnchorPane healthbar;
-    public static Rectangle red; //rectangles to make healthbar
-    public static Rectangle green; //health is initially
+    public Rectangle red; //rectangles to make healthbar
+    public Rectangle green; //health is initially
 
     public AnchorPane makeHealthbar() {
 
