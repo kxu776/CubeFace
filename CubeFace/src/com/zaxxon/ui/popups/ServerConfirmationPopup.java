@@ -11,9 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -38,10 +36,10 @@ public class ServerConfirmationPopup {
         //****************************CONTENTS
 
         Label label= new Label("Your server has been successfully made!");
-        GridPane.setConstraints(label, 0, 0);
         
-        Label IPlabel= new Label("IP: " + ip);
-        GridPane.setConstraints(label, 0, 2);
+        Label ipLabel= new Label("The IP is for the server is: " + ip);
+
+
 
         //join game
         Button joinGame = new Button("Join Game");
@@ -60,13 +58,18 @@ public class ServerConfirmationPopup {
         GridPane.setConstraints(exit, 0, 3);
         exit.setOnAction(e->popupwindow.close());
 
+        //make a hbox to hold the button
+        HBox buttons = new HBox(joinGame, exit);
+        buttons.setSpacing(20);
+        buttons.setAlignment(Pos.CENTER);
+
+        //make a Vbox to hold the conetnt
+        VBox content = new VBox(label, ipLabel, buttons );
+        content.setSpacing(12);
+        content.setAlignment(Pos.CENTER);
 
 
-        //LAYOUT
-        //gridpane for actual content
-        GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(label,IPlabel, exit, joinGame);
-        gridPane.setAlignment(Pos.CENTER);
+
 
         //make a toolbox
         AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Congratulations!");
@@ -74,10 +77,10 @@ public class ServerConfirmationPopup {
         //borderPane for it all
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(toolbox);
-        borderPane.setCenter(gridPane);
+        borderPane.setCenter(content);
 
         //make a rectangle and set clip
-        Rectangle rect = new Rectangle(450,175);
+        Rectangle rect = new Rectangle(450,150);
         rect.setArcHeight(10.0);
         rect.setArcWidth(10.0);
         borderPane.setClip(rect);
@@ -86,7 +89,7 @@ public class ServerConfirmationPopup {
 
 
         //make a scene
-        Scene scene1= new Scene(borderPane, 450, 175);
+        Scene scene1= new Scene(borderPane, 450, 150);
         popupwindow.setScene(scene1);
         scene1.setFill(Color.TRANSPARENT);
         scene1.getStylesheets().add(MainMenu.class.getResource("css/popup.css").toString());

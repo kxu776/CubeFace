@@ -1,6 +1,7 @@
 package com.zaxxon.world.mobile;
 
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Sprite;
 
 import java.util.LinkedHashMap;
@@ -115,7 +116,7 @@ public abstract class MovableSprite extends Sprite {
 	 */
 	public void heal(double healing) {
 
-		health += healing;
+		health = Math.min(100, health + healing);
 	}
 
 	/**

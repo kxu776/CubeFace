@@ -30,7 +30,7 @@ public class ClientMain extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// load game font
 		// load font
-		Font.loadFont(MainMenu.class.getResourceAsStream("img/VCR_OSD_MONO.ttf"), 9);
+		Font.loadFont(MainMenu.class.getResourceAsStream("../ui/VCR_OSD_MONO.ttf"), 9);
 		primaryStage.setTitle("CubeFace");
 		MainMenu mainMenu2 = new MainMenu();
 		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);

@@ -15,15 +15,15 @@ public class HealthBar {
 
     //make an anchorpane to hold the healthbar
     public AnchorPane healthbar;
-    public static Rectangle red; //rectangles to make healthbar
-    public static Rectangle green; //health is initially
+    public Rectangle red; //rectangles to make healthbar
+    public Rectangle green; //health is initially
 
     public AnchorPane makeHealthbar() {
 
         //initialise
         healthbar = new AnchorPane();
         red = new Rectangle(100, 10); //rectangles to make healthbar
-        Rectangle green = new Rectangle(100, 10); //health is initially
+        green = new Rectangle(100, 10); //health is initially
 
         //set background rectangle to be red
         red.setFill(Color.RED);

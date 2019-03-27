@@ -55,13 +55,6 @@ import javafx.util.Pair;
 
 /**
  * The main window for the game and all its processes
- * 
- * @author Philip Eagles
- *
- */
-/**
- * @author Philip Eagles
- *
  */
 public class MainGame {
 
@@ -71,9 +64,7 @@ public class MainGame {
 	private static Group foreground;
 	private static Group overlay;
 	private static Group collidables;
-	private static final int WIDTH = 1000;
-	private static final int HEIGHT = 500;
-	private static Camera camera;
+	private static TrackingCamera camera;
 	private static ConcurrentLinkedQueue<Sprite> spriteList;
 	public static ArrayList<Player> playerList;
 	public static ArrayList<Enemy> enemiesList;
@@ -103,6 +94,12 @@ public class MainGame {
 	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<String> weaponQueue = new LinkedBlockingQueue<String>();
 
+	/**
+	 * resets all the game's objects (including UI and world)
+	 * 
+	 * @param primaryStage the Stage to render the game in
+	 * @param m            the MusicPlayer for music
+	 */
 	public static void reset(Stage primaryStage, MusicPlayer m) {
 		// set up game groups
 		grpGame = new Group();
@@ -126,21 +123,26 @@ public class MainGame {
 		double[] yOffset = { 0 };
 
 		// make a rectangle
-		Rectangle gameRect = new Rectangle(WIDTH - 2, HEIGHT - 2);
+		Rectangle gameRect = new Rectangle(MainMenu.WIDTH - 2, MainMenu.HEIGHT - 2);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
-		grpGame.prefWidth(WIDTH);
-		grpGame.prefHeight(HEIGHT);
+		grpGame.prefWidth(MainMenu.WIDTH);
+		grpGame.prefHeight(MainMenu.HEIGHT);
 		// clip the group
 		grpGame.setClip(gameRect);
 
+		BorderPane borderPane;
 		// make a statsbox
-		BorderPane borderPane = StatsBox.statsBox();
+		if (multiplayer) {
+			borderPane = StatsBox.statsBox(2);
+		} else {
+			borderPane = StatsBox.statsBox(1);
+		}
 
 		// make a toolbox
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
-		toolbox.setPrefWidth(WIDTH - 2);
+		toolbox.setPrefWidth(MainMenu.WIDTH - 2);
 		toolbox.setId("toolbox");
 
 		// make an audio button
@@ -187,13 +189,13 @@ public class MainGame {
 		addSpriteToForeground(player1);
 
 		// make a rectangle
-		Rectangle rect = new Rectangle(WIDTH, HEIGHT);
+		Rectangle rect = new Rectangle(MainMenu.WIDTH, MainMenu.HEIGHT);
 		rect.setArcHeight(10.0);
 		rect.setArcWidth(10.0);
 		anchorPane.setClip(rect);
 
 		// sets up the scene
-		renderedScene = new Scene(anchorPane, WIDTH, HEIGHT);
+		renderedScene = new Scene(anchorPane, MainMenu.WIDTH, MainMenu.HEIGHT);
 		renderedScene.setFill(Color.TRANSPARENT);
 		renderedScene.getStylesheets().add(MainMenu.class.getResource("css/maingame.css").toString());
 
@@ -224,6 +226,11 @@ public class MainGame {
 		camera = new TrackingCamera(player1);
 	}
 
+	/**
+	 * begins the main game loop
+	 * 
+	 * @param primaryStage the Stage to render on
+	 */
 	public static void start(Stage primaryStage) {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
@@ -260,7 +267,6 @@ public class MainGame {
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				dealWithKeyInput();
 				for (Player player : playerList) {
 					player.update(normalisedFPS);
 				}
@@ -305,7 +311,8 @@ public class MainGame {
 			}
 			int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
 			int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
-			// ensures zombie is at least 3 tiles away from the player so doesn't spawn too close
+			// ensures zombie is at least 3 tiles away from the player so doesn't spawn too
+			// close
 			if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
 				break;
 			}
@@ -374,6 +381,9 @@ public class MainGame {
 		grpGame.requestFocus();
 	}
 
+	/**
+	 * calculates a normalised FPS for updates with delta time
+	 */
 	private static void calculateFPS() {
 		double smoothingFactor = 0.05;
 		normalisedFPS = 1.0 / ((1000.0 / (System.currentTimeMillis() - fpsLong) / 60) * smoothingFactor
@@ -381,6 +391,9 @@ public class MainGame {
 		fpsLong = System.currentTimeMillis();
 	}
 
+	/**
+	 * @return the start time of the game in milliseconds
+	 */
 	public static long getGameStartTime() {
 		return gameStartTime;
 	}
@@ -403,9 +416,11 @@ public class MainGame {
 		return world;
 	}
 
-	private static void dealWithKeyInput() {
-	}
-
+	/**
+	 * removes an object from the game, including List references
+	 * 
+	 * @param o the object to remove
+	 */
 	public static void removeFromGame(Object o) {
 		if (o instanceof Rectangle) {
 			Sprite s = (Sprite) o;
@@ -426,6 +441,12 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * removes the object from the group
+	 * 
+	 * @param g the group containing the object
+	 * @param o the object to remove
+	 */
 	private static void removeFromGroup(Group g, Object o) {
 		Platform.runLater(() -> {
 			g.getChildren().remove(o);
@@ -712,11 +733,6 @@ public class MainGame {
 			}
 		}
 		return null;
-	}
-
-	public static void addZombie() {
-		Zombie zombie = new Zombie(500, 500);
-		addSpriteToForeground(zombie);
 	}
 
 	public static void setUpClientThread(String host, int port, String name) {

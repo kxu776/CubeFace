@@ -3,6 +3,7 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
@@ -23,7 +24,7 @@ import static java.lang.Math.abs;
  */
 public abstract class Enemy extends MovableSprite {
 
-	FacingDir facingDir;
+	protected FacingDir facingDir;
 
 	protected static final int TARGET_WIDTH = 64;
 	protected static final int TARGET_HEIGHT = 64;
@@ -39,17 +40,17 @@ public abstract class Enemy extends MovableSprite {
 
 	public int killReward;
 
-	double deltaTime;
+	protected double deltaTime;
 
-	Vector2 inputDir = new Vector2();
-	Vector2 moveDir = new Vector2();
-	Vector2 velocity = new Vector2();
+	protected Vector2 inputDir = new Vector2();
+	protected Vector2 moveDir = new Vector2();
+	protected Vector2 velocity = new Vector2();
 	protected double maxSpeed = 1.5;
-	final double acceleration = 1.2;
-	final double deceleration = -0.6;
-	double currentSpeed = 0;
+	protected final double acceleration = 1.2;
+	protected final double deceleration = -0.6;
+	protected double currentSpeed = 0;
 	protected double damage = 0.1;
-	final double pfOffset = 0.9; // 1.0
+	protected final double pfOffset = 0.9; // 1.0
 
 	private Boolean frozen = false;
 	private final long freezeTime = 600;

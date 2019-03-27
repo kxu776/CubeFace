@@ -10,6 +10,12 @@ public class Tile extends Sprite {
 
 	private static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 
+	/**constructor for a new wall
+	 * @param width    the width of the Tile in pixels
+	 * @param height   the height of the Tile in pixels
+	 * @param x        the x position of Tile wall in pixels
+	 * @param y        the x position of Tile wall in pixels
+	 */
 	public Tile(double x, double y, double width, double height) {
 		setX(x);
 		setY(y);
@@ -20,6 +26,9 @@ public class Tile extends Sprite {
 		allTiles.add(this);
 	}
 
+	/**
+	 * @return getter for all Tiles
+	 */
 	public static ArrayList<Tile> getAllTiles() {
 		return allTiles;
 	}

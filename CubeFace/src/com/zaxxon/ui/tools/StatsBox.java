@@ -16,8 +16,14 @@ public class StatsBox {
     public static HealthBar healthBar;
     public static HealthBar opHealthBar;
     public static Label score;
+    public static Label ammo;
 
-    public static BorderPane statsBox() {
+    public static BorderPane statsBox(int type) {
+
+        //types:
+        //1=singleplayer
+        //2=multiplayer
+
 
         //******CENTER
 
@@ -26,20 +32,32 @@ public class StatsBox {
         health.setId("health");
 
         //health bar
-        AnchorPane healthBarPane = new HealthBar().makeHealthbar();
+        healthBar = new HealthBar();
+        AnchorPane healthBarPane = healthBar.makeHealthbar();
         healthBarPane.setMinHeight(10);
+
 
         //opponent health label
         Label opHealth = new Label("OPPONENT HEALTH:");
         opHealth.setId("health");
 
         //opponent health bar
-        AnchorPane opHealthBarPane = new HealthBar().makeHealthbar();
+        opHealthBar = new HealthBar();
+        AnchorPane opHealthBarPane = opHealthBar.makeHealthbar();
         opHealthBarPane.setMinHeight(10);
+
+
 
         //vbox for health
         VBox center = new VBox(5);
-        center.getChildren().addAll(health, healthBarPane, opHealth, opHealthBarPane);
+        if (type == 1) {
+            Label label = new Label(" ");
+            label.setPadding(new Insets(25, 0, 0, 0));
+            center.getChildren().addAll(label, health, healthBarPane);
+        } else {
+            center.getChildren().addAll(health, healthBarPane, opHealth, opHealthBarPane);
+        }
+
 
 
 
@@ -76,16 +94,32 @@ public class StatsBox {
         //current weapon label
         Label weaponLbl = new Label("CURRENT WEAPON:");
         weaponLbl.setId("weaponLbl");
-        weaponLbl.setPadding(new Insets(17, 0, 5, 0));
 
         //weapon
         weapon = new Label("PISTOL");
         weapon.setId("weapon");
-        weapon.setPadding(new Insets(17, 0, 5, 0));
 
-        //Hbox for weapon
+        //layout for weapon
+        VBox weaponLayout = new VBox(weaponLbl, weapon);
+
+
+        //ammo label
+        Label ammoLbl = new Label("AMMO:");
+        ammoLbl.setId("weaponLbl");
+
+        //ammo
+        ammo = new Label("UNLIMITED");
+        ammo.setId("weapon");
+
+
+        //layout for ammo
+        VBox ammoLayout = new VBox(ammoLbl, ammo);
+
+
+        //Hbox for weapon and ammo
         HBox bottom = new HBox();
-        bottom.getChildren().addAll(weaponLbl, weapon);
+        bottom.getChildren().addAll(weaponLayout, ammoLayout);
+        bottom.setSpacing(30);
 
 
 
@@ -109,27 +143,25 @@ public class StatsBox {
     }
 
     public static void updateWeapon(String newWeapon) {
-
         weapon.setText(newWeapon.toUpperCase() );
+    }
+
+    public static void updateAmmo(String newAmmo) {
+
+        ammo.setText(newAmmo.toUpperCase() );
 
     }
 
     public static void updateHealthBar(Integer newHealth) {
-
-        healthBar.updateHealthBar(newHealth);
-
+    	healthBar.updateHealthBar(newHealth);
     }
 
     public static void updateOpHealthBar(Integer newHealth) {
-
-        opHealthBar.updateHealthBar(newHealth);
-
+    	opHealthBar.updateHealthBar(newHealth);
     }
 
     public static void updateScore(Integer newScore) {
-
         score.setText(newScore.toString());
-
     }
 
 }

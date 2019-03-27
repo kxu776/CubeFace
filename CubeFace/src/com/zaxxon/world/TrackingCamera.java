@@ -12,8 +12,6 @@ import javafx.stage.Window;
  * The StaticCamera's movement and zoom is relative to the centre of the
  * viewport. Its default position is the Sprite's centre (calculated by its
  * Bounds)
- * 
- * @author philip
  *
  */
 public class TrackingCamera extends Camera {

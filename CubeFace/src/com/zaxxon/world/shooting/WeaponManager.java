@@ -159,7 +159,7 @@ public class WeaponManager {
 	 * @return current weapon name
 	 */
 	public String getCurrentWeaponName() {
-		return weapons.get(currentWeapon).getWeaponName() + ": " + weapons.get(currentWeapon).getAmmo();
+		return weapons.get(currentWeapon).getWeaponName();
 	}
 
 	/**
@@ -200,6 +200,7 @@ public class WeaponManager {
 	public void setCurrentWeapon(int wep) {
 		currentWeapon = wep;
 		StatsBox.updateWeapon(getCurrentWeaponName());
+		StatsBox.updateAmmo(weapons.get(currentWeapon).getAmmo());
 	}
 
 	/**
@@ -207,6 +208,7 @@ public class WeaponManager {
 	 */
 	public void updateWeaponReadout(){
 		StatsBox.updateWeapon(getCurrentWeaponName());
+		StatsBox.updateAmmo(weapons.get(currentWeapon).getAmmo());
 	}
 
 }
