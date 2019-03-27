@@ -9,6 +9,10 @@ import com.zaxxon.gameart.SpriteImages;
  * greater than that of a base zombie.
  */
 public class Hunter extends Enemy {
+	
+
+	protected static final int TARGET_WIDTH = 48;
+	protected static final int TARGET_HEIGHT = 48;
 
 	/**
 	 * Class constructor - specifies spawn coordinates
