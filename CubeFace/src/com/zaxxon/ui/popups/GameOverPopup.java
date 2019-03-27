@@ -25,7 +25,7 @@ import javafx.stage.StageStyle;
 public class GameOverPopup {
 
 
-    public static void display(Stage primaryStage)
+    public static void display(Stage primaryStage, String score)
     {
         double[] xOffset = {0};
         double[] yOffset = {0};
@@ -40,8 +40,28 @@ public class GameOverPopup {
 
         //****************************CONTENTS
         //game over label
+        Label gameOver = new Label("GAME OVER!");
+
+        Label scoreLbl = new Label("SCORE:");
+
+        Label scoreNum = new Label(score);
+
+        Button finish = new Button("FINISH");
+        //finish.setOnAction(e-> primaryStage.setScene());
 
 
+
+
+
+        //make a toolbox
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Game Mode");
+
+
+        //borderPane for it all
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(toolbox);
+        borderPane.setCenter(middle);
+        borderPane.setBottom(bottom);
 
         //make a rectangle and set clip
         Rectangle rect = new Rectangle(400,150);
