@@ -96,6 +96,7 @@ public class MainGame {
 	private static long fpsLong;
 	private static double normalisedFPS;
 	private static long gameStartTime;
+	private static long nextEnemySpawnTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
@@ -151,17 +152,12 @@ public class MainGame {
 
 		music = m;
 		audio.setOnAction(e -> {
-
 			muted = (muted) ? false : true;
-
 			if (muted) {
-
 				music.stop();
 			} else {
-
 				music.play();
 			}
-
 			MainGame.setGameFocus();
 		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
@@ -254,7 +250,6 @@ public class MainGame {
 		gameStartTime = System.currentTimeMillis();
 
 		if (!multiplayer) {
-
 			for (int i = 0; i < 5; i++) {
 				spawnRandomEnemy();
 			}
@@ -275,6 +270,7 @@ public class MainGame {
 					weaponSpawnQueue();
 					killPlayer();
 				} else {
+					spawnZombieCheck();
 					updateEnemies();
 				}
 				camera.update();
@@ -284,22 +280,23 @@ public class MainGame {
 		mainGameLoop.start();
 	}
 
+	private static void spawnZombieCheck() {
+		if (System.currentTimeMillis() >= nextEnemySpawnTime) {
+			spawnRandomEnemy();
+		}
+	}
+
 	private static void spawnRandomEnemy() {
 		double randomPercentage = Math.random();
 		Tile randomTile;
-		boolean escapeFlag = true;
 		do {
 			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
 			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
 			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
-			int sum = 0;
-			for (int i = 0; i < 4; i++) {
-				sum += Levels.LEVEL2[baseTileY + (i / 2) % 2][baseTileX + i % 2];
+			if (Levels.LEVEL2[baseTileY][baseTileX] == 0) {
+				break;
 			}
-			if (sum == 0) {
-				escapeFlag = false;
-			}
-		} while (escapeFlag);
+		} while (true);
 		if (randomPercentage < 0.7) {
 			Zombie enemy = new Zombie(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
@@ -307,6 +304,9 @@ public class MainGame {
 			Hunter enemy = new Hunter(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
 		}
+		nextEnemySpawnTime = System.currentTimeMillis();
+		nextEnemySpawnTime += 1500 + ThreadLocalRandom.current().nextInt(2000, 20000)
+				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
 
 	private static void spawnRandomAmmoPickup() {

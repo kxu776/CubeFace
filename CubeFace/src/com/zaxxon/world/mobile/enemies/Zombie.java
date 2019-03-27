@@ -4,15 +4,16 @@ import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 
 /**
- * A base enemy instance. This possesses default health, damage and movement characteristics.
+ * A base enemy instance. This possesses default health, damage and movement
+ * characteristics.
  */
 public class Zombie extends Enemy {
 
 	/**
 	 * Class constructor - specifies spawn coordinates
 	 *
-	 * @param spawnX	x-coordinate of spawn location
-	 * @param spawnY	y-coordinated of spawn location
+	 * @param spawnX x-coordinate of spawn location
+	 * @param spawnY y-coordinated of spawn location
 	 */
 	public Zombie(double spawnX, double spawnY) {
 		controllable = false;
@@ -24,18 +25,18 @@ public class Zombie extends Enemy {
 		this.setHeight(TARGET_HEIGHT);
 		facingDir = Enemy.FacingDir.up;
 		isAlive = true;
-		health = 80.0;
 		pathfinding = false;
+		health = 80;
 		killReward = 500;
+		setDifficultyScaling(System.currentTimeMillis() - MainGame.getGameStartTime());
 	}
 
-
 	/**
-	 * Class destructor - removes all references to object instance in order to un-instantiate object.
+	 * Class destructor - removes all references to object instance in order to
+	 * un-instantiate object.
 	 */
 	@Override
 	public void delete() {
-
 		MainGame.removeFromGame(this);
 	}
 
