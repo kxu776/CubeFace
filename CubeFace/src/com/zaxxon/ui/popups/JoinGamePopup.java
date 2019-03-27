@@ -2,7 +2,7 @@ package com.zaxxon.ui.popups;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.networking.Client;
-
+import com.zaxxon.networking.PortNumber;
 import com.zaxxon.ui.MainMenu;
 import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.EventHandler;
@@ -61,17 +61,17 @@ public class JoinGamePopup {
         Label serverIP = new Label("Server IP:");
         GridPane.setConstraints(serverIP, 0, 1);
 
-        TextField ipField = new TextField("localhost");
+        TextField ipField = new TextField();
+        ipField.setPromptText("127.0.0.1");
         GridPane.setConstraints(ipField,1,1);
 
         //*****SERVER PORT*****
 
-        Label port = new Label("Server Port:");
-        GridPane.setConstraints(port, 0, 2);
+       // Label port = new Label("Server Port:");
+      //  GridPane.setConstraints(port, 0, 2);
 
-        TextField portField = new TextField();
-        portField.setPromptText("1111");
-        GridPane.setConstraints(portField,1, 2);
+        // TextField portField = new TextField(""+PortNumber.number);
+        // GridPane.setConstraints(portField,1, 2);
 
 
 
@@ -81,7 +81,7 @@ public class JoinGamePopup {
         GridPane.setConstraints(startGame, 0, 2);
         startGame.setOnAction(e -> {
 
-        	 	MainGame.setUpClientThread(ipField.getText(),Integer.parseInt((portField.getText())),nameField.getText());
+        	 	MainGame.setUpClientThread(ipField.getText(),PortNumber.number,nameField.getText());
     			MainGame.multiplayer = true;
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());
@@ -107,7 +107,7 @@ public class JoinGamePopup {
 
         //gridpane for the details
         GridPane gridPane = new GridPane();
-        gridPane.getChildren().addAll(nameField, ipField, serverIP, portField, name, port);
+        gridPane.getChildren().addAll(nameField, ipField, serverIP, name);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -119,10 +119,10 @@ public class JoinGamePopup {
         top.setPadding(new Insets(20, 20, 20, 20));
 
         //hbox for the bottom
-        HBox bottom = new HBox(20);
+        HBox bottom = new HBox(30);
         bottom.getChildren().add(startGame);
         bottom.setAlignment(Pos.CENTER);
-        bottom.setPadding(new Insets(0, 20, 20, 20));
+        bottom.setPadding(new Insets(0, 0, 40, 40));
 
         //make a toolbox
         AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Join A Game");

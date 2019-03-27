@@ -8,19 +8,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.zaxxon.client.MainGame;
+import com.zaxxon.world.pickups.PickupPoint;
 
 
 public class Server extends Thread {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
-	private Thread sendThread;
+	private Thread sendThread, weaponThread;
 	private boolean listening = false;
 	private final int SERVER_PORT;
 	private String SERVER_IP;
-	private int MAX_PACKET_SIZE = 512;
+	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
 	protected ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
@@ -32,8 +36,6 @@ public class Server extends Thread {
 	private ObjectInputStream in;
 	private ByteArrayInputStream bais;
 	private InetAddress ServerAddress;
-	private Thread gameThread;
-	private ServerGameSimulator simulator;
 
 	public Server(int serverPort) {
 		this.SERVER_PORT = serverPort;
@@ -52,9 +54,8 @@ public class Server extends Thread {
 			System.out.println("Server Started on port " + SERVER_PORT);
 			ServerAddress = InetAddress.getLocalHost();
 			SERVER_IP = ServerAddress.toString();
-			System.out.println(SERVER_IP);
+			System.out.println(SERVER_IP.split("/")[1]);
 			listening = true;
-			simulator = new ServerGameSimulator(this, SERVER_PORT, ServerAddress);
 		} catch (UnknownHostException e) {
 			System.out.println("Server can't be started, IP isnt known");
 			e.printStackTrace();
@@ -67,20 +68,7 @@ public class Server extends Thread {
 			}
 		});
 		listenThread.start();
-		simulator.start();
-	}
-	
-	public void gameState() {
-		gameThread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				
-			}
-			
-			
-		});
-		gameThread.start();
+		MainGame.host = true;
 	}
 
 	public void send(final byte[] data, InetAddress address, int port) {
@@ -99,6 +87,22 @@ public class Server extends Thread {
 			}
 		});
 		sendThread.start();
+	}
+	
+	
+	public void weapons() {
+		weaponThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (Iterator<PickupPoint> it = MainGame.ammoPickupPoints.iterator(); it.hasNext();) {
+					PickupPoint p = it.next();
+					if(!p.update()){
+						MainGame.spawnAmmoPickup(p);
+					}	
+				}
+			}
+		});
+		weaponThread.start();
 	}
 
 	private void listen() {
@@ -120,9 +124,6 @@ public class Server extends Thread {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
-			simulator.serverGame.inputUpdateQueue.add(data);
-			bais.close();
-			in.close();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
 				out = new ObjectOutputStream(baos);
@@ -136,6 +137,8 @@ public class Server extends Thread {
 				}
 				out.close();
 				baos.close();
+				bais.close();
+				in.close();
 				return playerinfo;
 			} catch (IOException e) {
 				System.out.println(bs.toString());
@@ -224,6 +227,7 @@ public class Server extends Thread {
 			for (HashMap.Entry<String, byte[]> c : lastKnownPos.entrySet()) {
 				send(c.getValue(), address, port);
 			}
+			weapons();
 			return;
 		}
 
@@ -231,6 +235,11 @@ public class Server extends Thread {
 				disconnect(port,address);
 				return;
 		}
+		else if(action.startsWith("/s/")) {
+				sendToRelevant(packet.getData(),port,address);
+				return;
+		}
+		
 
 		// If we don't have enough players we just update the position of who is
 		// currently connected.
@@ -239,6 +248,7 @@ public class Server extends Thread {
 			updatePos(packet.getData(), currentPlayer);
 			return;
 		}
+		
 
 		else {
 			// Game starts
@@ -248,14 +258,18 @@ public class Server extends Thread {
 
 	// Could be used by UI to show user what to enter.
 	public String getServerIP() {
-		return SERVER_IP;
+		if(SERVER_IP.split("/")[1] != null) {
+			return SERVER_IP.split("/")[1];
+		}
+		else {
+			return SERVER_IP;
+		}
 	}
 
 	// Update the players position
 	private void updatePos(byte[] b, String ID) {
 		if (!lastKnownPos.containsKey(ID)) {
 			lastKnownPos.put(ID, b);
-		//	System.out.println(lastKnownPos.size());
 		} else {
 			editObj(b, ID);
 		}
@@ -270,8 +284,6 @@ public class Server extends Thread {
 		try {
 			listening = false;
 			listenThread.interrupt();
-			simulator.run = false;
-			simulator.interrupt();
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 		} catch (SocketException e) {
@@ -301,6 +313,7 @@ public class Server extends Thread {
 			}
 		}			
 	}
+	
 	
 
 	// Send the last known positions of any other player

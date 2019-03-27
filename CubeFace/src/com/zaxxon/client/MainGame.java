@@ -78,16 +78,16 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static ArrayList<PickupPoint> ammoPickupPoints;
-	public static Client networkingClient;
+	private static Client networkingClient;
 	private static Scene renderedScene;
-	public static ClientSender client;
+	private static ClientSender client;
+	public static boolean host = false;
 	public static boolean multiplayer = false;
 	private static boolean spawn = false;
-	static boolean fired = false;
+	private static boolean fired = false;
 	public static boolean muted = false;
-	
-	private static MusicPlayer music;
 
+	private static MusicPlayer music;
 
 	private static Player player1;
 	public static ConcurrentHashMap<String, Player> play = new ConcurrentHashMap<>();
@@ -98,7 +98,8 @@ public class MainGame {
 	private static long gameStartTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
-	public static LinkedBlockingQueue<String> deathQueue = new LinkedBlockingQueue<String>();
+	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
+	public static LinkedBlockingQueue<String> weaponQueue = new LinkedBlockingQueue<String>();
 
 	public static void reset(Stage primaryStage, MusicPlayer m) {
 		// set up game groups
@@ -123,7 +124,7 @@ public class MainGame {
 		double[] yOffset = { 0 };
 
 		// make a rectangle
-		Rectangle gameRect = new Rectangle(WIDTH-2, HEIGHT-2);
+		Rectangle gameRect = new Rectangle(WIDTH - 2, HEIGHT - 2);
 		gameRect.setLayoutX(1);
 		gameRect.setLayoutY(1);
 
@@ -137,7 +138,7 @@ public class MainGame {
 
 		// make a toolbox
 		AnchorPane toolbox = new Toolbox().toolbar(primaryStage, 3, "CubeFace");
-		toolbox.setPrefWidth(WIDTH-2);
+		toolbox.setPrefWidth(WIDTH - 2);
 		toolbox.setId("toolbox");
 
 		// make an audio button
@@ -147,22 +148,20 @@ public class MainGame {
 		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
-		
+
 		music = m;
 		audio.setOnAction(e -> {
-			
-			muted = (muted)? false : true;
-			
+
+			muted = (muted) ? false : true;
+
 			if (muted) {
-				
+
 				music.stop();
-			}
-			else {
-				
+			} else {
+
 				music.play();
 			}
-			
-			
+
 			MainGame.setGameFocus();
 		});
 		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
@@ -185,18 +184,10 @@ public class MainGame {
 		enemiesList = new ArrayList<Enemy>();
 		ammoPickupList = new ArrayList<AmmoPickup>();
 		ammoPickupPoints = new ArrayList<>();
-		if(multiplayer){
-			for(Point2D.Double pickupPointcoords : Levels.MP_AMMO_SPAWNS){				// Creates MP ammo spawnpoints on map
-				ammoPickupPoints.add(new PickupPoint(pickupPointcoords));
-				spawnAmmoPickup(ammoPickupPoints.get(ammoPickupPoints.size()-1));		//Spawns pickup at newly created spawn point
-			}
-		}
 		player1 = new Player();
 		player1.setX(500);
 		player1.setY(500);
 		addSpriteToForeground(player1);
-		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-
 
 		// make a rectangle
 		Rectangle rect = new Rectangle(WIDTH, HEIGHT);
@@ -227,9 +218,9 @@ public class MainGame {
 		});
 
 		// loads the level
-		if(multiplayer){
+		if (multiplayer) {
 			Levels.generateLevel(Levels.MP_LEVEL);
-		}else {
+		} else {
 			Levels.generateLevel(Levels.LEVEL2);
 		}
 		// sets up the game camera
@@ -246,24 +237,29 @@ public class MainGame {
 		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
 
 		Input.addHandlers(primaryStage);
-		
+
 		if (!muted) {
-			
 			music.play();
+		}
+		if (multiplayer && host) {
+			for (Point2D.Double pickupPointcoords : Levels.MP_AMMO_SPAWNS) { // Creates MP ammo spawnpoints on map
+				ammoPickupPoints.add(new PickupPoint(pickupPointcoords));
+				spawnAmmoPickup(ammoPickupPoints.get(ammoPickupPoints.size() - 1)); // Spawns pickup at newly created
+																					// spawn point
+			}
 		}
 
 		fpsLong = System.currentTimeMillis();
 		normalisedFPS = 1;
 		gameStartTime = System.currentTimeMillis();
 
-
 		if (!multiplayer) {
-			
+
 			for (int i = 0; i < 5; i++) {
 				spawnRandomEnemy();
 			}
 		}
-		
+
 		spawnRandomAmmoPickup();
 
 		AnimationTimer mainGameLoop = new AnimationTimer() {
@@ -276,9 +272,9 @@ public class MainGame {
 					updatePickups();
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
+					weaponSpawnQueue();
 					killPlayer();
-
-				}else {
+				} else {
 					updateEnemies();
 				}
 				camera.update();
@@ -312,9 +308,9 @@ public class MainGame {
 			addSpriteToForeground(enemy);
 		}
 	}
-	
+
 	private static void spawnRandomAmmoPickup() {
-		if(!multiplayer){
+		if (!multiplayer) {
 
 			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650), null);
 			ammoPickupList.add(a);
@@ -327,14 +323,21 @@ public class MainGame {
 	}
 
 	/**
-	 * Spawns a randomised ammo pickup at the designated spawnpoint object passed to it.
+	 * Spawns a randomised ammo pickup at the designated spawnpoint object passed to
+	 * it.
 	 *
 	 * @param pickupPoint Multiplayer spawn point object for item pickups
 	 */
-	private static void	spawnAmmoPickup(PickupPoint pickupPoint){
-		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1), pickupPoint.getPosVector(), pickupPoint); //spawn random ammo pickup at location
+	public static void spawnAmmoPickup(PickupPoint pickupPoint) {
+		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1),
+				pickupPoint.getPosVector(), pickupPoint); // spawn random ammo pickup at location
 		ammoPickupList.add(ammoPickup);
 		addSpriteToForeground(ammoPickup);
+		if (host) {
+			String s = "/s/" + ammoPickup.type + "/" + pickupPoint.getPosVector().x + "/" + pickupPoint.getPosVector().y
+					+ "/";
+			networkingClient.send(s.getBytes());
+		}
 	}
 
 	/**
@@ -418,13 +421,11 @@ public class MainGame {
 	 * @param s the Sprite to be added
 	 */
 	public static void addSpriteToForeground(Sprite s) {
-		Platform.runLater(() -> {
-			foreground.getChildren().add(s);
-			spriteList.add(s);
-			if (s.getClass() == Player.class) {
-				playerList.add((Player) s);
-			}
-		});
+		foreground.getChildren().add(s);
+		spriteList.add(s);
+		if (s.getClass() == Player.class) {
+			playerList.add((Player) s);
+		}
 	}
 
 	/**
@@ -445,9 +446,12 @@ public class MainGame {
 	public static void addCollidable(CollidableRectangle c) {
 		collidables.getChildren().add(c);
 	}
-	
 
 	private static void sendNetworkUpdate() {
+		if (!player1.isAlive()) {
+			client.alive = false;
+			networkingClient.sendPlayerObj(client);
+		}
 		if (!Input.isKeyPressed(KeyCode.SPACE)) {
 			fired = false;
 		}
@@ -455,7 +459,7 @@ public class MainGame {
 		client.pos = player1.getDir();
 		double x = player1.getX();
 		double y = player1.getY();
-		
+
 		if (spawn == false) {
 			client.setX(x);
 			client.setY(y);
@@ -464,13 +468,11 @@ public class MainGame {
 			spawn = true;
 			return;
 		}
-		
+
 		// Standing still and shooting
-		if (Input.isKeyPressed(KeyCode.SPACE) &&
-			((x - client.getX()) == 0.0) &&
-			((y - client.getY()) == 0.0)) {
+		if (Input.isKeyPressed(KeyCode.SPACE) && ((x - client.getX()) == 0.0) && ((y - client.getY()) == 0.0)) {
 			if (fired == false) {
-				if(player1.getCurrentWeaponNum() != 1) {
+				if (player1.getCurrentWeaponNum() != 1) {
 					fired = true;
 				}
 				client.setX(x);
@@ -489,18 +491,18 @@ public class MainGame {
 
 		else if (Input.isKeyPressed(KeyCode.SPACE)) {
 			if (fired == false) {
-				if(player1.getCurrentWeaponNum() != 1) {
+				if (player1.getCurrentWeaponNum() != 1) {
 					fired = true;
 				}
 				client.shoot = true;
 			}
 		}
-			// Moving
-			client.setX(x);
-			client.setY(y);
-			client.setHealth(player1.getHealth());
-			networkingClient.sendPlayerObj(client);
-			client.shoot = false;
+		// Moving
+		client.setX(x);
+		client.setY(y);
+		client.setHealth(player1.getHealth());
+		networkingClient.sendPlayerObj(client);
+		client.shoot = false;
 	}
 
 	private static void getPlayerUpdatesFromQueue() {
@@ -528,7 +530,8 @@ public class MainGame {
 						FacingDir m = play.get(id).getdir();
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
-						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos, play.get(id).getplayerDimensions(), vect);
+						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos,
+								play.get(id).getplayerDimensions(), vect);
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
@@ -537,8 +540,8 @@ public class MainGame {
 	}
 
 	/**
-	 * Updates each ai controlled enemy in game - handles movement, damage and pathfinding for each enemy.
-	 * Removes dead enemies from the game.
+	 * Updates each ai controlled enemy in game - handles movement, damage and
+	 * pathfinding for each enemy. Removes dead enemies from the game.
 	 */
 	private static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
@@ -568,23 +571,23 @@ public class MainGame {
 	}
 
 	/**
-	 *  Updates item pick-up spawn points in multiplayer mode.
-	 *  Checks for spawns/despawns on each designated point, and implements a respawn cooldown for pickup items.
+	 * Updates item pick-up spawn points in multiplayer mode. Checks for
+	 * spawns/despawns on each designated point, and implements a respawn cooldown
+	 * for pickup items.
 	 */
 	private static void updatePickups() {
 
 		/*
-		for (int i = 0; i < ammoPickupList.size(); i++) {
-			
-			ammoPickupList.get(i).update();
-		}*/
-		for(PickupPoint pickupPoint: ammoPickupPoints){
-			if(pickupPoint.update()){				//If an item is due to spawn at this point, spawn the item.
+		 * for (int i = 0; i < ammoPickupList.size(); i++) {
+		 * 
+		 * ammoPickupList.get(i).update(); }
+		 */
+		for (PickupPoint pickupPoint : ammoPickupPoints) {
+			if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
 				spawnAmmoPickup(pickupPoint);
 			}
 		}
 	}
-	
 
 	public static void removeAllMp() {
 		for (ConcurrentHashMap.Entry<String, Player> players : play.entrySet()) {
@@ -602,31 +605,52 @@ public class MainGame {
 	public static ConcurrentLinkedQueue<Sprite> getSpriteList() {
 		return spriteList;
 	}
-	
-	
+
+	private static void weaponSpawnQueue() {
+		while (!weaponQueue.isEmpty()) {
+			String weapon = weaponQueue.poll();
+			String[] attributes = weapon.split("/");
+			int type = 0;
+			double x = 0.00;
+			double y = 0.00;
+			try {
+				type = Integer.parseInt(attributes[0]);
+				x = Double.parseDouble(attributes[1]);
+				y = Double.parseDouble(attributes[2]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+			Point2D.Double point = new Point2D.Double(x, y);
+			PickupPoint pointtopic = new PickupPoint(point);
+			AmmoPickup ammoPickup = new AmmoPickup((type), (new Vector2(x, y)), pointtopic); // spawn random ammo pickup
+																								// at location
+			ammoPickupList.add(ammoPickup);
+			addSpriteToForeground(ammoPickup);
+		}
+	}
+
 	private static void killPlayer() {
-		while(!deathQueue.isEmpty()){
-			String playerToKill = deathQueue.poll();
-			String messageArr[] = playerToKill.split("/");
-			play.get(messageArr[0]).delete();
+		while (!deathQueue.isEmpty()) {
+			ClientSender playerToKill = deathQueue.poll();
+			play.get(playerToKill.getID()).setHealth(0);
 		}
 	}
 
 	public static void newPlayer(ClientSender data) {
 		String id = data.getID();
-		if(!play.containsKey(data.getID())) {
-				play.put(id, new Player());
-				Player player = play.get(id);
-				player.setX(data.getX());
-				player.setY(data.getY());
-				player.setId(id);
-				player.mp = true;
-				player.weaponManager.getCurrentWeapon().test = true;
-				player.weaponManager.mp = true;
-				addSpriteToForeground(player);
+		if (!play.containsKey(data.getID())) {
+			play.put(id, new Player());
+			Player player = play.get(id);
+			player.setX(data.getX());
+			player.setY(data.getY());
+			player.setId(id);
+			player.mp = true;
+			player.weaponManager.getCurrentWeapon().test = true;
+			player.weaponManager.mp = true;
+			addSpriteToForeground(player);
 		}
 	}
-	
+
 	/**
 	 * returns a Sprite based off its unique ID
 	 * 
@@ -641,18 +665,23 @@ public class MainGame {
 		}
 		return null;
 	}
+
 	public static void addZombie() {
-		Zombie zombie = new Zombie(500,500);
+		Zombie zombie = new Zombie(500, 500);
 		addSpriteToForeground(zombie);
 	}
-	
+
 	public static void setUpClientThread(String host, int port, String name) {
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-		networkingClient = new Client(host,port,name);
+		networkingClient = new Client(host, port, name);
 		networkingClient.start();
 	}
 
 	public static Client getNetworkingClient() {
 		return networkingClient;
+	}
+
+	public static Point2D.Double pick(double x, double y) {
+		return new Point2D.Double(x, y);
 	}
 }

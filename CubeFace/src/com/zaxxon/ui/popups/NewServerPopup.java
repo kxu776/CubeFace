@@ -1,5 +1,6 @@
 package com.zaxxon.ui.popups;
 
+import com.zaxxon.networking.PortNumber;
 import com.zaxxon.networking.Server;
 
 import com.zaxxon.ui.MainMenu;
@@ -11,7 +12,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -39,50 +39,42 @@ public class NewServerPopup {
 
 		// ****************************CONTENTS
 
-		Label label = new Label("Please enter the following details:");
+		Label label = new Label("Server Menu");
 
 		// ***********ENTER DETAILS
 
 		// server port
 
-		Label port = new Label("Server Port:");
+		Label port = new Label("Create a game");
 		GridPane.setConstraints(port, 0, 0);
-		TextField portField = new TextField();
-		GridPane.setConstraints(portField, 1, 0);
+		 // TextField portField = new TextField();
+		 // GridPane.setConstraints(portField, 1, 0);
 
 		// make server button
 
-		Button makeServer = new Button("Make server");
+		Button makeServer = new Button("Make a server");
 		makeServer.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				int port = 0;
-				String portStr = null;
 				Server server;
 
-				portStr = portField.getText().trim();
+			// 	portStr = portField.getText().trim();
 
-				try {
-					port = Integer.parseInt(portStr);
-				} catch (NumberFormatException e) {
-					return;
-				}
-
-				if (port < 1000 || port > 65535) {
-					System.out.println("Try a different port number ");
-					return;
-				} else {
+			
 					// get info from text field and pass to networking
-					server = new Server(port);
-					server.start();
-
+					server = new Server(PortNumber.number);
+					server.start();	
 					// Expect to fail if same port num
-
+					
+					try {
+						Thread.sleep(1000);
+						ServerConfirmationPopup.setIP(server.getServerIP());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					popupwindow.close();
 					// open server confirmation popup
-
-					ServerConfirmationPopup.display(primaryStage, renderedScene);
-				}
+					ServerConfirmationPopup.display(primaryStage, renderedScene);					
 			}
 		});
 
@@ -96,7 +88,7 @@ public class NewServerPopup {
 
 		// gridpane for the center
 		GridPane gridPane = new GridPane();
-		gridPane.getChildren().addAll(port, portField, makeServer);
+		gridPane.getChildren().addAll(port, makeServer);
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setHgap(20);
 
