@@ -148,7 +148,7 @@ public class HelpScreen {
 
 
 
-        Scene helpScreen = new Scene(everything, 1000, 500);
+        Scene helpScreen = new Scene(everything, MainMenu.WIDTH, MainMenu.HEIGHT);
         helpScreen.getStylesheets().add(HelpScreen.class.getResource("css/helpscreen.css").toString()); //add the stylesheet
 
 
