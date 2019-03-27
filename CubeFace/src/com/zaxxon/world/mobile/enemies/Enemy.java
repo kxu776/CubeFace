@@ -3,7 +3,6 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;
@@ -343,7 +342,6 @@ public abstract class Enemy extends MovableSprite {
 	 * @return true if an unobstructed line-of-sight exists between enemy and player
 	 */
 	public boolean lineOfSight() {
-		boolean lineOfSight = false;
 		ArrayList<Bounds> wallBounds = Wall.getAllWallBounds();
 		Line line = new Line(this.getX(), this.getY(), pX + 32, pY + 32);
 		for (Bounds bounds : wallBounds) {

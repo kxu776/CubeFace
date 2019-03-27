@@ -184,8 +184,6 @@ public class WallCollision {
 	    	
 		double wallBuffer = 0.5;
 		Bounds pb = movingObject;
-		double w = pb.getWidth();
-		double h = pb.getHeight();
 		
 		double xDist = 0;
 		double yDist = 0;

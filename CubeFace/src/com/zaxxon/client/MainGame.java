@@ -15,13 +15,11 @@ import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.popups.GameOverPopup;
 import com.zaxxon.ui.tools.Toolbox;
 import com.zaxxon.sound.MusicPlayer;
 
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.tools.StatsBox;
-import com.zaxxon.world.Camera;
 import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
@@ -306,7 +304,7 @@ public class MainGame {
 	}
 
 	/**
-	 * checks whether or not to spawn a new checkup, and if necessary spawns it
+	 * checks whether or not to spawn a new pickup, and if necessary spawns it
 	 */
 	private static void spawnPickupCheck() {
 		if (System.currentTimeMillis() >= nextPickupSpawnTime) {
@@ -351,9 +349,11 @@ public class MainGame {
 				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
 
+	/**
+	 * spawns a random pickup in the world
+	 */
 	private static void spawnRandomAmmoPickup() {
 		if (!multiplayer) {
-			double randomPercentage = Math.random();
 			Tile randomTile;
 			do {
 				randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
@@ -649,7 +649,6 @@ public class MainGame {
 	private static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
-		boolean updatedPlayerPos = false;
 		for (Enemy sprite : enemiesList) {
 			if (!sprite.isAlive()) {
 				killList.add(sprite); // Cannot kill sprite during iteration

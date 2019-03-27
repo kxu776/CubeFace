@@ -1,7 +1,6 @@
 package com.zaxxon.world.mobile;
 
 import com.zaxxon.maths.Vector2;
-import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Sprite;
 
 import java.util.LinkedHashMap;
@@ -10,9 +9,8 @@ import java.util.LinkedHashMap;
  * Abstract representation of a mobile sprite.
  */
 public abstract class MovableSprite extends Sprite {
-	private double velocityX = 0;
-	private double velocityY = 0;
-	private double movementSpeed = 0;
+	protected double velocityX = 0;
+	protected double velocityY = 0;
 	protected double health = 0;
 
 	public Player lastHitReceived;
