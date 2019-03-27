@@ -308,7 +308,7 @@ public class MainGame {
 	 */
 	private static void spawnPickupCheck() {
 		if (System.currentTimeMillis() >= nextPickupSpawnTime) {
-			spawnRandomEnemy();
+			spawnRandomAmmoPickup();
 		}
 	}
 
