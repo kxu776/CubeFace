@@ -90,6 +90,7 @@ public class MainGame {
 	private static double normalisedFPS;
 	private static long gameStartTime;
 	private static long nextEnemySpawnTime;
+	private static long nextPickupSpawnTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
@@ -278,6 +279,7 @@ public class MainGame {
 					weaponSpawnQueue();
 				} else {
 					spawnZombieCheck();
+					spawnPickupCheck();
 					updateEnemies();
 				}
 				camera.update();
@@ -286,7 +288,10 @@ public class MainGame {
 		};
 		mainGameLoop.start();
 	}
-	
+
+	/**
+	 * ends the game loop
+	 */
 	public static void stop() {
 		mainGameLoop.stop();
 		camera.setSpriteToFollow(null);
@@ -297,6 +302,15 @@ public class MainGame {
 	 */
 	private static void spawnZombieCheck() {
 		if (System.currentTimeMillis() >= nextEnemySpawnTime) {
+			spawnRandomEnemy();
+		}
+	}
+
+	/**
+	 * checks whether or not to spawn a new checkup, and if necessary spawns it
+	 */
+	private static void spawnPickupCheck() {
+		if (System.currentTimeMillis() >= nextPickupSpawnTime) {
 			spawnRandomEnemy();
 		}
 	}
@@ -340,14 +354,31 @@ public class MainGame {
 
 	private static void spawnRandomAmmoPickup() {
 		if (!multiplayer) {
+			double randomPercentage = Math.random();
+			Tile randomTile;
+			do {
+				randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
+				int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
+				int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
+				// checks the tile isn't a wall
+				if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
+					continue;
+				}
+				int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
+				int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
+				// ensures zombie is at least 3 tiles away from the player so doesn't spawn too
+				// close
+				if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
+					break;
+				}
+			} while (true);
 
-			AmmoPickup a = new AmmoPickup(0, new Vector2(500, 650), null);
+			int pickupType = ThreadLocalRandom.current().nextInt(0, 3);
+
+			AmmoPickup a = new AmmoPickup(pickupType, new Vector2(randomTile.getX(), randomTile.getY()), null);
 			ammoPickupList.add(a);
 			addSpriteToForeground(a);
-
-			AmmoPickup b = new AmmoPickup(2, new Vector2(500, 800), null);
-			ammoPickupList.add(b);
-			addSpriteToForeground(b);
+			nextPickupSpawnTime = System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(10000, 30000);
 		}
 	}
 
@@ -359,24 +390,24 @@ public class MainGame {
 	 */
 	public static void spawnAmmoPickup(PickupPoint pickupPoint) {
 		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1),
-													pickupPoint.getPosVector(), pickupPoint); // spawn random ammo pickup at location
+				pickupPoint.getPosVector(), pickupPoint); // spawn random ammo pickup at location
 		if (host) {
 			String s = "/s/" + ammoPickup.type + "/" + pickupPoint.getPosVector().x + "/" + pickupPoint.getPosVector().y
 					+ "/";
 			networkingClient.send(s.getBytes());
 		}
-		if(!ammoPickupList.contains(ammoPickup)) {
+		if (!ammoPickupList.contains(ammoPickup)) {
 			ammoPickupList.add(ammoPickup);
 			addSpriteToForeground(ammoPickup);
 		}
 	}
-	
+
 	public static void displayAllGuns(PickupPoint pickupPoint) {
 		for (int i = 0; i < ammoPickupList.size(); i++) {
 			ammoPickupList.get(i);
-		String s = "/s/" + ammoPickupList.get(i).type + "/" + pickupPoint.getPosVector().x + "/" + pickupPoint.getPosVector().y
-				+ "/";
-		networkingClient.send(s.getBytes());
+			String s = "/s/" + ammoPickupList.get(i).type + "/" + pickupPoint.getPosVector().x + "/"
+					+ pickupPoint.getPosVector().y + "/";
+			networkingClient.send(s.getBytes());
 		}
 	}
 
@@ -506,7 +537,7 @@ public class MainGame {
 			player1.setX(700);
 			player1.setY(700);
 			player1.reset();
-			client.pos =2;
+			client.pos = 2;
 			client.alive = false;
 			client.setX(700);
 			client.setY(700);
@@ -572,7 +603,7 @@ public class MainGame {
 
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
-			if(data.getID() == null) {
+			if (data.getID() == null) {
 				return;
 			}
 			String id = data.getID().trim();
@@ -582,8 +613,8 @@ public class MainGame {
 			while (iterator.hasNext()) {
 				Sprite sprite = iterator.next();
 				if (sprite.getId().equals(id)) {
-					
-					if(data.alive == false) {
+
+					if (data.alive == false) {
 						play.remove(id);
 						removeFromGame(data.getID());
 						newPlayer(data);
