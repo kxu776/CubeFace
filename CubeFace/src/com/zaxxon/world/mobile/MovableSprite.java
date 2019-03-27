@@ -1,6 +1,7 @@
 package com.zaxxon.world.mobile;
 
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Sprite;
 
 import java.util.LinkedHashMap;

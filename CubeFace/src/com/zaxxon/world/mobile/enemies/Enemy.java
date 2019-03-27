@@ -3,6 +3,7 @@ package com.zaxxon.world.mobile.enemies;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.gameart.SpriteImages;
 import com.zaxxon.maths.Vector2;
+import com.zaxxon.ui.tools.StatsBox;
 import com.zaxxon.world.Wall;
 import com.zaxxon.world.mobile.MovableSprite;
 import com.zaxxon.world.mobile.Player;

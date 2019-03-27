@@ -26,7 +26,8 @@ public class StatsBox {
         health.setId("health");
 
         //health bar
-        AnchorPane healthBarPane = new HealthBar().makeHealthbar();
+        healthBar = new HealthBar();
+        AnchorPane healthBarPane = healthBar.makeHealthbar();
         healthBarPane.setMinHeight(10);
 
         //opponent health label
@@ -34,7 +35,8 @@ public class StatsBox {
         opHealth.setId("health");
 
         //opponent health bar
-        AnchorPane opHealthBarPane = new HealthBar().makeHealthbar();
+        opHealthBar = new HealthBar();
+        AnchorPane opHealthBarPane = opHealthBar.makeHealthbar();
         opHealthBarPane.setMinHeight(10);
 
         //vbox for health
@@ -109,27 +111,19 @@ public class StatsBox {
     }
 
     public static void updateWeapon(String newWeapon) {
-
         weapon.setText(newWeapon.toUpperCase() );
-
     }
 
     public static void updateHealthBar(Integer newHealth) {
-
-        healthBar.updateHealthBar(newHealth);
-
+    	opHealthBar.updateHealthBar(newHealth);
     }
 
     public static void updateOpHealthBar(Integer newHealth) {
-
-        opHealthBar.updateHealthBar(newHealth);
-
+    	healthBar.updateHealthBar(newHealth);
     }
 
     public static void updateScore(Integer newScore) {
-
         score.setText(newScore.toString());
-
     }
 
 }
