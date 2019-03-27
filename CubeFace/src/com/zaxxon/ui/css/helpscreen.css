@@ -1,46 +1,41 @@
-
 .root {
-    -fx-background-image: url(../img/gui-prototypes.png);
-    -fx-background-repeat: repeat;
+	-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #e2f4b3, #05abb1);
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";
     -fx-border-style: solid;
     -fx-border-color:#05abb1;
     -fx-border-radius:4px;
     -fx-text-fill:white;
-
-    }
+}
 
 .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    }
+}
 
 #plus {
     -fx-text-fill: white;
     -fx-font-size:30px;
     -fx-padding: 8 15 0 15;
-    }
+}
 
 #toolbox {
-
     -fx-background-color: #c1e9b3;
-    -fx-border-width: 0 0 1 0; -fx-border-color: white;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
 }
 
 #title {
     -fx-font-size: 20px;
     -fx-font-family: "Cube";
     -fx-text-fill:#06abb1;
-    }
+}
 
 #heading {
--fx-font-size:15px;
+	-fx-font-size:15px;
 }
 
 #back {
     -fx-background-color: none;
     -fx-text-fill: white;
-
 }
-

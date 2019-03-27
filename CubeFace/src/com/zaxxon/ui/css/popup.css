@@ -1,26 +1,23 @@
-
 .root {
-    -fx-background-image: url(../img/popup-bg.png);
-    -fx-background-repeat: repeat;
+	-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #e2f4b3, #05abb1);
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";
     -fx-border-style: solid;
-        -fx-border-width: 1 1 1 1;
-        -fx-border-color:white;
-        -fx-border-radius:4px;
-        -fx-text-fill:white;
-
-    }
+    -fx-border-width: 1 1 1 1;
+    -fx-border-color:white;
+    -fx-border-radius:4px;
+    -fx-text-fill:white;
+}
 
 .button {
     -fx-background-color: #e1f4b3;
-        -fx-background-size: 60%;
-        -fx-padding:5 5 5 5;
-        -fx-background-repeat: no-repeat;
-        -fx-background-position: center;
-        -fx-background-radius: 0;
-        -fx-background-insets: 0;
-        -fx-text-fill: #06abb1;
+    -fx-background-size: 60%;
+    -fx-padding:5 5 5 5;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: #06abb1;
 }
 
 .button:hover {
@@ -34,11 +31,13 @@
 
 #toolbarbutton {
     -fx-background-color: none;
-    -fx-border-width: 0 0 0 1; -fx-border-color: white;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: white;
 }
 
 #toolbar {
-    -fx-border-width: 0 0 1 0; -fx-border-color: white;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
 }
 
 #tbTitle {

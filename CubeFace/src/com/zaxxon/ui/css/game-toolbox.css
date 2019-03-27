@@ -1,39 +1,30 @@
-
-
 .root {
-    -fx-background-color: #c1e9b3;
-    -fx-background-image: url(../img/popup-bg.png);
-    -fx-background-repeat: repeat;
+	-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #e2f4b3, #05abb1);
     -fx-overflow: hidden;
     -fx-font-family: "VCR OSD Mono";
     -fx-border-style: solid;
     -fx-border-color:white;
     -fx-border-radius:4px;
     -fx-font-family: white;
-
-    }
-
+}
 
 #toolbarbutton {
     -fx-padding: 5 5 5 5;
     -fx-background-color: none;
-    -fx-border-width: 0 0 0 1; -fx-border-color: white;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: white;
 }
 
 #toolbarbutton:hover {
     -fx-background-color: #80d3b1;
 }
 
-
 #toolbar {
-    -fx-border-width: 0 0 1 0; -fx-border-color: white;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
 }
 
 #tbTitle {
     -fx-padding: 5 0 0 5;
     -fx-text-fill: white;
 }
-
-
-
-
