@@ -11,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -22,10 +19,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 
-public class QuitPopup {
+public class GameOverPopup {
 
 
-    public static void display(Stage primaryStage)
+    public static void display(Stage primaryStage, String score, Scene mainmenu)
     {
         double[] xOffset = {0};
         double[] yOffset = {0};
@@ -39,63 +36,43 @@ public class QuitPopup {
 
 
         //****************************CONTENTS
+        //game over label
+        Label gameOver = new Label("GAME OVER!");
+        gameOver.setId("gameover");
 
-        Label label = new Label("Are you sure you would like to quit?");
-        GridPane.setConstraints(label, 0, 0);
+        Label scoreLbl = new Label("SCORE:");
 
-        //***********YES - quit
-        Button single = new Button("Yes");
-        GridPane.setConstraints(single,0, 0);
-        single.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	if(MainGame.multiplayer) {
-            		MainGame.getNetworkingClient().disconnect();
-            	}
-                popupwindow.close();
-                primaryStage.setResizable(false);
-                primaryStage.setScene(MainMenu.mainmenu);
-            
-        }});
+        Label scoreNum = new Label(score);
 
+        //Hbox for score labels
+        HBox scoreLayout = new HBox(scoreLbl, scoreNum);
+        scoreLayout.setAlignment(Pos.CENTER);
 
-        //************ NO - continue game
-        Button multiplayer= new Button("No");
-        GridPane.setConstraints(multiplayer, 1, 0);
-        multiplayer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	MainGame.setGameFocus();
-                popupwindow.close();
-                //JoinGamePopup.display(primaryStage, renderedScene);
-            }
+        Button finish = new Button("FINISH");
+        finish.setOnAction(e-> {
+            popupwindow.close();
+            primaryStage.setResizable(false);
+            primaryStage.setScene(mainmenu);
+
         });
 
+        //vbox to hold it all
+        VBox content = new VBox(gameOver, scoreLayout, finish);
+        content.setAlignment(Pos.CENTER);
+        content.setSpacing(15);
 
-        //********************LAYOUT**************************
 
-        //VBox for the middle
-        VBox middle = new VBox();
-        middle.getChildren().add(label);
-        middle.setAlignment(Pos.CENTER);
-        middle.setPadding(new Insets(0, 20, 0, 20));
 
-        //GridPane for the bottom
-        GridPane bottom = new GridPane();
-        bottom.getChildren().addAll(single, multiplayer);
-        bottom.setAlignment(Pos.CENTER);
-        bottom.setHgap(20);
-        bottom.setPadding(new Insets(0, 20, 20, 20));
+
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 1, "Game Mode");
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 5, "You died!");
 
 
         //borderPane for it all
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(toolbox);
-        borderPane.setCenter(middle);
-        borderPane.setBottom(bottom);
+        borderPane.setCenter(content);
 
         //make a rectangle and set clip
         Rectangle rect = new Rectangle(400,150);
@@ -127,7 +104,7 @@ public class QuitPopup {
 
 
         popupwindow.setScene(scene1);
-        popupwindow.showAndWait();
+        popupwindow.show();
 
     }
 

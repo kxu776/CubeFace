@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.*;
+import sun.applet.Main;
 
 
 public class ArityPopup {
@@ -48,6 +49,7 @@ public class ArityPopup {
         single.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                MainGame.multiplayer = false;
                 popupwindow.close();
                 primaryStage.setScene(MainGame.getRenderedScene());
                 MainGame.start(primaryStage);
@@ -61,6 +63,7 @@ public class ArityPopup {
         multiplayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                MainGame.multiplayer = true;
                 popupwindow.close();
                 JoinGamePopup.display(primaryStage, renderedScene);
             }

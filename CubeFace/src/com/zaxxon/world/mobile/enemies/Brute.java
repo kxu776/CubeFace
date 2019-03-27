@@ -12,6 +12,10 @@ import com.zaxxon.gameart.SpriteImages;
  * greater than that of a base zombie.
  */
 public class Brute extends Enemy {
+	
+
+	protected static final int TARGET_WIDTH = 80;
+	protected static final int TARGET_HEIGHT = 80;
 
 	/**
 	 * Class constructor - specifies spawn coordinates

@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class HelpScreen {
@@ -24,7 +25,7 @@ public class HelpScreen {
         Font.loadFont(HelpScreen.class.getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
         Font.loadFont(HelpScreen.class.getResourceAsStream("Cube.ttf"), 9);
 
-
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         //make a title for the screen
         Label title = new Label("GAME CONTROLS");
@@ -117,7 +118,7 @@ public class HelpScreen {
         content.getChildren().addAll(left,changeWeaponLayout);
         content.setAlignment(Pos.CENTER);
         content.setHgap(35);
-        content.setPadding(new Insets(0, 0, 90, 0));
+        content.setPadding(new Insets(0, 0, 120, 0));
 
 
         //make a toolbox
