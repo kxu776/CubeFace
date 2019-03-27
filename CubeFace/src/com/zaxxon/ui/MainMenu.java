@@ -75,9 +75,24 @@ public class MainMenu {
         //AUDIO BUTTON
 
         audio = new Button("AUDIO");
-        audio.setOnAction(e -> 
-        music.stop());
+        audio.setOnAction(e -> {
+       
+        MainGame.muted = (MainGame.muted)? false : true;
+		
+		if (MainGame.muted) {
+			
+			music.stop();
+		}
+		else {
+			
+			music.play();
+		}
+        });
+        
         grid1.setConstraints(audio, 0, 4);
+        
+        music.play();
+        MainGame.muted = false;
 
 
 

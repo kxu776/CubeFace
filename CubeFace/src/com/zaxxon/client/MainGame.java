@@ -319,7 +319,7 @@ public class MainGame {
 			ammoPickupList.add(a);
 			addSpriteToForeground(a);
 
-			AmmoPickup b = new AmmoPickup(1, new Vector2(500, 800), null);
+			AmmoPickup b = new AmmoPickup(2, new Vector2(500, 800), null);
 			ammoPickupList.add(b);
 			addSpriteToForeground(b);
 		}
