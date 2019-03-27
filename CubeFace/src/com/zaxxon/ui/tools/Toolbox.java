@@ -49,15 +49,14 @@ public class Toolbox {
 
 
         Button close = new Button();
-        if (type ==3) {
-            close.setOnAction(e -> {
-            	QuitPopup.display(popupwindow);
-            	MainGame.setGameFocus();
-            });
-        } else {
-            close.setOnAction(e -> popupwindow.close());
-            
-        }
+        close.setOnAction(e->{
+                if(type ==3) {
+                    QuitPopup.display(popupwindow);
+                    MainGame.setGameFocus();
+                } else {
+                    popupwindow.close();
+                }
+        });
 
         //load the icon
         Image closeIcon = new Image(MainMenu.class.getResource("img/close.png").toString());
