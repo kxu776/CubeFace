@@ -240,7 +240,7 @@ public class Player extends MovableSprite{
     			
     			else {
     				
-    				//health
+    				this.heal(100);
     			}
     			
     			MainGame.ammoPickupList.get(i).delete();

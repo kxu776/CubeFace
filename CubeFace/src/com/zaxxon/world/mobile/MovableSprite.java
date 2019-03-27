@@ -115,7 +115,7 @@ public abstract class MovableSprite extends Sprite {
 	 */
 	public void heal(double healing) {
 
-		health += healing;
+		health = Math.min(100, health + healing);
 	}
 
 	/**
