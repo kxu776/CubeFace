@@ -36,6 +36,7 @@ public class StatsBox {
         AnchorPane healthBarPane = healthBar.makeHealthbar();
         healthBarPane.setMinHeight(10);
 
+
         //opponent health label
         Label opHealth = new Label("OPPONENT HEALTH:");
         opHealth.setId("health");
@@ -152,11 +153,11 @@ public class StatsBox {
     }
 
     public static void updateHealthBar(Integer newHealth) {
-    	opHealthBar.updateHealthBar(newHealth);
+    	healthBar.updateHealthBar(newHealth);
     }
 
     public static void updateOpHealthBar(Integer newHealth) {
-    	healthBar.updateHealthBar(newHealth);
+    	opHealthBar.updateHealthBar(newHealth);
     }
 
     public static void updateScore(Integer newScore) {
