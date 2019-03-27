@@ -120,8 +120,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		double[] xOffset = { 0 }; // array for making window movable
-		double[] yOffset = { 0 };
+		double[] xOffset = {0}; // array for making window movable
+		double[] yOffset = {0};
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(MainMenu.WIDTH - 2, MainMenu.HEIGHT - 2);
@@ -216,7 +216,15 @@ public class MainGame {
 				primaryStage.setY(event.getScreenY() - yOffset[0]);
 			}
 		});
+	}
 
+
+	/**
+	 * begins the main game loop
+	 *
+	 * @param primaryStage the Stage to render on
+	 */
+	public static void start(Stage primaryStage) {
 		// loads the level
 		if (multiplayer) {
 			Levels.generateLevel(Levels.MP_LEVEL);
@@ -225,14 +233,6 @@ public class MainGame {
 		}
 		// sets up the game camera
 		camera = new TrackingCamera(player1);
-	}
-
-	/**
-	 * begins the main game loop
-	 * 
-	 * @param primaryStage the Stage to render on
-	 */
-	public static void start(Stage primaryStage) {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		setGameFocus();
