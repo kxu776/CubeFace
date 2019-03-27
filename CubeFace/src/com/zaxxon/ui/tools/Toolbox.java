@@ -15,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import static com.zaxxon.ui.MainMenu.music;
+
 import java.awt.*;
 
 public class Toolbox {
@@ -53,6 +55,8 @@ public class Toolbox {
             if(type ==3) {
                 QuitPopup.display(popupwindow);
                 MainGame.setGameFocus();
+        		MainGame.stop();
+        		MainGame.reset(popupwindow, music);
             } else {
             	if(type == 2) {
                  popupwindow.close();

@@ -44,18 +44,22 @@ public class TrackingCamera extends Camera {
 
 	@Override
 	public void update() {
-		Bounds spriteBounds = spriteToFollow.getBoundsInParent();
-		Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
-		Window displayWindow = MainGame.getRenderedScene().getWindow();
-		Group world = MainGame.getWorld();
-		double offsetX = (spriteBounds.getMaxX() + spriteBounds.getMinX()) / 2;
-		double offsetY = (spriteBounds.getMaxY() + spriteBounds.getMinY()) / 2;
-		world.setTranslateX(
-				(int) ((positionX - offsetX) * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2));
-		world.setTranslateY(
-				(int) ((positionY - offsetY) * scaleY - worldBounds.getHeight() / 2 + displayWindow.getHeight() / 2));
-		world.setScaleX(scaleX);
-		world.setScaleY(scaleY);
+		try {
+			Bounds spriteBounds = spriteToFollow.getBoundsInParent();
+			Bounds worldBounds = MainGame.getWorld().getLayoutBounds();
+			Window displayWindow = MainGame.getRenderedScene().getWindow();
+			Group world = MainGame.getWorld();
+			double offsetX = (spriteBounds.getMaxX() + spriteBounds.getMinX()) / 2;
+			double offsetY = (spriteBounds.getMaxY() + spriteBounds.getMinY()) / 2;
+			world.setTranslateX(
+					(int) ((positionX - offsetX) * scaleX - worldBounds.getWidth() / 2 + displayWindow.getWidth() / 2));
+			world.setTranslateY((int) ((positionY - offsetY) * scaleY - worldBounds.getHeight() / 2
+					+ displayWindow.getHeight() / 2));
+			world.setScaleX(scaleX);
+			world.setScaleY(scaleY);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 }

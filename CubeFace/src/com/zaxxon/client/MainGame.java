@@ -78,6 +78,7 @@ public class MainGame {
 	private static boolean spawn = false;
 	private static boolean fired = false;
 	public static boolean muted = false;
+	private static AnimationTimer mainGameLoop;
 
 	private static MusicPlayer music;
 
@@ -265,7 +266,7 @@ public class MainGame {
 
 		spawnRandomAmmoPickup();
 
-		AnimationTimer mainGameLoop = new AnimationTimer() {
+		mainGameLoop = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				for (Player player : playerList) {
 					player.update(normalisedFPS);
@@ -285,6 +286,11 @@ public class MainGame {
 			}
 		};
 		mainGameLoop.start();
+	}
+	
+	public static void stop() {
+		mainGameLoop.stop();
+		camera.setSpriteToFollow(null);
 	}
 
 	/**
