@@ -476,12 +476,13 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
-			player1.relocate(700, 700);
+			player1.setX(700);
+			player1.setY(700);
 			player1.reset();
-			client.pos =1;
+			client.pos =2;
 			client.alive = false;
-			client.setX(player1.getX());
-			client.setY(player1.getY());
+			client.setX(700);
+			client.setY(700);
 			networkingClient.sendPlayerObj(client);
 			client.alive = true;
 
