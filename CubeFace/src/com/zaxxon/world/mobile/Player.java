@@ -106,8 +106,6 @@ public class Player extends MovableSprite {
 			this.setOpacity(0.6);
 			this.setEffect(lighting);
 			oneTimeOnly = false;
-			primaryStage.setMaxWidth(1000);
-			primaryStage.setMaxHeight(600);
 			GameOverPopup.display(primaryStage, String.valueOf(score), MainMenu.mainmenu);
 			return;
 		}

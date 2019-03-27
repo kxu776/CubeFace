@@ -150,8 +150,6 @@ public class MainGame {
 
 		// make an audio button
 		Button audio = new Button();
-		// load audio icon
-		// load the icon
 		Image audioIcon = new Image(MainMenu.class.getResource("img/audio.png").toString());
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
@@ -166,7 +164,7 @@ public class MainGame {
 			}
 			MainGame.setGameFocus();
 		});
-		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 25 0 0 5;");
+		audio.setStyle("-fx-background-color: none; -fx-border: none; -fx-padding: 27 0 0 5;");
 
 		// make an anchor pane to hold the game and the stats box
 		anchorPane = new AnchorPane();
@@ -238,10 +236,10 @@ public class MainGame {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		setGameFocus();
-		primaryStage.setWidth(renderedScene.getWindow().getWidth());
+		/*primaryStage.setWidth(renderedScene.getWindow().getWidth());
 		primaryStage.setHeight(renderedScene.getWindow().getHeight());
 		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
-		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
+		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());*/
 
 		Input.addHandlers(primaryStage);
 

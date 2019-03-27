@@ -53,7 +53,7 @@ public class QuitPopup {
             		MainGame.getNetworkingClient().disconnect();
             	}
                 popupwindow.close();
-
+                primaryStage.setResizable(false);
                 primaryStage.setScene(MainMenu.mainmenu);
             
         }});

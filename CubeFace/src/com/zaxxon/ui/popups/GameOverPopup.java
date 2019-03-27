@@ -50,8 +50,10 @@ public class GameOverPopup {
 
         Button finish = new Button("FINISH");
         finish.setOnAction(e-> {
-            primaryStage.setScene(mainmenu);
             popupwindow.close();
+            primaryStage.setResizable(false);
+            primaryStage.setScene(mainmenu);
+
         });
 
         //vbox to hold it all
@@ -64,7 +66,7 @@ public class GameOverPopup {
 
 
         //make a toolbox
-        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 5, "Game Mode");
+        AnchorPane toolbox = new Toolbox().toolbar(popupwindow, 5, "You died!");
 
 
         //borderPane for it all
