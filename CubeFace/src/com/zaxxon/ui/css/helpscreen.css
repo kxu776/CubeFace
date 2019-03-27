@@ -28,7 +28,9 @@
 #title {
     -fx-font-size: 20px;
     -fx-font-family: "Cube";
-    -fx-text-fill:#06abb1;
+    -fx-text-fill:white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
 
 #heading {
