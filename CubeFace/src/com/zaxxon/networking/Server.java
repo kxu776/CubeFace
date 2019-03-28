@@ -46,7 +46,7 @@ public class Server extends Thread {
 		try {
 			serverSocket = new DatagramSocket(SERVER_PORT);
 		} catch (BindException e) {
-			System.out.println("fuckoff");
+			e.printStackTrace();
 			return;
 		} catch (SocketException e) {
 			e.printStackTrace();
