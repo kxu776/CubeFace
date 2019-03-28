@@ -71,7 +71,7 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static ArrayList<PickupPoint> ammoPickupPoints;
-	private static Client networkingClient;
+	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static ClientSender client;
 	public static boolean host = false;
@@ -94,7 +94,6 @@ public class MainGame {
 	private static long nextPickupSpawnTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
-	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<String> weaponQueue = new LinkedBlockingQueue<String>();
 
 	/**
@@ -533,16 +532,14 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
-			player1.setX(700);
-			player1.setY(700);
+			player1.setX(Math.random()*1000);
+			player1.setY(Math.random()*1000);
 			player1.reset();
 			client.pos = 2;
 			client.alive = false;
-			client.setX(700);
-			client.setY(700);
+			client.setX(player1.getX());
+			client.setY(player1.getY());
 			networkingClient.sendPlayerObj(client);
-			client.alive = true;
-
 		}
 		client.alive = true;
 		if (!Input.isKeyPressed(KeyCode.SPACE)) {
@@ -608,13 +605,13 @@ public class MainGame {
 			String id = data.getID().trim();
 			newPlayer(data);
 
-			Iterator<Sprite> iterator = spriteList.iterator();
-			while (iterator.hasNext()) {
-				Sprite sprite = iterator.next();
+			for (Iterator<Sprite> iterator = spriteList.iterator(); iterator.hasNext();) {
+				Sprite sprite =  iterator.next();
+				
 				if (sprite.getId().equals(id)) {
-
-					
-					if(data.alive == false) {
+					if(!data.alive) {
+						player1.updateScore();
+						player1.displayStats();
 						play.get(id).reset();
 						sprite.setX(data.getX());
 						sprite.setY(data.getY());
@@ -643,6 +640,7 @@ public class MainGame {
 			}
 		}
 	}
+
 
 	/**
 	 * Updates each ai controlled enemy in game - handles movement, damage and
@@ -734,15 +732,6 @@ public class MainGame {
 		}
 	}
 
-	private static void killPlayer() {
-		while (!deathQueue.isEmpty()) {
-			ClientSender playerToKill = deathQueue.poll();
-			play.get(playerToKill.getID()).setHealth(0);
-			play.get(playerToKill.getID()).reset();
-			play.get(playerToKill.getID()).relocate(playerToKill.x, playerToKill.y);
-		}
-	}
-
 	public static void newPlayer(ClientSender data) {
 		String id = data.getID();
 		if (!play.containsKey(data.getID())) {
@@ -773,26 +762,24 @@ public class MainGame {
 		}
 		return null;
 	}
+	public static Player getPlayer() {
+		return player1;
+	}
 
 	public static void setUpClientThread(String host, int port, String name) {
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-		networkingClient = new Client(host, port, name);
+		networkingClient = new Client(host,port,name);
 		networkingClient.start();
-	}
-
-	public static Client getNetworkingClient() {
-		return networkingClient;
 	}
 
 	public static Point2D.Double pick(double x, double y) {
 		return new Point2D.Double(x, y);
 	}
 
-
-
-
-
-
+	public static Client getNetworkingClient() {
+		return networkingClient;
+	}
+	
 }
 
 

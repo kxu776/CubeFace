@@ -20,7 +20,7 @@ public class Server extends Thread {
 
 	private DatagramSocket serverSocket;
 	private Thread listenThread;
-	private Thread sendThread, weaponThread, stillActive;
+	private Thread sendThread, weaponThread,gameOverThread;
 	private boolean listening = false;
 	private final int SERVER_PORT;
 	private String SERVER_IP;
@@ -28,9 +28,9 @@ public class Server extends Thread {
 	private int MAX_PACKET_SIZE = 1024;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
-	protected ConcurrentHashMap<Integer, ServerClient> clients = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, ServerClient> clients = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, byte[]> lastKnownPos = new ConcurrentHashMap<>();
-
+	
 	@SuppressWarnings("unused")
 	private ByteArrayOutputStream baos;
 	private ObjectOutputStream out;
@@ -63,7 +63,6 @@ public class Server extends Thread {
 		}
 
 		// Make sure we can continue the program.
-		// activity = new PlayerActivity(this);
 		listenThread = new Thread(new Runnable() {
 			public void run() {
 				listen();
@@ -71,14 +70,12 @@ public class Server extends Thread {
 		});
 		MainGame.host = true;
 		listenThread.start();
-		// activity.start();
 	}
-
+	
 	public void send(final byte[] data, InetAddress address, int port) {
 		sendThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
 				DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
 				try {
 					if (listening == true) {
@@ -93,27 +90,21 @@ public class Server extends Thread {
 		sendThread.start();
 	}
 	
-	private void activity() {
-		stillActive = new Thread(new Runnable() {
+	public void gameOver() {
+		gameOverThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					sleep(15000);
-				} catch (InterruptedException e) {
+				sendToAll("/e/".getBytes());
+				sleep(100);
+				}
+				catch(InterruptedException e) {
 					e.printStackTrace();
 				}
-				for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-					if(c.getValue().getInactive() == 5 ) {
-						disconnect(c.getKey(), c.getValue().getAddress());
-					}
-					else {
-						send(("/p/").getBytes(),c.getValue().getAddress(),c.getKey());
-						c.getValue().increaceInactive();
-					}
-				}
+				close();
 			}
 		});
-		stillActive.start();
+		gameOverThread.start();
 	}
 	
 	public void weapons() {
@@ -141,7 +132,6 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 			process(packet);
-			// activity();	
 		}
 	}
 
@@ -152,6 +142,16 @@ public class Server extends Thread {
 			in = new ObjectInputStream(bais);
 			ClientSender data = (ClientSender) in.readObject();
 			data.setID(ID);
+			if(!data.alive) {
+				
+				if(clients.get(ID).getDeaths() >= 2) {
+						gameOver();
+				}
+				else {
+					clients.get(ID).incDeaths();
+					System.out.println(ID + " " + clients.get(ID).getDeaths());
+				}
+			}
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
 				out = new ObjectOutputStream(baos);
@@ -180,19 +180,19 @@ public class Server extends Thread {
 	}
 
 	protected void sendToAll(byte[] b) {
-		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			send(b, c.getValue().getAddress(), c.getKey());
+		for (HashMap.Entry<String, ServerClient> c : clients.entrySet()) {
+			send(b, c.getValue().getAddress(), c.getValue().getPort());
 		}
 	}
 
 	protected void sendToRelevant(byte[] b, int port, InetAddress address) {
-		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			if (port == c.getKey()) {
+		for (HashMap.Entry<String, ServerClient> c : clients.entrySet()) {
+			if (port == c.getValue().port) {
 				if (address.equals(c.getValue().getAddress())) {
 					continue;
 				}
 			}
-			send(b, c.getValue().getAddress(), c.getKey());
+			send(b, c.getValue().getAddress(), c.getValue().port);
 		}
 	}
 
@@ -202,12 +202,12 @@ public class Server extends Thread {
 		ServerClient associatedID;
 		byte[] playerAttributes;
 
-		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
+		for (HashMap.Entry<String, ServerClient> c : clients.entrySet()) {
 
 			// If only one player exists in the server
 			// we store their current location
 
-			if (port == c.getKey()) {
+			if (port == c.getValue().port) {
 				if (address.equals(c.getValue().getAddress())) {
 					associatedID = c.getValue();
 
@@ -244,7 +244,7 @@ public class Server extends Thread {
 			System.out.println("------------");
 			String id = UUID.randomUUID().toString().trim();
 
-			clients.put(packet.getPort(),
+			clients.put(id,
 					(new ServerClient(action.substring(3), packet.getAddress(), packet.getPort(), id)));
 
 			send(("/c/Connected/" + id + "/").getBytes(), address, port);
@@ -260,29 +260,24 @@ public class Server extends Thread {
 		}
 
 		else if (action.startsWith("/d/")) {
+			System.out.println("disconnected");
 				disconnect(port,address);
 				return;
 		}
 		else if(action.startsWith("/s/")) {
 				sendToRelevant(packet.getData(),port,address);
 				return;
-		}
-		
-//		else if(action.startsWith("/p/")) {
-//			for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-//				if((c.getKey() == port) && (address.equals(c.getValue().getAddress()))){
-//					c.getValue().resetActivity();
-//				}
-//			}
-//			return;
-//		}
-		
+		}	
 
 		// If we don't have enough players we just update the position of who is
 		// currently connected.
 		if (clients.size() < 2) {
-			String currentPlayer = clients.get(port).getID();
-			updatePos(packet.getData(), currentPlayer);
+			for (HashMap.Entry<String, ServerClient> c : clients.entrySet()) {
+				if(packet.getPort() == c.getValue().getPort() &&c.getValue().address.equals(packet.getAddress())) {
+					updatePos(packet.getData(), c.getKey());
+					return;
+				}
+			}
 			return;
 		}
 		
@@ -329,8 +324,8 @@ public class Server extends Thread {
 	
 	protected void disconnect(int port,InetAddress address) {
 		// Find who specifically disconnected
-		for (HashMap.Entry<Integer, ServerClient> c : clients.entrySet()) {
-			if (port == c.getKey() && address.equals(c.getValue().getAddress())) {
+		for (HashMap.Entry<String, ServerClient> c : clients.entrySet()) {
+			if (port == c.getValue().port && address.equals(c.getValue().getAddress())) {
 				String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
 				String disconnectIP = disconnectIParray[1];
 				
@@ -342,8 +337,10 @@ public class Server extends Thread {
 					return;
 				}
 				// Otherwise we tell everyone who disconnected and remove them.
+				
 				String idToRemove = c.getValue().getID();
 				String disconnectIT = "/d/" + idToRemove + "/";
+
 				lastKnownPos.remove(c.getValue().getID());
 				clients.remove(c.getKey(), c.getValue());
 				System.out.println(c.getKey() +" "+c.getValue().getAddress());

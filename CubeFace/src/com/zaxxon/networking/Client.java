@@ -98,6 +98,7 @@ public class Client extends Thread {
 			MainGame.getSpriteList().remove(MainGame.getSprite(throwAwayPlayer[2].trim()));
 			MainGame.removeFromGame(MainGame.getSprite(throwAwayPlayer[2]));
 			MainGame.play.remove(throwAwayPlayer[2].trim());
+
 			return;
 		}
 		else if(message.startsWith("/b/")) {
@@ -111,10 +112,19 @@ public class Client extends Thread {
 				}
 				return;
 		}
-//		else if(message.startsWith("/p/")) {
-//			send("/p/".getBytes());
-//			return;
-//		}
+		else if(message.startsWith("/e/")) {
+			System.out.println("/e/ recieved");
+			MainGame.getPlayer().end = true;
+			try {
+				sleep(100);
+			}
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+			MainGame.stop();
+			close();
+			return;
+		}
 		
 		if
 		(message.startsWith("/C/")){
@@ -161,10 +171,13 @@ public class Client extends Thread {
 	public void disconnect() {
 		send("/d/".getBytes());
 		running = false;
+		close();
+	}
+	private void close(){
+		running = false;
 		try {
 			if ((in == null)){
 				socket.close();		
-
 				if(bais == null) {
 					socket.close();		
 					return;

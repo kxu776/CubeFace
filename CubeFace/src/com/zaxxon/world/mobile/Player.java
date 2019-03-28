@@ -31,6 +31,7 @@ public class Player extends MovableSprite {
 	int height = 64;
 
 	double deltaTime;
+	public boolean end = false;
 	public boolean mp = false;
 
 	Vector2 inputDir = new Vector2();
@@ -102,7 +103,15 @@ public class Player extends MovableSprite {
 		if(!oneTimeOnly){
 			return;
 		}
-		if (!isAlive) {
+	
+		if (!isAlive && !mp) {
+			this.setOpacity(0.6);
+			this.setEffect(lighting);
+			oneTimeOnly = false;
+			GameOverPopup.display(primaryStage, String.valueOf(score), MainMenu.mainmenu);
+			return;
+		}
+		else if (end) {
 			this.setOpacity(0.6);
 			this.setEffect(lighting);
 			oneTimeOnly = false;
@@ -399,16 +408,22 @@ public class Player extends MovableSprite {
 	public void reset() {
 		heal(100.0);
 		isAlive = true;
-		facingDir = FacingDir.up;
-		weaponManager = new WeaponManager(this);
+		facingDir = FacingDir.down;
+		// weaponManager = new WeaponManager(this);
 	}
 
 	/**
 	 * @return velocity
 	 */
 	public Vector2 getVelocity() {
-
 		return velocity;
+	}
+	
+	public void updateScore() {
+		score +=1;
+	}
+	public void displayStats() {
+		StatsBox.updateScore(score);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.zaxxon.ui.popups;
 
-import com.zaxxon.client.MainGame;
 import com.zaxxon.ui.MainMenu;
 import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.ActionEvent;
@@ -107,7 +106,5 @@ public class GameOverPopup {
         popupwindow.show();
 
     }
-
-
 }
 
