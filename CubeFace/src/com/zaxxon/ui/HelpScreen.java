@@ -25,7 +25,7 @@ public class HelpScreen {
         Font.loadFont(HelpScreen.class.getResourceAsStream("VCR_OSD_MONO.ttf"), 9);
         Font.loadFont(HelpScreen.class.getResourceAsStream("Cube.ttf"), 9);
 
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
+       // primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         //make a title for the screen
         Label title = new Label("GAME CONTROLS");

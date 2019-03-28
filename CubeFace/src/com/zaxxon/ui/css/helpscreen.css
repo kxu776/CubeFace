@@ -30,7 +30,7 @@
     -fx-font-family: "Cube";
     -fx-text-fill:white;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(225,225,225,1), 10, 0, 0, 0);
 }
 
 #heading {
