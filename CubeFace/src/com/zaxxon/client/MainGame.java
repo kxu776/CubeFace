@@ -269,7 +269,6 @@ public class MainGame {
 				spawnRandomEnemy();
 			}
 		}
-
 		spawnRandomAmmoPickup();
 
 		mainGameLoop = new AnimationTimer() {
@@ -277,8 +276,8 @@ public class MainGame {
 				for (Player player : playerList) {
 					player.update(normalisedFPS, primaryStage);
 				}
+				updatePickups();
 				if (multiplayer) {
-					updatePickups();
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
 					weaponSpawnQueue();
@@ -692,9 +691,15 @@ public class MainGame {
 		 * 
 		 * ammoPickupList.get(i).update(); }
 		 */
-		for (PickupPoint pickupPoint : ammoPickupPoints) {
-			if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
-				spawnAmmoPickup(pickupPoint);
+		if (multiplayer) {
+			for (PickupPoint pickupPoint : ammoPickupPoints) {
+				if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
+					spawnAmmoPickup(pickupPoint);
+				}
+			}
+		} else {
+			for (AmmoPickup aP : ammoPickupList) {
+				aP.update();
 			}
 		}
 	}
@@ -770,6 +775,11 @@ public class MainGame {
 		return null;
 	}
 
+	/**
+	 * getter for the Player object
+	 * 
+	 * @return gets the Player
+	 */
 	public static Player getPlayer() {
 		return player1;
 	}
