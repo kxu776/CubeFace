@@ -25,7 +25,7 @@ public class Server extends Thread {
 	private final int SERVER_PORT;
 	private String SERVER_IP;
 	// private PlayerActivity activity;
-	private int MAX_PACKET_SIZE = 1024;
+	private int MAX_PACKET_SIZE = 512;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 
 	protected ConcurrentHashMap<String, ServerClient> clients = new ConcurrentHashMap<>();
@@ -46,6 +46,7 @@ public class Server extends Thread {
 		try {
 			serverSocket = new DatagramSocket(SERVER_PORT);
 		} catch (BindException e) {
+			System.out.println("fuckoff");
 			return;
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -101,10 +102,16 @@ public class Server extends Thread {
 				catch(InterruptedException e) {
 					e.printStackTrace();
 				}
-				close();
 			}
 		});
 		gameOverThread.start();
+		try {
+			sleep(100);
+			close();
+		}
+		catch(InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void weapons() {
@@ -144,7 +151,7 @@ public class Server extends Thread {
 			data.setID(ID);
 			if(!data.alive) {
 				
-				if(clients.get(ID).getDeaths() >= 2) {
+				if(clients.get(ID).getDeaths() >=5) {
 						gameOver();
 				}
 				else {
@@ -319,6 +326,7 @@ public class Server extends Thread {
 			serverSocket.setSoTimeout(1000);
 			serverSocket.close();
 		} catch (SocketException e) {
+			e.printStackTrace();
 		}
 	}
 	
