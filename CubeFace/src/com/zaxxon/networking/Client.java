@@ -102,6 +102,7 @@ public class Client extends Thread {
 			return;
 		}
 		else if(message.startsWith("/b/")) {
+			System.out.println("recieved b");
 				MainGame.multiplayer = false;
 				try {
 					running = false;

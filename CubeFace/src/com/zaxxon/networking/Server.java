@@ -337,10 +337,9 @@ public class Server extends Thread {
 				String[] disconnectIParray = c.getValue().getAddress().toString().split("/");
 				String disconnectIP = disconnectIParray[1];
 				
-				if (c.getValue().getAddress().equals(ServerAddress) || disconnectIP.equals("localhost")
-					|| disconnectIP.equals("127.0.0.1")) {
-					sendToRelevant("/b/".getBytes(), port, address);
-					
+				if (c.getValue().getAddress().equals(ServerAddress)) {
+					sendToAll("/b/".getBytes());
+
 					close();
 					return;
 				}
