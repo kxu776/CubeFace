@@ -21,10 +21,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+/**
+ * Quit popup
+ * Shown if the user presses the close button whilst the game is running
+ * asks the user if they are sure they would like to quit
+ * @author Megan
+ */
 public class QuitPopup {
 
 
+    /**
+     * when run it builds and runs the quit popup
+     * @param primaryStage
+     */
     public static void display(Stage primaryStage)
     {
         double[] xOffset = {0};

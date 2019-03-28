@@ -10,6 +10,12 @@ import javafx.scene.text.TextAlignment;
 
 import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
 
+/**
+ * StatsBox - contains information related to the game as the game is running
+ * including - current weapon, ammo, health and score
+ * updates in realtime with changes in the game
+ * @author Megan
+ */
 public class StatsBox {
 
     public static Label weapon;
@@ -18,6 +24,14 @@ public class StatsBox {
     public static Label score;
     public static Label ammo;
 
+    /**
+     * Makes the stats box
+     * has two types for singleplayer and multiplayer
+     * singleplayer has one health bar (of the player)
+     * multiplayer has an extra healthbar displaying the opponents health
+     * @param type
+     * @return
+     */
     public static BorderPane statsBox(int type) {
 
         //types:
@@ -146,6 +160,10 @@ public class StatsBox {
 
     }
 
+    /**
+     * changes the weapon label when the weapon is changed in weapon manager
+     * @param newWeapon
+     */
     public static void updateWeapon(String newWeapon) {
         int colon = newWeapon.indexOf(":");
         String sWeapon = newWeapon.substring(0, colon);
@@ -155,20 +173,36 @@ public class StatsBox {
         weapon.setText(sWeapon.toUpperCase() );
     }
 
+    /**
+     * updates the ammo of the current weapon when the gun fires
+     * @param newAmmo
+     */
     public static void updateAmmo(String newAmmo) {
 
         ammo.setText(newAmmo.toUpperCase() );
 
     }
 
+    /**
+     * updates the healthbar of the player when they take damage or gain health
+     * @param newHealth
+     */
     public static void updateHealthBar(Integer newHealth) {
     	healthBar.updateHealthBar(newHealth);
     }
 
+    /**
+     * updates the healthbar of the oponent when they take damage or gain health
+     * @param newHealth
+     */
     public static void updateOpHealthBar(Integer newHealth) {
     	opHealthBar.updateHealthBar(newHealth);
     }
 
+    /**
+     * Updates the score of the player when an enemy is defeated
+     * @param newScore
+     */
     public static void updateScore(Integer newScore) {
         score.setText(newScore.toString());
     }

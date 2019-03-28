@@ -2,9 +2,7 @@ package com.zaxxon.ui.tools;
 
 import com.zaxxon.client.MainGame;
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.popups.ArityPopup;
 import com.zaxxon.ui.popups.QuitPopup;
-import com.zaxxon.ui.popups.ServerConfirmationPopup;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,12 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-import static com.zaxxon.ui.MainMenu.music;
-
-import java.awt.*;
 
 public class Toolbox {
 	public static boolean runningServer = false;

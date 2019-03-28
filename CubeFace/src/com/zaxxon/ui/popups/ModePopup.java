@@ -18,12 +18,20 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 import sun.applet.Main;
 
+/**
+ * ModePopup
+ * Makes a popup that asks the user if they want to play in multiplayer or singleplayer
+ * Opens when the user clicks start
+ * @author Megan
+ */
+public class ModePopup {
 
-public class ArityPopup {
 
-
-
-
+    /**
+     * Display - when run it builds and runs the modepopup
+     * @param primaryStage
+     * @param renderedScene
+     */
     public static void display(Stage primaryStage, Scene renderedScene)
     {
 

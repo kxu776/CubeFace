@@ -3,7 +3,7 @@ package com.zaxxon.ui;
 import com.zaxxon.client.MainGame;
 import com.zaxxon.sound.MusicPlayer;
 
-import com.zaxxon.ui.popups.ArityPopup;
+import com.zaxxon.ui.popups.ModePopup;
 import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -23,6 +23,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * MainMenu class - the first scene displayed when the application is run
+ * @author Megan
+ */
 public class MainMenu {
 
 	public static final int WIDTH = 1000;
@@ -35,7 +39,12 @@ public class MainMenu {
     Button help;
 
 
-    //a method that makes the main menu scene
+    /**
+     * a method that makes the main menu scene
+     * creates all buttons, images and text that link to other interfaces
+     * @param primaryStage
+     * @return
+     */
     public Scene makeMainMenu(Stage primaryStage) {
 
         //make sure stage is not resizeable
@@ -69,7 +78,7 @@ public class MainMenu {
 
         start = new Button("START");
         start.setOnAction(e -> {
-            ArityPopup.display(primaryStage, MainGame.getRenderedScene());
+            ModePopup.display(primaryStage, MainGame.getRenderedScene());
         });
         grid1.setConstraints(start, 0, 3);
 

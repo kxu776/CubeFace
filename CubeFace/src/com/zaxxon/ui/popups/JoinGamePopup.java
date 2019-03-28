@@ -20,9 +20,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+/**
+ * Join game popup - is shown if the user chooses multiplayer after the modepopup
+ * allows user to enter the ip of the game they want to join and set a username
+ * or has another button if they want to create a server
+ * @author Megan
+ */
 public class JoinGamePopup {
 
+    /**
+     * Display - when run it builds and runs the joingame popup
+     * @param primaryStage
+     * @param renderedScene
+     */
     public static void display(Stage primaryStage, Scene renderedScene)
     {
         double[] xOffset = {0};

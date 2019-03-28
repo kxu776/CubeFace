@@ -23,9 +23,21 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * New server popup
+ * Offers the user the option to make a new server by pressing the button
+ * Explains that if they do the ip of the server made will be displayed to the user
+ * that they can then use to connect to in the joingame popup
+ * @author Megan
+ */
 public class NewServerPopup {
 	public static int proceed = 0;
 
+	/**
+	 * when run it builds and runs the new server popup
+	 * @param primaryStage
+	 * @param renderedScene
+	 */
 	public static void display(Stage primaryStage, Scene renderedScene) {
 
 		double[] xOffset = { 0 };

@@ -11,6 +11,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * HealthBar
+ * Makes a healthbar to be displayed on the stats box to display the level the users health is at
+ * @author Megan
+ */
 public class HealthBar {
 
     //make an anchorpane to hold the healthbar
@@ -18,6 +23,12 @@ public class HealthBar {
     public Rectangle red; //rectangles to make healthbar
     public Rectangle green; //health is initially
 
+    /**
+     * Makes a healthbar and returns the healthbar made
+     * healthbar consits of a red rectangle and green rectangle on top
+     * the green rectangle changes size based on the players health
+     * @return
+     */
     public AnchorPane makeHealthbar() {
 
         //initialise
@@ -38,6 +49,12 @@ public class HealthBar {
 
     }
 
+    /**
+     * Update healthbar
+     * if the health of the user changes, this method is called
+     * and chneges the size of the green rectangle to display the change in health
+     * @param newHealth
+     */
     public void updateHealthBar(Integer newHealth) {
 
         if (newHealth > 100) {
