@@ -37,7 +37,8 @@ public class ClientMain extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.setScene(mainmenu);
 		primaryStage.show();
-		MainGame.reset(primaryStage, music);
+		MainGame.setMusic(music);
+		MainGame.reset(primaryStage);
 	}
 
 }
