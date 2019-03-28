@@ -19,7 +19,7 @@ public class Client extends Thread {
 	private int port;
 	private InetAddress serverAddress;
 	private DatagramSocket socket;
-	private int MAX_PACKET_SIZE = 1024;
+	private int MAX_PACKET_SIZE = 512;
 	private String ID = null;
 	private byte[] data = new byte[MAX_PACKET_SIZE];
 	private ObjectOutputStream out = null;
@@ -98,9 +98,11 @@ public class Client extends Thread {
 			MainGame.getSpriteList().remove(MainGame.getSprite(throwAwayPlayer[2].trim()));
 			MainGame.removeFromGame(MainGame.getSprite(throwAwayPlayer[2]));
 			MainGame.play.remove(throwAwayPlayer[2].trim());
+
 			return;
 		}
 		else if(message.startsWith("/b/")) {
+			System.out.println("recieved b");
 				MainGame.multiplayer = false;
 				try {
 					running = false;
@@ -111,10 +113,19 @@ public class Client extends Thread {
 				}
 				return;
 		}
-//		else if(message.startsWith("/p/")) {
-//			send("/p/".getBytes());
-//			return;
-//		}
+		else if(message.startsWith("/e/")) {
+			System.out.println("/e/ recieved");
+			MainGame.getPlayer().end = true;
+			try {
+				sleep(100);
+			}
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+			MainGame.stop();
+			close();
+			return;
+		}
 		
 		if
 		(message.startsWith("/C/")){
@@ -147,11 +158,9 @@ public class Client extends Thread {
 			out.writeObject(c);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-			send(playerinfo);
-			
+			send(playerinfo);	
 			out.close();
-			baos.close();
-			
+			baos.close();	
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -161,10 +170,13 @@ public class Client extends Thread {
 	public void disconnect() {
 		send("/d/".getBytes());
 		running = false;
+		close();
+	}
+	private void close(){
+		running = false;
 		try {
 			if ((in == null)){
 				socket.close();		
-
 				if(bais == null) {
 					socket.close();		
 					return;
@@ -181,8 +193,8 @@ public class Client extends Thread {
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
+			sleep(30);
 			socket.send(packet);
-			sleep(25);
 		} catch (IOException e) {
 		} catch (InterruptedException e) {
 			e.printStackTrace();

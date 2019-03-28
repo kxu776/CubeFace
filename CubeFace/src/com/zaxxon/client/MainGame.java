@@ -15,13 +15,11 @@ import com.zaxxon.networking.Client;
 import com.zaxxon.networking.ClientSender;
 
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.popups.GameOverPopup;
 import com.zaxxon.ui.tools.Toolbox;
 import com.zaxxon.sound.MusicPlayer;
 
 import com.zaxxon.world.TrackingCamera;
 import com.zaxxon.ui.tools.StatsBox;
-import com.zaxxon.world.Camera;
 import com.zaxxon.world.CollidableRectangle;
 import com.zaxxon.world.Levels;
 import com.zaxxon.world.Sprite;
@@ -71,7 +69,7 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static ArrayList<PickupPoint> ammoPickupPoints;
-	private static Client networkingClient;
+	public static Client networkingClient;
 	private static Scene renderedScene;
 	private static ClientSender client;
 	public static boolean host = false;
@@ -94,7 +92,6 @@ public class MainGame {
 	private static long nextPickupSpawnTime;
 
 	public static LinkedBlockingQueue<ClientSender> inputUpdateQueue = new LinkedBlockingQueue<ClientSender>();
-	public static LinkedBlockingQueue<ClientSender> deathQueue = new LinkedBlockingQueue<ClientSender>();
 	public static LinkedBlockingQueue<String> weaponQueue = new LinkedBlockingQueue<String>();
 
 	/**
@@ -103,7 +100,7 @@ public class MainGame {
 	 * @param primaryStage the Stage to render the game in
 	 * @param m            the MusicPlayer for music
 	 */
-	public static void reset(Stage primaryStage, MusicPlayer m) {
+	public static void reset(Stage primaryStage) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -122,8 +119,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		double[] xOffset = {0}; // array for making window movable
-		double[] yOffset = {0};
+		double[] xOffset = { 0 }; // array for making window movable
+		double[] yOffset = { 0 };
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(MainMenu.WIDTH - 2, MainMenu.HEIGHT - 2);
@@ -154,7 +151,6 @@ public class MainGame {
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
 
-		music = m;
 		audio.setOnAction(e -> {
 			muted = (muted) ? false : true;
 			if (muted) {
@@ -218,6 +214,14 @@ public class MainGame {
 		});
 	}
 
+	/**
+	 * sets the music track to the MusicPlayer
+	 * 
+	 * @param m
+	 */
+	public static void setMusic(MusicPlayer m) {
+		music = m;
+	}
 
 	/**
 	 * begins the main game loop
@@ -236,10 +240,12 @@ public class MainGame {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		setGameFocus();
-		/*primaryStage.setWidth(renderedScene.getWindow().getWidth());
-		primaryStage.setHeight(renderedScene.getWindow().getHeight());
-		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
-		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());*/
+		/*
+		 * primaryStage.setWidth(renderedScene.getWindow().getWidth());
+		 * primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		 * anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
+		 * anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
+		 */
 
 		Input.addHandlers(primaryStage);
 
@@ -263,7 +269,6 @@ public class MainGame {
 				spawnRandomEnemy();
 			}
 		}
-
 		spawnRandomAmmoPickup();
 
 		mainGameLoop = new AnimationTimer() {
@@ -271,8 +276,8 @@ public class MainGame {
 				for (Player player : playerList) {
 					player.update(normalisedFPS, primaryStage);
 				}
+				updatePickups();
 				if (multiplayer) {
-					updatePickups();
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
 					weaponSpawnQueue();
@@ -306,11 +311,11 @@ public class MainGame {
 	}
 
 	/**
-	 * checks whether or not to spawn a new checkup, and if necessary spawns it
+	 * checks whether or not to spawn a new pickup, and if necessary spawns it
 	 */
 	private static void spawnPickupCheck() {
 		if (System.currentTimeMillis() >= nextPickupSpawnTime) {
-			spawnRandomEnemy();
+			spawnRandomAmmoPickup();
 		}
 	}
 
@@ -351,9 +356,11 @@ public class MainGame {
 				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
 
+	/**
+	 * spawns a random pickup in the world
+	 */
 	private static void spawnRandomAmmoPickup() {
 		if (!multiplayer) {
-			double randomPercentage = Math.random();
 			Tile randomTile;
 			do {
 				randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
@@ -533,16 +540,14 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
-			player1.setX(700);
-			player1.setY(700);
+			player1.setX(Math.random() * 1000);
+			player1.setY(Math.random() * 1000);
 			player1.reset();
 			client.pos = 2;
 			client.alive = false;
-			client.setX(700);
-			client.setY(700);
+			client.setX(player1.getX());
+			client.setY(player1.getY());
 			networkingClient.sendPlayerObj(client);
-			client.alive = true;
-
 		}
 		client.alive = true;
 		if (!Input.isKeyPressed(KeyCode.SPACE)) {
@@ -608,15 +613,17 @@ public class MainGame {
 			String id = data.getID().trim();
 			newPlayer(data);
 
-			Iterator<Sprite> iterator = spriteList.iterator();
-			while (iterator.hasNext()) {
+			for (Iterator<Sprite> iterator = spriteList.iterator(); iterator.hasNext();) {
 				Sprite sprite = iterator.next();
-				if (sprite.getId().equals(id)) {
 
-					if (data.alive == false) {
-						play.remove(id);
-						removeFromGame(data.getID());
-						newPlayer(data);
+				if (sprite.getId().equals(id)) {
+					if (!data.alive) {
+						player1.updateScore();
+						player1.displayStats();
+						play.get(id).reset();
+						sprite.setX(data.getX());
+						sprite.setY(data.getY());
+						((Player) sprite).setDir(data.pos);
 						continue;
 					}
 					sprite.setX(data.getX());
@@ -649,7 +656,6 @@ public class MainGame {
 	private static void updateEnemies() {
 		LinkedList<Enemy> killList = new LinkedList<>();
 		// Iterates through enemies, updates pos relative to player
-		boolean updatedPlayerPos = false;
 		for (Enemy sprite : enemiesList) {
 			if (!sprite.isAlive()) {
 				killList.add(sprite); // Cannot kill sprite during iteration
@@ -685,9 +691,15 @@ public class MainGame {
 		 * 
 		 * ammoPickupList.get(i).update(); }
 		 */
-		for (PickupPoint pickupPoint : ammoPickupPoints) {
-			if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
-				spawnAmmoPickup(pickupPoint);
+		if (multiplayer) {
+			for (PickupPoint pickupPoint : ammoPickupPoints) {
+				if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
+					spawnAmmoPickup(pickupPoint);
+				}
+			}
+		} else {
+			for (AmmoPickup aP : ammoPickupList) {
+				aP.update();
 			}
 		}
 	}
@@ -732,15 +744,6 @@ public class MainGame {
 		}
 	}
 
-	private static void killPlayer() {
-		while (!deathQueue.isEmpty()) {
-			ClientSender playerToKill = deathQueue.poll();
-			play.get(playerToKill.getID()).setHealth(0);
-			play.get(playerToKill.getID()).reset();
-			play.get(playerToKill.getID()).relocate(playerToKill.x, playerToKill.y);
-		}
-	}
-
 	public static void newPlayer(ClientSender data) {
 		String id = data.getID();
 		if (!play.containsKey(data.getID())) {
@@ -749,6 +752,7 @@ public class MainGame {
 			player.setX(data.getX());
 			player.setY(data.getY());
 			player.setId(id);
+			player.setDir(data.pos);
 			player.mp = true;
 			player.weaponManager.getCurrentWeapon().test = true;
 			player.weaponManager.mp = true;
@@ -771,25 +775,27 @@ public class MainGame {
 		return null;
 	}
 
+	/**
+	 * getter for the Player object
+	 * 
+	 * @return gets the Player
+	 */
+	public static Player getPlayer() {
+		return player1;
+	}
+
 	public static void setUpClientThread(String host, int port, String name) {
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 		networkingClient = new Client(host, port, name);
 		networkingClient.start();
 	}
 
-	public static Client getNetworkingClient() {
-		return networkingClient;
-	}
-
 	public static Point2D.Double pick(double x, double y) {
 		return new Point2D.Double(x, y);
 	}
 
-
-
-
-
+	public static Client getNetworkingClient() {
+		return networkingClient;
+	}
 
 }
-
-

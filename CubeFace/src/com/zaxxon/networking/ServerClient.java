@@ -7,7 +7,7 @@ public class ServerClient {
 	public String name;
 	public InetAddress address;
 	public int port;
-	private int inactive;
+	private int deaths =0 ;
 	private final String ID;
 	public ServerClient(String user,InetAddress address, int port,String ID) {
 		this.name = user;
@@ -28,13 +28,14 @@ public class ServerClient {
 		return ID;
 	}
 	
-	public void resetActivity() {
-		inactive = 0;
+	public void resetDeaths() {
+		deaths = 0;
 	}
-	public void increaceInactive() {
-		inactive +=1;
+	public int getDeaths() {
+		return deaths;
 	}
-	public int getInactive() {
-		return inactive;
+	public int incDeaths() {
+		deaths+=1;
+		return deaths;
 	}
 }

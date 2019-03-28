@@ -93,7 +93,9 @@ public class Levels {
 	 */
 	private static Tile[] generateBackgroundTiles(int[][] level) {
 		LinkedList<Tile> allTiles = new LinkedList<Tile>();
+		// trims the level down to a polygon
 		level = removeRedundantLines(level);
+		// get the top leftmost wall
 		int startX = 0;
 		int startY = 0;
 		while (true) {

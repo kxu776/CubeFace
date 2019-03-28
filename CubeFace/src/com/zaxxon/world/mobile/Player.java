@@ -16,10 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * @author Dan
- * 
- *         Class to contain all behaviour relating to the player character
- *
+ * Class to contain all behaviour relating to the player character
  */
 public class Player extends MovableSprite {
 
@@ -31,6 +28,7 @@ public class Player extends MovableSprite {
 	int height = 64;
 
 	double deltaTime;
+	public boolean end = false;
 	public boolean mp = false;
 
 	Vector2 inputDir = new Vector2();
@@ -87,7 +85,7 @@ public class Player extends MovableSprite {
 
 		facingDir = FacingDir.up;
 		weaponManager = new WeaponManager(this);
-		
+
 		lighting = new Lighting();
 		lighting.setDiffuseConstant(2.0);
 		lighting.setSpecularConstant(0.0);
@@ -98,11 +96,25 @@ public class Player extends MovableSprite {
 
 	protected boolean oneTimeOnly = true;
 
+	/**
+	 * triggers all mechanisms within the player e.g. movement, damage, input etc
+	 * 
+	 * @param time         a delta time used for calculating truer values
+	 * @param primaryStage the stage holding the game
+	 */
 	public void update(double time, Stage primaryStage) {
-		if(!oneTimeOnly){
+		if (!oneTimeOnly) {
 			return;
 		}
-		if (!isAlive) {
+	
+		if (!isAlive && !mp) {
+			this.setOpacity(0.6);
+			this.setEffect(lighting);
+			oneTimeOnly = false;
+			GameOverPopup.display(primaryStage, String.valueOf(score), MainMenu.mainmenu);
+			return;
+		}
+		else if (end) {
 			this.setOpacity(0.6);
 			this.setEffect(lighting);
 			oneTimeOnly = false;
@@ -266,7 +278,7 @@ public class Player extends MovableSprite {
 				else {
 
 					this.heal(100);
-					StatsBox.updateHealthBar((int)health);
+					StatsBox.updateHealthBar((int) health);
 				}
 
 				MainGame.ammoPickupList.get(i).delete();
@@ -399,16 +411,22 @@ public class Player extends MovableSprite {
 	public void reset() {
 		heal(100.0);
 		isAlive = true;
-		facingDir = FacingDir.up;
-		weaponManager = new WeaponManager(this);
+		facingDir = FacingDir.down;
+		// weaponManager = new WeaponManager(this);
 	}
 
 	/**
 	 * @return velocity
 	 */
 	public Vector2 getVelocity() {
-
 		return velocity;
+	}
+	
+	public void updateScore() {
+		score +=1;
+	}
+	public void displayStats() {
+		StatsBox.updateScore(score);
 	}
 
 }

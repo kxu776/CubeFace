@@ -53,7 +53,8 @@ public class GameOverPopup {
             popupwindow.close();
             primaryStage.setResizable(false);
             primaryStage.setScene(mainmenu);
-
+            MainGame.stop();
+            MainGame.reset(primaryStage);
         });
 
         //vbox to hold it all
@@ -107,7 +108,5 @@ public class GameOverPopup {
         popupwindow.show();
 
     }
-
-
 }
 

@@ -56,7 +56,7 @@ public class Toolbox {
                 QuitPopup.display(popupwindow);
                 MainGame.setGameFocus();
         		MainGame.stop();
-        		MainGame.reset(popupwindow, music);
+        		MainGame.reset(popupwindow);
             } else {
             	if(type == 2) {
                  popupwindow.close();
