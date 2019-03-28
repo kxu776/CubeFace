@@ -324,23 +324,7 @@ public class MainGame {
 	 */
 	private static void spawnRandomEnemy() {
 		double randomPercentage = Math.random();
-		Tile randomTile;
-		do {
-			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
-			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
-			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
-			// checks the tile isn't a wall
-			if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
-				continue;
-			}
-			int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
-			int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
-			// ensures zombie is at least 3 tiles away from the player so doesn't spawn too
-			// close
-			if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
-				break;
-			}
-		} while (true);
+		Tile randomTile = getRandomFreeTile(2);
 		if (randomPercentage < 0.6) {
 			Zombie enemy = new Zombie(randomTile.getX(), randomTile.getY());
 			addSpriteToForeground(enemy);
@@ -355,32 +339,39 @@ public class MainGame {
 		nextEnemySpawnTime += 1500 + ThreadLocalRandom.current().nextInt(2000, 20000)
 				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
+	
+	private static Tile getRandomFreeTile(int minDistance) {
+		Tile randomTile;
+		do {
+			randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
+			int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
+			int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
+			// checks the tile isn't a wall
+			if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
+				continue;
+			}
+			if(minDistance>0) {
+				int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
+				int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
+				// ensures object is at least 3 tiles away from the player so doesn't spawn too
+				// close
+				if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > minDistance) {
+					break;
+				}				
+			} else {
+				break;
+			}
+		} while (true);
+		return randomTile;
+	}
 
 	/**
 	 * spawns a random pickup in the world
 	 */
 	private static void spawnRandomAmmoPickup() {
 		if (!multiplayer) {
-			Tile randomTile;
-			do {
-				randomTile = Tile.getAllTiles().get(ThreadLocalRandom.current().nextInt(0, Tile.getAllTiles().size()));
-				int baseTileX = (int) ((randomTile.getX() - randomTile.getWidth() / 2) / randomTile.getWidth());
-				int baseTileY = (int) ((randomTile.getY() - randomTile.getHeight() / 2) / randomTile.getHeight());
-				// checks the tile isn't a wall
-				if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
-					continue;
-				}
-				int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
-				int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
-				// ensures zombie is at least 3 tiles away from the player so doesn't spawn too
-				// close
-				if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > 2) {
-					break;
-				}
-			} while (true);
-
+			Tile randomTile = getRandomFreeTile(2);
 			int pickupType = ThreadLocalRandom.current().nextInt(0, 3);
-
 			AmmoPickup a = new AmmoPickup(pickupType, new Vector2(randomTile.getX(), randomTile.getY()), null);
 			ammoPickupList.add(a);
 			addSpriteToForeground(a);
@@ -540,8 +531,9 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
-			player1.setX(Math.random() * 1000);
-			player1.setY(Math.random() * 1000);
+			Tile randomTile = getRandomFreeTile(0);
+			player1.setX(randomTile.getX());
+			player1.setY(randomTile.getY());
 			player1.reset();
 			client.pos = 2;
 			client.alive = false;
