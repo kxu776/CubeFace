@@ -102,7 +102,6 @@ public class Client extends Thread {
 			return;
 		}
 		else if(message.startsWith("/b/")) {
-			System.out.println("recieved b");
 				MainGame.multiplayer = false;
 				try {
 					running = false;
@@ -158,9 +157,11 @@ public class Client extends Thread {
 			out.writeObject(c);
 			out.flush();
 			byte[] playerinfo = baos.toByteArray();
-			send(playerinfo);	
+			send(playerinfo);
+			
 			out.close();
-			baos.close();	
+			baos.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -193,7 +194,8 @@ public class Client extends Thread {
 	public void send(byte[] data) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
-			sleep(30);
+			sleep(25);
+
 			socket.send(packet);
 		} catch (IOException e) {
 		} catch (InterruptedException e) {
