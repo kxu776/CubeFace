@@ -144,5 +144,11 @@ public class Wall extends Sprite {
 		hitBox.delete();
 		MainGame.removeFromGame(this);
 	}
+	
+	public static void reset() {
+		for(Wall w  : allWalls) {
+			w.delete();
+		}
+	}
 
 }

@@ -43,5 +43,11 @@ public class Tile extends Sprite {
 		allTiles.remove(this);
 		MainGame.removeFromGame(this);
 	}
+	
+	public static void reset() {
+		for(Tile t : allTiles) {
+			t.delete();
+		}
+	}
 
 }

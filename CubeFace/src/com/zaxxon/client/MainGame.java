@@ -101,6 +101,13 @@ public class MainGame {
 	 * @param m            the MusicPlayer for music
 	 */
 	public static void reset(Stage primaryStage) {
+		try {
+			Tile.reset();
+			Wall.reset();
+		} catch (Exception e) {
+
+		}
+
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -240,12 +247,6 @@ public class MainGame {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		setGameFocus();
-		/*
-		 * primaryStage.setWidth(renderedScene.getWindow().getWidth());
-		 * primaryStage.setHeight(renderedScene.getWindow().getHeight());
-		 * anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
-		 * anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
-		 */
 
 		Input.addHandlers(primaryStage);
 
@@ -339,7 +340,7 @@ public class MainGame {
 		nextEnemySpawnTime += 1500 + ThreadLocalRandom.current().nextInt(2000, 20000)
 				/ ((nextEnemySpawnTime - gameStartTime) / 40000.0 + 1);
 	}
-	
+
 	private static Tile getRandomFreeTile(int minDistance) {
 		Tile randomTile;
 		do {
@@ -350,14 +351,14 @@ public class MainGame {
 			if (Levels.LEVEL2[baseTileY][baseTileX] != 0) {
 				continue;
 			}
-			if(minDistance>0) {
+			if (minDistance > 0) {
 				int playerTileX = (int) Math.floor(player1.getX() / Levels.SIZE);
 				int playerTileY = (int) Math.floor(player1.getY() / Levels.SIZE);
 				// ensures object is at least 3 tiles away from the player so doesn't spawn too
 				// close
 				if (Math.abs(baseTileX - playerTileX) + Math.abs(baseTileY - playerTileY) > minDistance) {
 					break;
-				}				
+				}
 			} else {
 				break;
 			}
