@@ -28,8 +28,6 @@ public class WeaponManager {
 	private ArrayList<Weapon> weapons;
 	private static ArrayList<Bullet> allBullets;
 
-	private Player player;
-
 	public WeaponManager(){};
 	
 	/**

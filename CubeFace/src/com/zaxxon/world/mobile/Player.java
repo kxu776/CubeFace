@@ -16,10 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * @author Dan
- * 
- *         Class to contain all behaviour relating to the player character
- *
+ * Class to contain all behaviour relating to the player character
  */
 public class Player extends MovableSprite {
 
@@ -88,7 +85,7 @@ public class Player extends MovableSprite {
 
 		facingDir = FacingDir.up;
 		weaponManager = new WeaponManager(this);
-		
+
 		lighting = new Lighting();
 		lighting.setDiffuseConstant(2.0);
 		lighting.setSpecularConstant(0.0);
@@ -99,8 +96,14 @@ public class Player extends MovableSprite {
 
 	protected boolean oneTimeOnly = true;
 
+	/**
+	 * triggers all mechanisms within the player e.g. movement, damage, input etc
+	 * 
+	 * @param time         a delta time used for calculating truer values
+	 * @param primaryStage the stage holding the game
+	 */
 	public void update(double time, Stage primaryStage) {
-		if(!oneTimeOnly){
+		if (!oneTimeOnly) {
 			return;
 		}
 	
@@ -275,7 +278,7 @@ public class Player extends MovableSprite {
 				else {
 
 					this.heal(100);
-					StatsBox.updateHealthBar((int)health);
+					StatsBox.updateHealthBar((int) health);
 				}
 
 				MainGame.ammoPickupList.get(i).delete();
