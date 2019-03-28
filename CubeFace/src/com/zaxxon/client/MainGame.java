@@ -69,7 +69,7 @@ public class MainGame {
 	public static ArrayList<Enemy> enemiesList;
 	public static ArrayList<AmmoPickup> ammoPickupList;
 	public static ArrayList<PickupPoint> ammoPickupPoints;
-	public static Client networkingClient;
+	private static Client networkingClient;
 	private static Scene renderedScene;
 	private static ClientSender client;
 	public static boolean host = false;

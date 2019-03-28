@@ -86,6 +86,7 @@ public class JoinGamePopup {
     			MainGame.multiplayer = true;
             popupwindow.close();
             primaryStage.setScene(MainGame.getRenderedScene());
+            MainGame.reset(primaryStage);
             MainGame.start(primaryStage);
         });
         startGame.setId("startgame");
