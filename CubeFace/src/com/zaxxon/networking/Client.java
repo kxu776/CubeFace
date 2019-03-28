@@ -195,7 +195,7 @@ public class Client extends Thread {
 		DatagramPacket packet = new DatagramPacket(data, data.length, serverAddress, port);
 		try {
 			socket.send(packet);
-			sleep(25);
+			sleep(30);
 		} catch (IOException e) {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
