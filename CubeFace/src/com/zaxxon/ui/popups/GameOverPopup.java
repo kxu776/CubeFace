@@ -1,5 +1,6 @@
 package com.zaxxon.ui.popups;
 
+import com.zaxxon.client.MainGame;
 import com.zaxxon.ui.MainMenu;
 import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.ActionEvent;
@@ -52,7 +53,8 @@ public class GameOverPopup {
             popupwindow.close();
             primaryStage.setResizable(false);
             primaryStage.setScene(mainmenu);
-
+            MainGame.stop();
+            MainGame.reset(primaryStage);
         });
 
         //vbox to hold it all

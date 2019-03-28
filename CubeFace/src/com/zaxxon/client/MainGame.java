@@ -100,7 +100,7 @@ public class MainGame {
 	 * @param primaryStage the Stage to render the game in
 	 * @param m            the MusicPlayer for music
 	 */
-	public static void reset(Stage primaryStage, MusicPlayer m) {
+	public static void reset(Stage primaryStage) {
 		// set up game groups
 		grpGame = new Group();
 		grpGame.setId("grpGame");
@@ -119,8 +119,8 @@ public class MainGame {
 		world.getChildren().add(collidables);
 		grpGame.getChildren().add(world);
 		grpGame.getChildren().add(overlay);
-		double[] xOffset = {0}; // array for making window movable
-		double[] yOffset = {0};
+		double[] xOffset = { 0 }; // array for making window movable
+		double[] yOffset = { 0 };
 
 		// make a rectangle
 		Rectangle gameRect = new Rectangle(MainMenu.WIDTH - 2, MainMenu.HEIGHT - 2);
@@ -151,7 +151,6 @@ public class MainGame {
 		ImageView audioView = new ImageView(audioIcon); // make an imageview for the minimise icon
 		audio.setGraphic(audioView); // add the image to the button
 
-		music = m;
 		audio.setOnAction(e -> {
 			muted = (muted) ? false : true;
 			if (muted) {
@@ -215,6 +214,14 @@ public class MainGame {
 		});
 	}
 
+	/**
+	 * sets the music track to the MusicPlayer
+	 * 
+	 * @param m
+	 */
+	public static void setMusic(MusicPlayer m) {
+		music = m;
+	}
 
 	/**
 	 * begins the main game loop
@@ -233,10 +240,12 @@ public class MainGame {
 		primaryStage.setScene(renderedScene);
 		grpGame.setFocusTraversable(true);
 		setGameFocus();
-		/*primaryStage.setWidth(renderedScene.getWindow().getWidth());
-		primaryStage.setHeight(renderedScene.getWindow().getHeight());
-		anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
-		anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());*/
+		/*
+		 * primaryStage.setWidth(renderedScene.getWindow().getWidth());
+		 * primaryStage.setHeight(renderedScene.getWindow().getHeight());
+		 * anchorPane.setPrefWidth(renderedScene.getWindow().getWidth());
+		 * anchorPane.setPrefHeight(renderedScene.getWindow().getHeight());
+		 */
 
 		Input.addHandlers(primaryStage);
 
@@ -260,7 +269,6 @@ public class MainGame {
 				spawnRandomEnemy();
 			}
 		}
-
 		spawnRandomAmmoPickup();
 
 		mainGameLoop = new AnimationTimer() {
@@ -268,8 +276,8 @@ public class MainGame {
 				for (Player player : playerList) {
 					player.update(normalisedFPS, primaryStage);
 				}
+				updatePickups();
 				if (multiplayer) {
-					updatePickups();
 					sendNetworkUpdate();
 					getPlayerUpdatesFromQueue();
 					weaponSpawnQueue();
@@ -532,8 +540,8 @@ public class MainGame {
 
 	private static void sendNetworkUpdate() {
 		if (!player1.isAlive()) {
-			player1.setX(Math.random()*1000);
-			player1.setY(Math.random()*1000);
+			player1.setX(Math.random() * 1000);
+			player1.setY(Math.random() * 1000);
 			player1.reset();
 			client.pos = 2;
 			client.alive = false;
@@ -606,10 +614,10 @@ public class MainGame {
 			newPlayer(data);
 
 			for (Iterator<Sprite> iterator = spriteList.iterator(); iterator.hasNext();) {
-				Sprite sprite =  iterator.next();
-				
+				Sprite sprite = iterator.next();
+
 				if (sprite.getId().equals(id)) {
-					if(!data.alive) {
+					if (!data.alive) {
 						player1.updateScore();
 						player1.displayStats();
 						play.get(id).reset();
@@ -633,14 +641,13 @@ public class MainGame {
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
 						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos,
-						play.get(id).getplayerDimensions(), vect);
+								play.get(id).getplayerDimensions(), vect);
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
 			}
 		}
 	}
-
 
 	/**
 	 * Updates each ai controlled enemy in game - handles movement, damage and
@@ -684,9 +691,15 @@ public class MainGame {
 		 * 
 		 * ammoPickupList.get(i).update(); }
 		 */
-		for (PickupPoint pickupPoint : ammoPickupPoints) {
-			if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
-				spawnAmmoPickup(pickupPoint);
+		if (multiplayer) {
+			for (PickupPoint pickupPoint : ammoPickupPoints) {
+				if (pickupPoint.update()) { // If an item is due to spawn at this point, spawn the item.
+					spawnAmmoPickup(pickupPoint);
+				}
+			}
+		} else {
+			for (AmmoPickup aP : ammoPickupList) {
+				aP.update();
 			}
 		}
 	}
@@ -761,13 +774,19 @@ public class MainGame {
 		}
 		return null;
 	}
+
+	/**
+	 * getter for the Player object
+	 * 
+	 * @return gets the Player
+	 */
 	public static Player getPlayer() {
 		return player1;
 	}
 
 	public static void setUpClientThread(String host, int port, String name) {
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
-		networkingClient = new Client(host,port,name);
+		networkingClient = new Client(host, port, name);
 		networkingClient.start();
 	}
 
@@ -778,7 +797,5 @@ public class MainGame {
 	public static Client getNetworkingClient() {
 		return networkingClient;
 	}
-	
+
 }
-
-

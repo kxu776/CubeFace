@@ -10,12 +10,8 @@ import static com.zaxxon.ui.MainMenu.music;
 
 /**
  * the Client for a game to run on/with
- * 
- * @author Philip Eagles
- *
  */
 public class ClientMain extends Application {
-
 
 	/**
 	 * runs the client side program
@@ -28,16 +24,19 @@ public class ClientMain extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// load game font
 		// load font
 		Font.loadFont(MainMenu.class.getResourceAsStream("../ui/VCR_OSD_MONO.ttf"), 9);
 		primaryStage.setTitle("CubeFace");
+		// set up the main menu
 		MainMenu mainMenu2 = new MainMenu();
 		Scene mainmenu = mainMenu2.makeMainMenu(primaryStage);
+		// prevent rescaling
 		primaryStage.setResizable(false);
 		primaryStage.setScene(mainmenu);
 		primaryStage.show();
-		MainGame.reset(primaryStage, music);
+		// set up the main game
+		MainGame.setMusic(music);
+		MainGame.reset(primaryStage);
 	}
 
 }
