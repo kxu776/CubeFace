@@ -105,7 +105,8 @@ public class MainGame {
 			Tile.reset();
 			Wall.reset();
 		} catch (Exception e) {
-
+			Tile.clear();
+			Wall.resetWalls();
 		}
 
 		// set up game groups

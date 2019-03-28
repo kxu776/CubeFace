@@ -49,5 +49,9 @@ public class Tile extends Sprite {
 			t.delete();
 		}
 	}
+	
+	public static void clear() {
+		allTiles = new ArrayList<Tile>();
+	}
 
 }
