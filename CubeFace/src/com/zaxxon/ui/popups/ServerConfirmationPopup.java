@@ -1,8 +1,6 @@
 package com.zaxxon.ui.popups;
 
 import com.zaxxon.ui.MainMenu;
-import com.zaxxon.ui.popups.ArityPopup;
-import com.zaxxon.ui.popups.JoinGamePopup;
 import com.zaxxon.ui.tools.Toolbox;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,10 +16,21 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+/**
+ * Server confirmation popup
+ * Shown after the server has been made from the make server popup
+ * tells the user the ip of the serve that has been made
+ * and offers to take them back to the join game popup or to exit
+ * @author Megan
+ */
 public class ServerConfirmationPopup {
 	private static String ip;
 
+    /**
+     * when run it builds and runs the server confirmation popup
+     * @param primaryStage
+     * @param renderedScene
+     */
     public static void display(Stage primaryStage, Scene renderedScene)
     {
         double[] xOffset = {0};

@@ -13,11 +13,21 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+/**
+ * Help screen class
+ * Builds the help screen and adds all information to it
+ * @author Megan
+ */
 public class HelpScreen {
 
     public static Scene HelpScreen;
 
+    /**
+     * Makes the help screen, adds all images, text to the layouts and returns said screen
+     * @param primaryStage
+     * @param mainmenu
+     * @return
+     */
     public static Scene makeHelpScreen(Stage primaryStage, Scene mainmenu) {
 
 

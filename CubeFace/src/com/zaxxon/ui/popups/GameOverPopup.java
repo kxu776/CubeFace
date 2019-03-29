@@ -18,10 +18,22 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+/**
+ * Game over popup
+ * When the user dies this popup appears explaining they died and the game is over
+ * Also displays their final score
+ * And a finish button that takes them back to the main menu
+ * @author Megan
+ */
 public class GameOverPopup {
 
 
+    /**
+     * when run it builds and runs the game over popup
+     * @param primaryStage
+     * @param score
+     * @param mainmenu
+     */
     public static void display(Stage primaryStage, String score, Scene mainmenu)
     {
         double[] xOffset = {0};
