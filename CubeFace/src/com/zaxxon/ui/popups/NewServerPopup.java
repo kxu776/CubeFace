@@ -65,7 +65,7 @@ public class NewServerPopup {
 					// Expect to fail if same port num
 					
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(1500);
 						ServerConfirmationPopup.setIP(server.getServerIP());
 					} catch (InterruptedException e) {
 						e.printStackTrace();

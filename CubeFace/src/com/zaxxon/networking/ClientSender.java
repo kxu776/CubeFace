@@ -1,7 +1,14 @@
 package com.zaxxon.networking;
 
 import java.io.Serializable;
-import java.net.InetAddress;
+
+/**
+ * This class is the object that is sent over the network
+ * containing necessary information about the player.
+ *  
+ * @author Omar Farooq Khan
+ *
+ */
 
 public class ClientSender implements Serializable{
 	static final long serialVersionUID = 42L;
@@ -12,54 +19,86 @@ public class ClientSender implements Serializable{
 	public double x;
 	public double y;
 	public double health;
-	public InetAddress ipAddress;
 	public boolean shoot = false;
 	public boolean alive = true;
 	private String ID;
 	
-	
-	public ClientSender(double d, double e, double health) {
-		this.x = d;
-		this.y = e;
+	/**
+	 * Constructor - Set up the player to with the info to be sent. 
+	 * @param x x coordinate of the player.
+	 * @param y y coordinate of the player.
+	 * @param health
+	 */
+	public ClientSender(double x, double y, double health) {
+		this.x =	 x;
+		this.y = y;
 		this.health = health;
 	}
 	
+	/**
+	 * Get the x position of ClientSender that is currently stored.
+	 * @return double x position of player.
+	 */
 	public double getX() {
 		return x;
 	}
 
-	public void setX(double d) {
-		this.x = d;
+	/**
+	 * Set the x position of the ClientSender.
+	 * @param x Set the x position
+	 * @return nothing
+	 */
+	public void setX(double x) {
+		this.x = x;
 	}
 
+	/**
+	 * Get the y position of ClientSender.
+	 * @return double y position of ClientSender.
+	 */
 	public double getY() {
 		return y;
 	}
 
+	/**
+	 * Set the y position of the ClientSender.
+	 * @return nothing
+	 */
 	public void setY(double y) {
 		this.y = y;
 	}
 
+	/**
+	 * @return double get the current health of the ClientSender.
+	 */
 	public double getHealth() {
 		return health;
 	}
-
+	
+	/**
+	 * @param health Set the health of the ClientSender.
+	 */
 	public void setHealth(double health) {
 		this.health = health;
 	}
-
-	public InetAddress getIpAddress() {
-		return ipAddress;
-	}
-
+	
+	/**
+	 * @return String ID of the ClientSender.
+	 */
 	public String getID() {
 		return ID;
 	}
 
-	public void setID(String iD) {
-		ID = iD;
+	/**
+	 * @param ID Set the ID of the ClientSender.
+	 */
+	public void setID(String ID) {
+		this.ID = ID;
 	}
 	
+	/**
+	 * @return int The number of which gun is currently selected.
+	 */
 	public int getCurrWep() {
 		return currWep;
 	}

@@ -97,8 +97,10 @@ public class MainGame {
 	/**
 	 * resets all the game's objects (including UI and world)
 	 * 
-	 * @param primaryStage the Stage to render the game in
-	 * @param m            the MusicPlayer for music
+	 * @param primaryStage
+	 *            the Stage to render the game in
+	 * @param m
+	 *            the MusicPlayer for music
 	 */
 	public static void reset(Stage primaryStage) {
 		try {
@@ -234,7 +236,8 @@ public class MainGame {
 	/**
 	 * begins the main game loop
 	 *
-	 * @param primaryStage the Stage to render on
+	 * @param primaryStage
+	 *            the Stage to render on
 	 */
 	public static void start(Stage primaryStage) {
 		// loads the level
@@ -385,7 +388,8 @@ public class MainGame {
 	 * Spawns a randomised ammo pickup at the designated spawnpoint object passed to
 	 * it.
 	 *
-	 * @param pickupPoint Multiplayer spawn point object for item pickups
+	 * @param pickupPoint
+	 *            Multiplayer spawn point object for item pickups
 	 */
 	public static void spawnAmmoPickup(PickupPoint pickupPoint) {
 		AmmoPickup ammoPickup = new AmmoPickup(ThreadLocalRandom.current().nextInt(0, 1 + 1),
@@ -403,7 +407,6 @@ public class MainGame {
 
 	public static void displayAllGuns(PickupPoint pickupPoint) {
 		for (int i = 0; i < ammoPickupList.size(); i++) {
-			ammoPickupList.get(i);
 			String s = "/s/" + ammoPickupList.get(i).type + "/" + pickupPoint.getPosVector().x + "/"
 					+ pickupPoint.getPosVector().y + "/";
 			networkingClient.send(s.getBytes());
@@ -455,7 +458,8 @@ public class MainGame {
 	/**
 	 * removes an object from the game, including List references
 	 * 
-	 * @param o the object to remove
+	 * @param o
+	 *            the object to remove
 	 */
 	public static void removeFromGame(Object o) {
 		if (o instanceof Rectangle) {
@@ -480,8 +484,10 @@ public class MainGame {
 	/**
 	 * removes the object from the group
 	 * 
-	 * @param g the group containing the object
-	 * @param o the object to remove
+	 * @param g
+	 *            the group containing the object
+	 * @param o
+	 *            the object to remove
 	 */
 	private static void removeFromGroup(Group g, Object o) {
 		Platform.runLater(() -> {
@@ -492,7 +498,8 @@ public class MainGame {
 	/**
 	 * adds a Sprite to the background of the game
 	 * 
-	 * @param s the Sprite to be added
+	 * @param s
+	 *            the Sprite to be added
 	 */
 	public static void addSpriteToBackground(Sprite s) {
 		background.getChildren().add(s);
@@ -502,7 +509,8 @@ public class MainGame {
 	/**
 	 * adds a Sprite to the foreground of the game
 	 * 
-	 * @param s the Sprite to be added
+	 * @param s
+	 *            the Sprite to be added
 	 */
 	public static void addSpriteToForeground(Sprite s) {
 		foreground.getChildren().add(s);
@@ -515,7 +523,8 @@ public class MainGame {
 	/**
 	 * adds a Sprite to the overlay of the game
 	 * 
-	 * @param s the Sprite to be added
+	 * @param s
+	 *            the Sprite to be added
 	 */
 	public static void addSpriteToOverlay(Sprite s) {
 		overlay.getChildren().add(s);
@@ -525,13 +534,15 @@ public class MainGame {
 	/**
 	 * adds a CollidableRectangle to the collidable of the game
 	 * 
-	 * @param c the CollidableRectangle to be added
+	 * @param c
+	 *            the CollidableRectangle to be added
 	 */
 	public static void addCollidable(CollidableRectangle c) {
 		collidables.getChildren().add(c);
 	}
 
 	private static void sendNetworkUpdate() {
+		// Send info about where the player has died and where they are due to spawn.
 		if (!player1.isAlive()) {
 			Tile randomTile = getRandomFreeTile(0);
 			player1.setX(randomTile.getX());
@@ -544,6 +555,7 @@ public class MainGame {
 			networkingClient.sendPlayerObj(client);
 		}
 		client.alive = true;
+		// Manage if the player has fired or not
 		if (!Input.isKeyPressed(KeyCode.SPACE)) {
 			fired = false;
 		}
@@ -589,7 +601,7 @@ public class MainGame {
 				client.shoot = true;
 			}
 		}
-		// Moving
+		// Moving or moving and shooting
 		client.setX(x);
 		client.setY(y);
 		client.setHealth(player1.getHealth());
@@ -597,19 +609,25 @@ public class MainGame {
 		client.shoot = false;
 	}
 
+	/**
+	 * Method to Update the multiplayer sprites within the main game loop.
+	 */
 	private static void getPlayerUpdatesFromQueue() {
-
 		while (!inputUpdateQueue.isEmpty()) {
 			ClientSender data = inputUpdateQueue.poll();
+			// Player does not exist
 			if (data.getID() == null) {
 				return;
 			}
 			String id = data.getID().trim();
+			// create a new player if they dont already exist.
 			newPlayer(data);
-
+			
+			// Iterate through the sprites to find the one associated with the ID.
 			for (Iterator<Sprite> iterator = spriteList.iterator(); iterator.hasNext();) {
 				Sprite sprite = iterator.next();
 
+				// Update the sprite if they died.
 				if (sprite.getId().equals(id)) {
 					if (!data.alive) {
 						player1.updateScore();
@@ -620,6 +638,7 @@ public class MainGame {
 						((Player) sprite).setDir(data.pos);
 						continue;
 					}
+					// Otherwise update their location, health, direction and weapon .
 					sprite.setX(data.getX());
 					sprite.setY(data.getY());
 					((Player) sprite).setDir(data.pos);
@@ -635,7 +654,7 @@ public class MainGame {
 						Vector2 vect = play.get(id).weaponManager.getFacingDirAsVector(m);
 						Vector2 pos = play.get(id).weaponManager.playerPos;
 						Vector2 wepPos = play.get(id).weaponManager.getWeaponPos(pos,
-								play.get(id).getplayerDimensions(), vect);
+								         play.get(id).getplayerDimensions(), vect);
 						play.get(id).weaponManager.getCurrentWeapon().fire(vect, wepPos, true);
 					}
 				}
@@ -698,6 +717,9 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * Method to clear the game of all multiplayer players.
+	 */
 	public static void removeAllMp() {
 		for (ConcurrentHashMap.Entry<String, Player> players : play.entrySet()) {
 			getSprite(players.getKey()).delete();
@@ -737,8 +759,12 @@ public class MainGame {
 			addSpriteToForeground(ammoPickup);
 		}
 	}
-
-	public static void newPlayer(ClientSender data) {
+	
+	/**
+	 * Method to add a new player sprite to the game for multiplayer.
+	 * @param data Contains a clientsender object that has info about the player.
+	 */
+	private static void newPlayer(ClientSender data) {
 		String id = data.getID();
 		if (!play.containsKey(data.getID())) {
 			play.put(id, new Player());
@@ -757,7 +783,8 @@ public class MainGame {
 	/**
 	 * returns a Sprite based off its unique ID
 	 * 
-	 * @param id the ID of the Sprite
+	 * @param id
+	 *            the ID of the Sprite
 	 * @return the Sprite if it exists else null
 	 */
 	public static Sprite getSprite(String id) {
@@ -777,17 +804,33 @@ public class MainGame {
 	public static Player getPlayer() {
 		return player1;
 	}
-
+	
+	/**
+	 * Sets up the Client thread for multiplayer.
+	 * @param host ip of the server
+	 * @param port port of the server
+	 * @param name name of the player
+	 */
 	public static void setUpClientThread(String host, int port, String name) {
 		client = new ClientSender(player1.getX(), player1.getY(), player1.getHealth());
 		networkingClient = new Client(host, port, name);
 		networkingClient.start();
 	}
-
+	
+	/**
+	 * Method for creating a point 2D double.
+	 * @param x
+	 * @param y
+	 * @return a point 2D double.
+	 */
 	public static Point2D.Double pick(double x, double y) {
 		return new Point2D.Double(x, y);
 	}
 
+	/**
+	 * Getter for the networkingClient thread.
+	 * @return networkingClient 
+	 */
 	public static Client getNetworkingClient() {
 		return networkingClient;
 	}
